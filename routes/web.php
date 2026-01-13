@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\LessonCommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Teacher\ContentController;
+use App\Http\Controllers\Teacher\AnnouncementController;
 use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\StudentController;
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
@@ -37,8 +38,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::view('/admin', 'dashboards.admin')->middleware(['auth', 'role:admin'])->name('admin.dashboard');
-Route::view('/profesor', 'dashboards.teacher')->middleware(['auth', 'role:teacher'])->name('teacher.dashboard');
-Route::view('/alumno', 'dashboards.student')->middleware(['auth', 'role:student'])->name('student.dashboard');
+Route::get('/profesor', [\App\Http\Controllers\Teacher\DashboardController::class, 'index'])
+    ->middleware(['auth', 'role:teacher'])
+    ->name('teacher.dashboard');
+Route::get('/alumno', [\App\Http\Controllers\Student\DashboardController::class, 'index'])
+    ->middleware(['auth', 'role:student'])
+    ->name('student.dashboard');
 
 Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.')->group(function () {
     Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
@@ -58,6 +63,10 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::post('/alumnos', [StudentController::class, 'store'])->name('students.store');
     Route::put('/alumnos/{studentProfile}/estado', [StudentController::class, 'updateStatus'])->name('students.status');
     Route::put('/alumnos/{studentProfile}/cursos', [StudentController::class, 'updateCourseAccess'])->name('students.courses.access');
+    Route::get('/anuncios', [AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::post('/anuncios', [AnnouncementController::class, 'store'])->name('announcements.store');
+    Route::put('/anuncios/{announcement}/estado', [AnnouncementController::class, 'updateStatus'])->name('announcements.status');
+    Route::delete('/anuncios/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')->group(function () {

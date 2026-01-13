@@ -148,6 +148,122 @@ main {
     margin-bottom: 0;
 }
 
+.dashboard-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.widget {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    display: grid;
+    gap: 12px;
+}
+
+html[data-theme="dark"] .widget {
+    background: #111827;
+    border-color: #1f2937;
+}
+
+.widget-wide {
+    grid-column: 1 / -1;
+}
+
+.widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.metric-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.metric {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+html[data-theme="dark"] .metric {
+    background: #0b1220;
+}
+
+.metric-label {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.metric-value {
+    font-size: 20px;
+}
+
+.clock {
+    display: grid;
+    gap: 6px;
+    align-items: start;
+}
+
+.clock-date {
+    font-size: 16px;
+    color: #6b7280;
+}
+
+.clock-time {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.calendar {
+    display: grid;
+    gap: 10px;
+}
+
+.calendar-header {
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(28px, 1fr));
+    gap: 6px;
+}
+
+.calendar-day {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 8px 0;
+    text-align: center;
+    font-size: 12px;
+}
+
+html[data-theme="dark"] .calendar-day {
+    background: #0b1220;
+}
+
+.calendar-day--header {
+    background: transparent;
+    color: #6b7280;
+}
+
+.calendar-day--empty {
+    background: transparent;
+}
+
+.calendar-day--today {
+    background: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+}
+
 .btn {
     display: inline-flex;
     align-items: center;
@@ -388,6 +504,13 @@ html[data-theme="dark"] .alert {
 .list {
     display: grid;
     gap: 12px;
+}
+
+.announcement-image {
+    width: 100%;
+    border-radius: 10px;
+    max-height: 240px;
+    object-fit: cover;
 }
 
 dialog {
