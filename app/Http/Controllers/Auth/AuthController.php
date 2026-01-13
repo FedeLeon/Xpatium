@@ -37,7 +37,27 @@ class AuthController extends Controller
 
     public function showRegister(): View
     {
+        if (! session('register_role')) {
+            return redirect()->route('register');
+        }
+
         return view('auth.register');
+    }
+
+    public function showRegisterRole(): View
+    {
+        return view('auth.register-role');
+    }
+
+    public function storeRegisterRole(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'role' => ['required', 'in:teacher,student'],
+        ]);
+
+        $request->session()->put('register_role', $data['role']);
+
+        return redirect()->route('register.form');
     }
 
     public function register(Request $request): RedirectResponse
@@ -48,11 +68,16 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
+        $role = $request->session()->pull('register_role');
+        if (! in_array($role, [User::ROLE_TEACHER, User::ROLE_STUDENT], true)) {
+            return redirect()->route('register');
+        }
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => User::ROLE_STUDENT,
+            'role' => $role,
         ]);
 
         Auth::login($user);

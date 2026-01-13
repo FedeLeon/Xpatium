@@ -8,7 +8,9 @@ Route::view('/', 'welcome')->name('home');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-    Route::get('/registro', [AuthController::class, 'showRegister'])->name('register');
+    Route::get('/registro', [AuthController::class, 'showRegisterRole'])->name('register');
+    Route::post('/registro/rol', [AuthController::class, 'storeRegisterRole'])->name('register.role');
+    Route::get('/registro/formulario', [AuthController::class, 'showRegister'])->name('register.form');
     Route::post('/registro', [AuthController::class, 'register'])->name('register.submit');
 });
 
