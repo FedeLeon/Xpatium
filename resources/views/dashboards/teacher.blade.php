@@ -9,6 +9,10 @@
         <main>
             <h1>Panel de profesor</h1>
             <p>Publica cursos, agenda clases y sigue tu progreso.</p>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Cerrar sesion</button>
+            </form>
         </main>
     </body>
 </html>

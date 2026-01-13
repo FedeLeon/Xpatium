@@ -9,6 +9,10 @@
         <main>
             <h1>Panel de alumno</h1>
             <p>Accede a tus cursos, clases en vivo y materiales.</p>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Cerrar sesion</button>
+            </form>
         </main>
     </body>
 </html>

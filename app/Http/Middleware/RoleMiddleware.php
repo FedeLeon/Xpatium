@@ -16,7 +16,7 @@ class RoleMiddleware
         $user = $request->user();
 
         if (! $user) {
-            return redirect('/');
+            return redirect()->route('login');
         }
 
         if (! in_array($user->role, $roles, true)) {
