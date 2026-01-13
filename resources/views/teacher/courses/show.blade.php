@@ -32,4 +32,5 @@
             <p>{{ $course->start_date?->format('d/m/Y') ?? 'Sin fecha' }}</p>
         </div>
     </div>
+
 @endsection

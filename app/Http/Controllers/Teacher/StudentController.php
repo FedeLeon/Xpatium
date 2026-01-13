@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class StudentController extends Controller
@@ -19,7 +20,25 @@ class StudentController extends Controller
             ->latest()
             ->get();
 
-        return view('teacher.students.index', compact('students'));
+        $courses = $request->user()->courses()->get();
+
+        $studentIds = $students->pluck('student_id')->all();
+        $courseIds = $courses->pluck('id')->all();
+
+        $enrolled = collect();
+        if ($studentIds && $courseIds) {
+            $enrolled = DB::table('course_user')
+                ->whereIn('user_id', $studentIds)
+                ->whereIn('course_id', $courseIds)
+                ->get();
+        }
+
+        $enrolledMap = [];
+        foreach ($enrolled as $row) {
+            $enrolledMap[$row->user_id][$row->course_id] = true;
+        }
+
+        return view('teacher.students.index', compact('students', 'courses', 'enrolledMap'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -65,6 +84,31 @@ class StudentController extends Controller
         $student = $studentProfile->student;
         $student->status = $data['status'];
         $student->save();
+
+        return redirect()->route('teacher.students.index');
+    }
+
+    public function updateCourseAccess(Request $request, StudentProfile $studentProfile): RedirectResponse
+    {
+        if ($studentProfile->teacher_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'course_id' => ['required', 'integer'],
+            'action' => ['required', 'in:grant,revoke'],
+        ]);
+
+        $course = $request->user()->courses()->where('id', $data['course_id'])->first();
+        if (! $course) {
+            return back()->withErrors(['course_id' => 'Curso invalido.']);
+        }
+
+        if ($data['action'] === 'grant') {
+            $course->students()->syncWithoutDetaching([$studentProfile->student_id]);
+        } else {
+            $course->students()->detach($studentProfile->student_id);
+        }
 
         return redirect()->route('teacher.students.index');
     }

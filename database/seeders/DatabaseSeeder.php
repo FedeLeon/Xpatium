@@ -36,11 +36,17 @@ class DatabaseSeeder extends Seeder
             'status' => 'activo',
         ]);
 
-        User::factory()->create([
+        $demoStudent = User::factory()->create([
             'name' => 'Alumno Demo',
             'email' => 'alumno@example.com',
             'role' => 'student',
             'password' => Hash::make('alumno1234'),
+            'status' => 'activo',
+        ]);
+
+        StudentProfile::create([
+            'teacher_id' => $teacher->id,
+            'student_id' => $demoStudent->id,
             'status' => 'activo',
         ]);
 

@@ -109,4 +109,5 @@ class CourseController extends Controller
 
         return redirect()->route('teacher.courses.show', $course);
     }
+
 }

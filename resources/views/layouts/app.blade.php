@@ -408,6 +408,7 @@
                             <a href="{{ route('teacher.students.index') }}">Alumnos</a>
                             <a href="{{ route('chat.index') }}">Chat</a>
                         @elseif ($role === \App\Models\User::ROLE_STUDENT)
+                            <a href="{{ route('student.courses.index') }}">Cursos</a>
                             <a href="{{ route('chat.index') }}">Chat</a>
                         @endif
                     </nav>

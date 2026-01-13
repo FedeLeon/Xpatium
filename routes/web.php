@@ -7,6 +7,8 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Teacher\ContentController;
 use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\StudentController;
+use App\Http\Controllers\Student\CourseController as StudentCourseController;
+use App\Http\Controllers\Student\LessonController as StudentLessonController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -51,4 +53,11 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::get('/alumnos', [StudentController::class, 'index'])->name('students.index');
     Route::post('/alumnos', [StudentController::class, 'store'])->name('students.store');
     Route::put('/alumnos/{studentProfile}/estado', [StudentController::class, 'updateStatus'])->name('students.status');
+    Route::put('/alumnos/{studentProfile}/cursos', [StudentController::class, 'updateCourseAccess'])->name('students.courses.access');
+});
+
+Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')->group(function () {
+    Route::get('/cursos', [StudentCourseController::class, 'index'])->name('courses.index');
+    Route::get('/cursos/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
+    Route::get('/lecciones/{lesson}', [StudentLessonController::class, 'show'])->name('lessons.show');
 });
