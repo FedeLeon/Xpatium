@@ -30,9 +30,17 @@ class AuthController extends Controller
             ])->onlyInput('email');
         }
 
+        $user = $request->user();
+        if ($user->status === 'bloqueado') {
+            Auth::logout();
+            return back()->withErrors([
+                'email' => 'Cuenta bloqueada. Contacta al profesor.',
+            ])->onlyInput('email');
+        }
+
         $request->session()->regenerate();
 
-        return $this->redirectToDashboard($request->user());
+        return $this->redirectToDashboard($user);
     }
 
     public function showRegister(): View
@@ -78,6 +86,7 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => $role,
+            'status' => 'activo',
         ]);
 
         Auth::login($user);

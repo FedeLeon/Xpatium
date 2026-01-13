@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Course;
+use App\Models\Asset;
+use App\Models\StudentProfile;
 
 class User extends Authenticatable
 {
@@ -24,9 +26,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'last_name',
         'email',
         'password',
         'role',
+        'status',
     ];
 
     /**
@@ -55,5 +59,15 @@ class User extends Authenticatable
     public function courses()
     {
         return $this->hasMany(Course::class);
+    }
+
+    public function assets()
+    {
+        return $this->hasMany(Asset::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(StudentProfile::class, 'teacher_id');
     }
 }

@@ -3,6 +3,9 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Teacher\CourseController;
 use App\Http\Controllers\Teacher\CourseModuleController;
+use App\Http\Controllers\Teacher\ContentController;
+use App\Http\Controllers\Teacher\LessonController;
+use App\Http\Controllers\Teacher\StudentController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -32,4 +35,11 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::get('/cursos/{course}/contenido', [CourseModuleController::class, 'index'])->name('courses.modules.index');
     Route::post('/cursos/{course}/modulos', [CourseModuleController::class, 'storeModule'])->name('courses.modules.store');
     Route::post('/modulos/{module}/lecciones', [CourseModuleController::class, 'storeLesson'])->name('courses.lessons.store');
+    Route::get('/gestor-contenidos', [ContentController::class, 'index'])->name('assets.index');
+    Route::post('/gestor-contenidos', [ContentController::class, 'store'])->name('assets.store');
+    Route::get('/lecciones/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+    Route::post('/lecciones/{lesson}/contenido', [LessonController::class, 'storeContent'])->name('lessons.content.store');
+    Route::get('/alumnos', [StudentController::class, 'index'])->name('students.index');
+    Route::post('/alumnos', [StudentController::class, 'store'])->name('students.store');
+    Route::put('/alumnos/{studentProfile}/estado', [StudentController::class, 'updateStatus'])->name('students.status');
 });

@@ -144,6 +144,45 @@
                 color: #6b7280;
                 font-size: 13px;
             }
+            .asset-list {
+                display: grid;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            .asset-item {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                padding: 8px 10px;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                font-size: 13px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            th,
+            td {
+                padding: 12px 14px;
+                text-align: left;
+                border-bottom: 1px solid #e5e7eb;
+                font-size: 14px;
+            }
+            th {
+                background: #f9fafb;
+                color: #6b7280;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                font-size: 12px;
+            }
+            tr:last-child td {
+                border-bottom: 0;
+            }
             .form-grid {
                 display: grid;
                 gap: 14px;
@@ -298,6 +337,8 @@
                         <a href="{{ route($dashboardRoute) }}">Inicio</a>
                         @if ($role === \App\Models\User::ROLE_TEACHER)
                             <a href="{{ route('teacher.courses.index') }}">Cursos</a>
+                            <a href="{{ route('teacher.assets.index') }}">Gestor de contenidos</a>
+                            <a href="{{ route('teacher.students.index') }}">Alumnos</a>
                         @endif
                     </nav>
                 </aside>

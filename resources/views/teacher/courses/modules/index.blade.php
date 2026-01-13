@@ -45,7 +45,9 @@
                     <div class="list">
                         @foreach ($module->lessons as $lesson)
                             <div>
-                                <strong>{{ $lesson->title }}</strong>
+                                <strong>
+                                    <a href="{{ route('teacher.lessons.show', $lesson) }}">{{ $lesson->title }}</a>
+                                </strong>
                                 @if ($lesson->description)
                                     <div class="subtle">{{ $lesson->description }}</div>
                                 @endif
