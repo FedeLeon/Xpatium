@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CourseModule;
 use App\Models\LessonContent;
+use App\Models\LessonComment;
 
 class Lesson extends Model
 {
@@ -25,5 +26,10 @@ class Lesson extends Model
     public function contents()
     {
         return $this->hasMany(LessonContent::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(LessonComment::class);
     }
 }

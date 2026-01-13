@@ -54,6 +54,10 @@ class ChatController extends Controller
             abort(404);
         }
 
+        $conversation->participants()->updateExistingPivot($user->id, [
+            'last_read_at' => now(),
+        ]);
+
         $conversations = $user->conversations()
             ->with([
                 'participants',

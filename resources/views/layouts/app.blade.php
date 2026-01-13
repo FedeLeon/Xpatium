@@ -48,6 +48,16 @@
                 font-size: 18px;
                 cursor: pointer;
             }
+            .icon-badge {
+                position: relative;
+            }
+            .icon-badge .badge {
+                position: absolute;
+                top: -6px;
+                right: -6px;
+                background: #ef4444;
+                color: #ffffff;
+            }
             .layout {
                 display: grid;
                 grid-template-columns: 220px 1fr;
@@ -373,7 +383,29 @@
             <header>
                 <div class="logo">Xpatium</div>
                 <div class="header-actions">
-                    <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
+                    <div class="menu-dropdown icon-badge">
+                        <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
+                        @if (!empty($notificationUnreadCount))
+                            <span class="badge">{{ $notificationUnreadCount }}</span>
+                        @endif
+                        <div class="dropdown">
+                            <strong style="display:block; padding: 6px 10px;">Notificaciones</strong>
+                            @php
+                                $notifications = auth()->user()?->notifications()->latest()->limit(5)->get() ?? collect();
+                            @endphp
+                            @forelse ($notifications as $notification)
+                                <div style="padding: 6px 10px; font-size: 13px;">
+                                    {{ $notification->data['message'] ?? 'Nueva notificacion' }}
+                                </div>
+                            @empty
+                                <div style="padding: 6px 10px; font-size: 13px;">Sin notificaciones</div>
+                            @endforelse
+                            <form method="POST" action="{{ route('notifications.read') }}">
+                                @csrf
+                                <button type="submit">Marcar como leidas</button>
+                            </form>
+                        </div>
+                    </div>
                     <div class="menu-dropdown">
                         <button class="icon-btn" type="button" aria-label="Perfil">👤</button>
                         <div class="dropdown">
@@ -406,10 +438,20 @@
                             <a href="{{ route('teacher.courses.index') }}">Cursos</a>
                             <a href="{{ route('teacher.assets.index') }}">Gestor de contenidos</a>
                             <a href="{{ route('teacher.students.index') }}">Alumnos</a>
-                            <a href="{{ route('chat.index') }}">Chat</a>
+                            <a href="{{ route('chat.index') }}">
+                                Chat
+                                @if (!empty($chatUnreadCount))
+                                    <span class="badge">{{ $chatUnreadCount }}</span>
+                                @endif
+                            </a>
                         @elseif ($role === \App\Models\User::ROLE_STUDENT)
                             <a href="{{ route('student.courses.index') }}">Cursos</a>
-                            <a href="{{ route('chat.index') }}">Chat</a>
+                            <a href="{{ route('chat.index') }}">
+                                Chat
+                                @if (!empty($chatUnreadCount))
+                                    <span class="badge">{{ $chatUnreadCount }}</span>
+                                @endif
+                            </a>
                         @endif
                     </nav>
                 </aside>

@@ -25,7 +25,11 @@ class LessonController extends Controller
         }
 
         $contents = $lesson->contents()->with('asset')->get()->groupBy('type');
+        $comments = $lesson->comments()
+            ->whereNull('parent_id')
+            ->with(['user', 'replies.user'])
+            ->get();
 
-        return view('student.lessons.show', compact('lesson', 'course', 'contents'));
+        return view('student.lessons.show', compact('lesson', 'course', 'contents', 'comments'));
     }
 }

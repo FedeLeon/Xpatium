@@ -159,4 +159,26 @@
             </div>
         </form>
     </dialog>
+
+    <div class="card" style="margin-top: 16px;">
+        <h3>Comentarios</h3>
+        <form method="POST" action="{{ route('lessons.comments.store', $lesson) }}" class="form-grid">
+            @csrf
+            <div>
+                <label for="comment-body">Deja un comentario</label>
+                <textarea id="comment-body" name="body" required></textarea>
+            </div>
+            <button class="btn" type="submit">Publicar</button>
+        </form>
+
+        @if ($comments->isEmpty())
+            <p class="subtle">Sin comentarios.</p>
+        @else
+            <div class="list">
+                @foreach ($comments as $comment)
+                    @include('lessons.comment', ['comment' => $comment, 'level' => 0])
+                @endforeach
+            </div>
+        @endif
+    </div>
 @endsection

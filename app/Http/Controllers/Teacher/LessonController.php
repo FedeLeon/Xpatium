@@ -20,12 +20,16 @@ class LessonController extends Controller
         }
 
         $lesson->load('contents.asset');
+        $comments = $lesson->comments()
+            ->whereNull('parent_id')
+            ->with(['user', 'replies.user'])
+            ->get();
         $assets = Asset::where('user_id', $request->user()->id)
             ->latest()
             ->get()
             ->groupBy('type');
 
-        return view('teacher.lessons.show', compact('lesson', 'course', 'assets'));
+        return view('teacher.lessons.show', compact('lesson', 'course', 'assets', 'comments'));
     }
 
     public function storeContent(Request $request, Lesson $lesson): RedirectResponse

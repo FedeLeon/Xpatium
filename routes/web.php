@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Teacher\CourseController;
 use App\Http\Controllers\Teacher\CourseModuleController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\LessonCommentController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Teacher\ContentController;
 use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\StudentController;
@@ -30,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/{conversation}/messages', [ChatController::class, 'storeMessage'])->name('chat.messages.store');
     Route::post('/chat/directo', [ChatController::class, 'storeDirect'])->name('chat.direct.store');
     Route::post('/chat/grupo', [ChatController::class, 'storeGroup'])->name('chat.group.store');
+    Route::post('/lecciones/{lesson}/comentarios', [LessonCommentController::class, 'store'])->name('lessons.comments.store');
+    Route::post('/notificaciones/leidas', [NotificationController::class, 'markAllRead'])->name('notifications.read');
 });
 
 Route::view('/admin', 'dashboards.admin')->middleware(['auth', 'role:admin'])->name('admin.dashboard');
