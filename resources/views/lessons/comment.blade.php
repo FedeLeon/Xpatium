@@ -6,6 +6,11 @@
         <strong>{{ $comment->user->name }}</strong>
         <p>{{ $comment->body }}</p>
     </div>
+    <form method="POST" action="{{ route('lessons.comments.destroy', $comment) }}" data-confirm="Se eliminara el comentario y sus respuestas.">
+        @csrf
+        @method('DELETE')
+        <button class="btn btn-secondary" type="submit">Eliminar</button>
+    </form>
     <form method="POST" action="{{ route('lessons.comments.store', $comment->lesson_id) }}" class="form-grid">
         @csrf
         <input type="hidden" name="parent_id" value="{{ $comment->id }}">

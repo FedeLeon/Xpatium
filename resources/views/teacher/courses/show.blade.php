@@ -6,10 +6,15 @@
             <h1>{{ $course->name }}</h1>
             <p>{{ $course->subtitle }}</p>
         </div>
-        <div>
+        <div class="student-actions">
             <a class="btn btn-secondary" href="{{ route('teacher.courses.index') }}">Volver</a>
             <a class="btn" href="{{ route('teacher.courses.edit', $course) }}">Editar curso</a>
             <a class="btn btn-secondary" href="{{ route('teacher.courses.modules.index', $course) }}">Modulos y lecciones</a>
+            <form method="POST" action="{{ route('teacher.courses.destroy', $course) }}" data-confirm="Se eliminara el curso y todo su contenido.">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-secondary" type="submit">Eliminar</button>
+            </form>
         </div>
     </div>
 

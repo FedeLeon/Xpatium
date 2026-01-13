@@ -70,4 +70,27 @@ class LessonCommentController extends Controller
 
         return back();
     }
+
+    public function destroy(Request $request, LessonComment $comment): RedirectResponse
+    {
+        $user = $request->user();
+        $lesson = $comment->lesson;
+        $course = $lesson->module->course;
+
+        if ($user->role === User::ROLE_TEACHER) {
+            if ($course->user_id !== $user->id) {
+                abort(404);
+            }
+        } elseif ($user->role === User::ROLE_STUDENT) {
+            if ($comment->user_id !== $user->id) {
+                abort(403);
+            }
+        } else {
+            abort(403);
+        }
+
+        $comment->delete();
+
+        return back();
+    }
 }

@@ -110,4 +110,19 @@ class CourseController extends Controller
         return redirect()->route('teacher.courses.show', $course);
     }
 
+    public function destroy(Request $request, Course $course): RedirectResponse
+    {
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        if ($course->image_path) {
+            Storage::disk('public')->delete($course->image_path);
+        }
+
+        $course->delete();
+
+        return redirect()->route('teacher.courses.index');
+    }
+
 }

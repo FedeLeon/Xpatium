@@ -65,4 +65,28 @@ class CourseModuleController extends Controller
 
         return redirect()->route('teacher.courses.modules.index', $course);
     }
+
+    public function destroyModule(Request $request, CourseModule $module): RedirectResponse
+    {
+        $course = $module->course;
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $module->delete();
+
+        return redirect()->route('teacher.courses.modules.index', $course);
+    }
+
+    public function destroyLesson(Request $request, Lesson $lesson): RedirectResponse
+    {
+        $course = $lesson->module->course;
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $lesson->delete();
+
+        return redirect()->route('teacher.courses.modules.index', $course);
+    }
 }

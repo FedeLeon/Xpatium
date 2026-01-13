@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/directo', [ChatController::class, 'storeDirect'])->name('chat.direct.store');
     Route::post('/chat/grupo', [ChatController::class, 'storeGroup'])->name('chat.group.store');
     Route::post('/lecciones/{lesson}/comentarios', [LessonCommentController::class, 'store'])->name('lessons.comments.store');
+    Route::delete('/comentarios/{comment}', [LessonCommentController::class, 'destroy'])->name('lessons.comments.destroy');
     Route::post('/notificaciones/leidas', [NotificationController::class, 'markAllRead'])->name('notifications.read');
 });
 
@@ -52,9 +53,12 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::get('/cursos/{course}', [CourseController::class, 'show'])->name('courses.show');
     Route::get('/cursos/{course}/editar', [CourseController::class, 'edit'])->name('courses.edit');
     Route::put('/cursos/{course}', [CourseController::class, 'update'])->name('courses.update');
+    Route::delete('/cursos/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
     Route::get('/cursos/{course}/contenido', [CourseModuleController::class, 'index'])->name('courses.modules.index');
     Route::post('/cursos/{course}/modulos', [CourseModuleController::class, 'storeModule'])->name('courses.modules.store');
     Route::post('/modulos/{module}/lecciones', [CourseModuleController::class, 'storeLesson'])->name('courses.lessons.store');
+    Route::delete('/modulos/{module}', [CourseModuleController::class, 'destroyModule'])->name('courses.modules.destroy');
+    Route::delete('/lecciones/{lesson}', [CourseModuleController::class, 'destroyLesson'])->name('courses.lessons.destroy');
     Route::get('/gestor-contenidos', [ContentController::class, 'index'])->name('assets.index');
     Route::post('/gestor-contenidos', [ContentController::class, 'store'])->name('assets.store');
     Route::get('/lecciones/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
@@ -63,6 +67,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::post('/alumnos', [StudentController::class, 'store'])->name('students.store');
     Route::put('/alumnos/{studentProfile}/estado', [StudentController::class, 'updateStatus'])->name('students.status');
     Route::put('/alumnos/{studentProfile}/cursos', [StudentController::class, 'updateCourseAccess'])->name('students.courses.access');
+    Route::delete('/alumnos/{studentProfile}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/anuncios', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::post('/anuncios', [AnnouncementController::class, 'store'])->name('announcements.store');
     Route::put('/anuncios/{announcement}/estado', [AnnouncementController::class, 'updateStatus'])->name('announcements.status');

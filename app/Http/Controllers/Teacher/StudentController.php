@@ -112,4 +112,18 @@ class StudentController extends Controller
 
         return redirect()->route('teacher.students.index');
     }
+
+    public function destroy(Request $request, StudentProfile $studentProfile): RedirectResponse
+    {
+        if ($studentProfile->teacher_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $student = $studentProfile->student;
+
+        $studentProfile->delete();
+        $student->delete();
+
+        return redirect()->route('teacher.students.index');
+    }
 }

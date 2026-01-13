@@ -47,7 +47,7 @@
                                 <button class="btn" type="submit">Activar</button>
                             @endif
                         </form>
-                        <form method="POST" action="{{ route('teacher.announcements.destroy', $announcement) }}">
+                        <form method="POST" action="{{ route('teacher.announcements.destroy', $announcement) }}" data-confirm="Se eliminara el anuncio.">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-secondary" type="submit">Eliminar</button>

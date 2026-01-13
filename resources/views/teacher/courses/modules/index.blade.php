@@ -24,6 +24,13 @@
                     <p>{{ $module->subtitle }}</p>
                     <p class="subtle">{{ $module->description }}</p>
                 </div>
+                <div class="student-actions">
+                    <form method="POST" action="{{ route('teacher.courses.modules.destroy', $module) }}" data-confirm="Se eliminara el modulo y sus lecciones.">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-secondary" type="submit">Eliminar modulo</button>
+                    </form>
+                </div>
                 <div class="badge">{{ $module->lessons->count() }} lecciones</div>
 
                 <div class="form-grid form-grid-full">
@@ -44,14 +51,19 @@
                 @if ($module->lessons->isNotEmpty())
                     <div class="list">
                         @foreach ($module->lessons as $lesson)
-                            <div>
+                            <div class="asset-item">
                                 <strong>
                                     <a href="{{ route('teacher.lessons.show', $lesson) }}">{{ $lesson->title }}</a>
                                 </strong>
-                                @if ($lesson->description)
-                                    <div class="subtle">{{ $lesson->description }}</div>
-                                @endif
+                                <form method="POST" action="{{ route('teacher.courses.lessons.destroy', $lesson) }}" data-confirm="Se eliminara la leccion.">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-secondary" type="submit">Eliminar</button>
+                                </form>
                             </div>
+                            @if ($lesson->description)
+                                <div class="subtle">{{ $lesson->description }}</div>
+                            @endif
                         @endforeach
                     </div>
                 @endif

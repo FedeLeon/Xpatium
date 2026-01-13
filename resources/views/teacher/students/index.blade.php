@@ -41,6 +41,11 @@
                                     @endif
                                 </form>
                                 <button class="btn btn-secondary" type="button" onclick="document.getElementById('coursesModal-{{ $record->id }}').showModal()">Cursos</button>
+                                <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el alumno y su acceso.">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-secondary" type="submit">Eliminar</button>
+                                </form>
                             </div>
                         </td>
                     </tr>

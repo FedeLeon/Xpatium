@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ $title ?? 'Xpatium' }}</title>
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
         <div class="app">
@@ -111,6 +112,29 @@
                     setIcon(next);
                 });
             })();
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var forms = document.querySelectorAll('form[data-confirm]');
+                forms.forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        event.preventDefault();
+                        var message = form.getAttribute('data-confirm') || 'Confirmar eliminacion?';
+                        Swal.fire({
+                            title: 'Estas seguro?',
+                            text: message,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Si, eliminar',
+                            cancelButtonText: 'Cancelar'
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    });
+                });
+            });
         </script>
     </body>
 </html>
