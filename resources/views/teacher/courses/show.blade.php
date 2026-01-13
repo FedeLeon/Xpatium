@@ -9,6 +9,7 @@
         <div>
             <a class="btn btn-secondary" href="{{ route('teacher.courses.index') }}">Volver</a>
             <a class="btn" href="{{ route('teacher.courses.edit', $course) }}">Editar curso</a>
+            <a class="btn btn-secondary" href="{{ route('teacher.courses.modules.index', $course) }}">Modulos y lecciones</a>
         </div>
     </div>
 

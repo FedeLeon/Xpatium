@@ -181,6 +181,49 @@
                 font-size: 13px;
                 margin-bottom: 16px;
             }
+            .subtle {
+                color: #6b7280;
+                font-size: 13px;
+            }
+            .badge {
+                display: inline-block;
+                background: #eef2ff;
+                color: #3730a3;
+                font-size: 12px;
+                padding: 4px 8px;
+                border-radius: 999px;
+            }
+            .list {
+                display: grid;
+                gap: 12px;
+            }
+            dialog {
+                border: 0;
+                border-radius: 12px;
+                padding: 0;
+                width: min(520px, 92vw);
+                box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+            }
+            dialog::backdrop {
+                background: rgba(15, 23, 42, 0.4);
+            }
+            .modal-body {
+                padding: 18px;
+            }
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 14px 18px;
+            }
+            .modal-footer {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                border-top: 1px solid #e5e7eb;
+                padding: 14px 18px;
+            }
             .menu-dropdown {
                 position: relative;
             }

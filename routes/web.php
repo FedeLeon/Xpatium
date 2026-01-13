@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Teacher\CourseController;
+use App\Http\Controllers\Teacher\CourseModuleController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -28,4 +29,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::get('/cursos/{course}', [CourseController::class, 'show'])->name('courses.show');
     Route::get('/cursos/{course}/editar', [CourseController::class, 'edit'])->name('courses.edit');
     Route::put('/cursos/{course}', [CourseController::class, 'update'])->name('courses.update');
+    Route::get('/cursos/{course}/contenido', [CourseModuleController::class, 'index'])->name('courses.modules.index');
+    Route::post('/cursos/{course}/modulos', [CourseModuleController::class, 'storeModule'])->name('courses.modules.store');
+    Route::post('/modulos/{module}/lecciones', [CourseModuleController::class, 'storeLesson'])->name('courses.lessons.store');
 });
