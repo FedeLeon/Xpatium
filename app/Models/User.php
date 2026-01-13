@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Course;
 use App\Models\Asset;
 use App\Models\StudentProfile;
+use App\Models\Conversation;
+use App\Models\Message;
 
 class User extends Authenticatable
 {
@@ -69,5 +71,15 @@ class User extends Authenticatable
     public function students()
     {
         return $this->hasMany(StudentProfile::class, 'teacher_id');
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_user');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }

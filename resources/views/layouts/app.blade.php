@@ -195,7 +195,8 @@
                 font-size: 14px;
             }
             .form-grid input,
-            .form-grid textarea {
+            .form-grid textarea,
+            .form-grid select {
                 width: 100%;
                 border: 1px solid #d1d5db;
                 border-radius: 8px;
@@ -262,6 +263,72 @@
                 gap: 8px;
                 border-top: 1px solid #e5e7eb;
                 padding: 14px 18px;
+            }
+            .chat-layout {
+                display: grid;
+                grid-template-columns: 280px 1fr;
+                gap: 16px;
+                min-height: 60vh;
+            }
+            .chat-list {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                padding: 12px;
+                display: grid;
+                gap: 8px;
+                max-height: 70vh;
+                overflow: auto;
+            }
+            .chat-item {
+                display: block;
+                padding: 10px;
+                border-radius: 10px;
+                border: 1px solid #e5e7eb;
+                text-decoration: none;
+                color: #111827;
+            }
+            .chat-item small {
+                color: #6b7280;
+            }
+            .chat-window {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                padding: 16px;
+                display: grid;
+                grid-template-rows: 1fr auto;
+                gap: 12px;
+            }
+            .messages {
+                display: grid;
+                gap: 10px;
+                max-height: 55vh;
+                overflow: auto;
+                padding-right: 6px;
+            }
+            .bubble {
+                max-width: 70%;
+                padding: 10px 12px;
+                border-radius: 14px;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            .bubble.me {
+                margin-left: auto;
+                background: #2563eb;
+                color: #ffffff;
+            }
+            .bubble.other {
+                margin-right: auto;
+                background: #f3f4f6;
+                color: #111827;
+            }
+            .bubble small {
+                display: block;
+                font-size: 11px;
+                margin-top: 6px;
+                opacity: 0.7;
             }
             .menu-dropdown {
                 position: relative;
@@ -339,6 +406,9 @@
                             <a href="{{ route('teacher.courses.index') }}">Cursos</a>
                             <a href="{{ route('teacher.assets.index') }}">Gestor de contenidos</a>
                             <a href="{{ route('teacher.students.index') }}">Alumnos</a>
+                            <a href="{{ route('chat.index') }}">Chat</a>
+                        @elseif ($role === \App\Models\User::ROLE_STUDENT)
+                            <a href="{{ route('chat.index') }}">Chat</a>
                         @endif
                     </nav>
                 </aside>
