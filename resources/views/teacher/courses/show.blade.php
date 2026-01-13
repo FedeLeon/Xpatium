@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="card" style="max-width: 680px;">
+    <div class="card card-narrow">
         @if ($course->image_path)
             <img src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del curso">
         @else

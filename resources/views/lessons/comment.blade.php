@@ -1,4 +1,7 @@
-<div class="card" style="margin-left: {{ $level * 20 }}px;">
+@php
+    $indent = $level > 5 ? 5 : $level;
+@endphp
+<div class="card comment-level-{{ $indent }}">
     <div>
         <strong>{{ $comment->user->name }}</strong>
         <p>{{ $comment->body }}</p>

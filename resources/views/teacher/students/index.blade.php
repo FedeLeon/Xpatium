@@ -28,7 +28,7 @@
                         <td>{{ $record->student->email }}</td>
                         <td>{{ $record->student->status }}</td>
                         <td>
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <div class="student-actions">
                                 <form method="POST" action="{{ route('teacher.students.status', $record) }}">
                                     @csrf
                                     @method('PUT')

@@ -16,7 +16,7 @@
         @else
             @foreach ($contents['video'] as $content)
                 @if ($content->asset)
-                    <video controls style="width: 100%; border-radius: 8px;">
+                    <video class="lesson-video" controls>
                         <source src="{{ asset('storage/' . $content->asset->path) }}" type="{{ $content->asset->mime }}">
                     </video>
                 @endif

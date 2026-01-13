@@ -53,7 +53,7 @@
                         ? ($activeConversation->title ?: 'Grupo sin titulo')
                         : $activeConversation->participants->where('id', '!=', $currentUser->id)->first()?->name;
                 @endphp
-                <div class="actions" style="margin-bottom: 0;">
+                <div class="actions actions-tight">
                     <div>
                         <h3>{{ $activeTitle }}</h3>
                         <p class="subtle">{{ $activeConversation->participants->pluck('name')->join(', ') }}</p>

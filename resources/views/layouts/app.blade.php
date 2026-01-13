@@ -4,379 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ $title ?? 'Xpatium' }}</title>
-        <style>
-            :root {
-                color-scheme: light;
-            }
-            body {
-                margin: 0;
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-                background: #f6f7fb;
-                color: #1f2937;
-            }
-            .app {
-                display: grid;
-                grid-template-rows: 64px 1fr;
-                min-height: 100vh;
-            }
-            header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 20px;
-                background: #ffffff;
-                border-bottom: 1px solid #e5e7eb;
-            }
-            .logo {
-                font-weight: 700;
-                letter-spacing: 0.5px;
-            }
-            .header-actions {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-            }
-            .icon-btn {
-                width: 36px;
-                height: 36px;
-                border-radius: 8px;
-                border: 1px solid #e5e7eb;
-                background: #ffffff;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 18px;
-                cursor: pointer;
-            }
-            .icon-badge {
-                position: relative;
-            }
-            .icon-badge .badge {
-                position: absolute;
-                top: -6px;
-                right: -6px;
-                background: #ef4444;
-                color: #ffffff;
-            }
-            .layout {
-                display: grid;
-                grid-template-columns: 220px 1fr;
-                gap: 16px;
-            }
-            aside {
-                background: #ffffff;
-                border-right: 1px solid #e5e7eb;
-                padding: 16px;
-            }
-            .menu-title {
-                font-size: 12px;
-                text-transform: uppercase;
-                letter-spacing: 0.08em;
-                color: #6b7280;
-                margin-bottom: 10px;
-            }
-            .menu a {
-                display: block;
-                padding: 10px 12px;
-                border-radius: 8px;
-                color: #1f2937;
-                text-decoration: none;
-                border: 1px solid transparent;
-            }
-            .menu a:hover {
-                background: #f3f4f6;
-                border-color: #e5e7eb;
-            }
-            main {
-                padding: 24px;
-            }
-            .actions {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-                margin-bottom: 16px;
-            }
-            .btn {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                padding: 10px 14px;
-                border-radius: 8px;
-                border: 1px solid #2563eb;
-                background: #2563eb;
-                color: #ffffff;
-                text-decoration: none;
-                font-weight: 600;
-            }
-            .btn-secondary {
-                border-color: #e5e7eb;
-                background: #ffffff;
-                color: #1f2937;
-            }
-            .grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 16px;
-            }
-            .card {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                padding: 16px;
-                display: grid;
-                gap: 10px;
-            }
-            .card img {
-                width: 100%;
-                height: 140px;
-                object-fit: cover;
-                border-radius: 8px;
-                background: #f3f4f6;
-            }
-            .placeholder {
-                width: 100%;
-                height: 140px;
-                border-radius: 8px;
-                background: #f3f4f6;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #9ca3af;
-                font-size: 12px;
-            }
-            .card h3 {
-                margin: 0;
-                font-size: 16px;
-            }
-            .card p {
-                margin: 0;
-                color: #6b7280;
-                font-size: 13px;
-            }
-            .asset-list {
-                display: grid;
-                gap: 8px;
-                margin-top: 10px;
-            }
-            .asset-item {
-                display: flex;
-                gap: 8px;
-                align-items: center;
-                padding: 8px 10px;
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                font-size: 13px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                background: #ffffff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                overflow: hidden;
-            }
-            th,
-            td {
-                padding: 12px 14px;
-                text-align: left;
-                border-bottom: 1px solid #e5e7eb;
-                font-size: 14px;
-            }
-            th {
-                background: #f9fafb;
-                color: #6b7280;
-                text-transform: uppercase;
-                letter-spacing: 0.06em;
-                font-size: 12px;
-            }
-            tr:last-child td {
-                border-bottom: 0;
-            }
-            .form-grid {
-                display: grid;
-                gap: 14px;
-                max-width: 520px;
-            }
-            .form-grid label {
-                display: block;
-                margin-bottom: 6px;
-                font-weight: 600;
-                font-size: 14px;
-            }
-            .form-grid input,
-            .form-grid textarea,
-            .form-grid select {
-                width: 100%;
-                border: 1px solid #d1d5db;
-                border-radius: 8px;
-                padding: 10px 12px;
-                font-size: 14px;
-            }
-            .form-grid textarea {
-                min-height: 110px;
-                resize: vertical;
-            }
-            .form-grid .hint {
-                font-size: 12px;
-                color: #6b7280;
-                margin-top: 6px;
-            }
-            .alert {
-                background: #fef2f2;
-                border: 1px solid #fecaca;
-                color: #b91c1c;
-                padding: 10px 12px;
-                border-radius: 8px;
-                font-size: 13px;
-                margin-bottom: 16px;
-            }
-            .subtle {
-                color: #6b7280;
-                font-size: 13px;
-            }
-            .badge {
-                display: inline-block;
-                background: #eef2ff;
-                color: #3730a3;
-                font-size: 12px;
-                padding: 4px 8px;
-                border-radius: 999px;
-            }
-            .list {
-                display: grid;
-                gap: 12px;
-            }
-            dialog {
-                border: 0;
-                border-radius: 12px;
-                padding: 0;
-                width: min(520px, 92vw);
-                box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
-            }
-            dialog::backdrop {
-                background: rgba(15, 23, 42, 0.4);
-            }
-            .modal-body {
-                padding: 18px;
-            }
-            .modal-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                border-bottom: 1px solid #e5e7eb;
-                padding: 14px 18px;
-            }
-            .modal-footer {
-                display: flex;
-                justify-content: flex-end;
-                gap: 8px;
-                border-top: 1px solid #e5e7eb;
-                padding: 14px 18px;
-            }
-            .chat-layout {
-                display: grid;
-                grid-template-columns: 280px 1fr;
-                gap: 16px;
-                min-height: 60vh;
-            }
-            .chat-list {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                padding: 12px;
-                display: grid;
-                gap: 8px;
-                max-height: 70vh;
-                overflow: auto;
-            }
-            .chat-item {
-                display: block;
-                padding: 10px;
-                border-radius: 10px;
-                border: 1px solid #e5e7eb;
-                text-decoration: none;
-                color: #111827;
-            }
-            .chat-item small {
-                color: #6b7280;
-            }
-            .chat-window {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                padding: 16px;
-                display: grid;
-                grid-template-rows: 1fr auto;
-                gap: 12px;
-            }
-            .messages {
-                display: grid;
-                gap: 10px;
-                max-height: 55vh;
-                overflow: auto;
-                padding-right: 6px;
-            }
-            .bubble {
-                max-width: 70%;
-                padding: 10px 12px;
-                border-radius: 14px;
-                font-size: 14px;
-                line-height: 1.4;
-            }
-            .bubble.me {
-                margin-left: auto;
-                background: #2563eb;
-                color: #ffffff;
-            }
-            .bubble.other {
-                margin-right: auto;
-                background: #f3f4f6;
-                color: #111827;
-            }
-            .bubble small {
-                display: block;
-                font-size: 11px;
-                margin-top: 6px;
-                opacity: 0.7;
-            }
-            .menu-dropdown {
-                position: relative;
-            }
-            .dropdown {
-                position: absolute;
-                right: 0;
-                top: 44px;
-                background: #ffffff;
-                border: 1px solid #e5e7eb;
-                border-radius: 10px;
-                padding: 8px;
-                min-width: 180px;
-                display: none;
-                box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
-            }
-            .menu-dropdown:focus-within .dropdown,
-            .menu-dropdown:hover .dropdown {
-                display: block;
-            }
-            .dropdown a,
-            .dropdown button {
-                display: block;
-                width: 100%;
-                text-align: left;
-                padding: 8px 10px;
-                border: 0;
-                background: transparent;
-                color: #1f2937;
-                cursor: pointer;
-                text-decoration: none;
-            }
-            .dropdown a:hover,
-            .dropdown button:hover {
-                background: #f3f4f6;
-                border-radius: 6px;
-            }
-        </style>
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     </head>
     <body>
         <div class="app">
@@ -389,16 +17,16 @@
                             <span class="badge">{{ $notificationUnreadCount }}</span>
                         @endif
                         <div class="dropdown">
-                            <strong style="display:block; padding: 6px 10px;">Notificaciones</strong>
+                            <strong class="dropdown-title">Notificaciones</strong>
                             @php
                                 $notifications = auth()->user()?->notifications()->latest()->limit(5)->get() ?? collect();
                             @endphp
                             @forelse ($notifications as $notification)
-                                <div style="padding: 6px 10px; font-size: 13px;">
+                                <div class="dropdown-item">
                                     {{ $notification->data['message'] ?? 'Nueva notificacion' }}
                                 </div>
                             @empty
-                                <div style="padding: 6px 10px; font-size: 13px;">Sin notificaciones</div>
+                                <div class="dropdown-empty">Sin notificaciones</div>
                             @endforelse
                             <form method="POST" action="{{ route('notifications.read') }}">
                                 @csrf
@@ -406,6 +34,7 @@
                             </form>
                         </div>
                     </div>
+                    <button class="icon-btn" type="button" id="theme-toggle" aria-label="Cambiar tema" aria-pressed="false">🌙</button>
                     <div class="menu-dropdown">
                         <button class="icon-btn" type="button" aria-label="Perfil">👤</button>
                         <div class="dropdown">
@@ -416,7 +45,6 @@
                             </form>
                         </div>
                     </div>
-                    <button class="icon-btn" type="button" aria-label="Menu">☰</button>
                 </div>
             </header>
 
@@ -460,5 +88,29 @@
                 </main>
             </div>
         </div>
+        <script>
+            (function () {
+                var root = document.documentElement;
+                var stored = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var theme = stored || (prefersDark ? 'dark' : 'light');
+                root.setAttribute('data-theme', theme);
+                var toggle = document.getElementById('theme-toggle');
+                if (!toggle) {
+                    return;
+                }
+                var setIcon = function (value) {
+                    toggle.textContent = value === 'dark' ? '🌙' : '☀️';
+                    toggle.setAttribute('aria-pressed', value === 'dark' ? 'true' : 'false');
+                };
+                setIcon(theme);
+                toggle.addEventListener('click', function () {
+                    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    root.setAttribute('data-theme', next);
+                    localStorage.setItem('theme', next);
+                    setIcon(next);
+                });
+            })();
+        </script>
     </body>
 </html>

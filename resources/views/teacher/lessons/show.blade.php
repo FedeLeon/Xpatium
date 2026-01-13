@@ -160,7 +160,7 @@
         </form>
     </dialog>
 
-    <div class="card" style="margin-top: 16px;">
+    <div class="card card-spaced">
         <h3>Comentarios</h3>
         <form method="POST" action="{{ route('lessons.comments.store', $lesson) }}" class="form-grid">
             @csrf

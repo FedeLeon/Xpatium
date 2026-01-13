@@ -26,7 +26,7 @@
                 </div>
                 <div class="badge">{{ $module->lessons->count() }} lecciones</div>
 
-                <div class="form-grid" style="max-width: 100%;">
+                <div class="form-grid form-grid-full">
                     <form method="POST" action="{{ route('teacher.courses.lessons.store', $module) }}">
                         @csrf
                         <div>
