@@ -65,7 +65,6 @@
                         @if ($role === \App\Models\User::ROLE_TEACHER)
                             <a href="{{ route('teacher.courses.index') }}">Cursos</a>
                             <a href="{{ route('teacher.assets.index') }}">Gestor de contenidos</a>
-                            <a href="{{ route('teacher.announcements.index') }}">Anuncios</a>
                             <a href="{{ route('teacher.students.index') }}">Alumnos</a>
                             <a href="{{ route('chat.index') }}">
                                 Chat
