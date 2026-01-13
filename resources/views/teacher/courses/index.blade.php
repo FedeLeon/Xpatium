@@ -24,7 +24,7 @@
                         <h3>{{ $course->name }}</h3>
                         <p>{{ $course->subtitle }}</p>
                     </div>
-                    <a class="btn btn-secondary" href="{{ route('teacher.courses.show', $course) }}">Ver curso</a>
+                    <a class="btn btn-secondary" href="{{ route('teacher.courses.show', $course) }}">Ir al dashboard</a>
                 </div>
             @endforeach
         </div>

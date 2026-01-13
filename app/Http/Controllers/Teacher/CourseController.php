@@ -64,4 +64,49 @@ class CourseController extends Controller
 
         return view('teacher.courses.show', compact('course'));
     }
+
+    public function edit(Request $request, Course $course): View
+    {
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        return view('teacher.courses.edit', compact('course'));
+    }
+
+    public function update(Request $request, Course $course): RedirectResponse
+    {
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'price_ars' => ['required', 'numeric', 'min:0'],
+            'price_usd' => ['required', 'numeric', 'min:0'],
+            'start_date' => ['nullable', 'date'],
+            'image' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($course->image_path) {
+                Storage::disk('public')->delete($course->image_path);
+            }
+            $course->image_path = $request->file('image')->store('courses', 'public');
+        }
+
+        $course->fill([
+            'name' => $data['name'],
+            'subtitle' => $data['subtitle'],
+            'description' => $data['description'],
+            'price_ars' => $data['price_ars'],
+            'price_usd' => $data['price_usd'],
+            'start_date' => $data['start_date'],
+        ]);
+        $course->save();
+
+        return redirect()->route('teacher.courses.show', $course);
+    }
 }

@@ -26,4 +26,6 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::get('/cursos/crear', [CourseController::class, 'create'])->name('courses.create');
     Route::post('/cursos', [CourseController::class, 'store'])->name('courses.store');
     Route::get('/cursos/{course}', [CourseController::class, 'show'])->name('courses.show');
+    Route::get('/cursos/{course}/editar', [CourseController::class, 'edit'])->name('courses.edit');
+    Route::put('/cursos/{course}', [CourseController::class, 'update'])->name('courses.update');
 });

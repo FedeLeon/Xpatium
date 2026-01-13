@@ -6,7 +6,10 @@
             <h1>{{ $course->name }}</h1>
             <p>{{ $course->subtitle }}</p>
         </div>
-        <a class="btn btn-secondary" href="{{ route('teacher.courses.index') }}">Volver</a>
+        <div>
+            <a class="btn btn-secondary" href="{{ route('teacher.courses.index') }}">Volver</a>
+            <a class="btn" href="{{ route('teacher.courses.edit', $course) }}">Editar curso</a>
+        </div>
     </div>
 
     <div class="card" style="max-width: 680px;">
