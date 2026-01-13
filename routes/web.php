@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Teacher\CourseController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -19,3 +20,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::view('/admin', 'dashboards.admin')->middleware(['auth', 'role:admin'])->name('admin.dashboard');
 Route::view('/profesor', 'dashboards.teacher')->middleware(['auth', 'role:teacher'])->name('teacher.dashboard');
 Route::view('/alumno', 'dashboards.student')->middleware(['auth', 'role:student'])->name('student.dashboard');
+
+Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.')->group(function () {
+    Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
+    Route::get('/cursos/crear', [CourseController::class, 'create'])->name('courses.create');
+    Route::post('/cursos', [CourseController::class, 'store'])->name('courses.store');
+    Route::get('/cursos/{course}', [CourseController::class, 'show'])->name('courses.show');
+});

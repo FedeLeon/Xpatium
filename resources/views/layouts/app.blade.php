@@ -80,6 +80,107 @@
             main {
                 padding: 24px;
             }
+            .actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px 14px;
+                border-radius: 8px;
+                border: 1px solid #2563eb;
+                background: #2563eb;
+                color: #ffffff;
+                text-decoration: none;
+                font-weight: 600;
+            }
+            .btn-secondary {
+                border-color: #e5e7eb;
+                background: #ffffff;
+                color: #1f2937;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 16px;
+            }
+            .card {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                padding: 16px;
+                display: grid;
+                gap: 10px;
+            }
+            .card img {
+                width: 100%;
+                height: 140px;
+                object-fit: cover;
+                border-radius: 8px;
+                background: #f3f4f6;
+            }
+            .placeholder {
+                width: 100%;
+                height: 140px;
+                border-radius: 8px;
+                background: #f3f4f6;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #9ca3af;
+                font-size: 12px;
+            }
+            .card h3 {
+                margin: 0;
+                font-size: 16px;
+            }
+            .card p {
+                margin: 0;
+                color: #6b7280;
+                font-size: 13px;
+            }
+            .form-grid {
+                display: grid;
+                gap: 14px;
+                max-width: 520px;
+            }
+            .form-grid label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 600;
+                font-size: 14px;
+            }
+            .form-grid input,
+            .form-grid textarea {
+                width: 100%;
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            .form-grid textarea {
+                min-height: 110px;
+                resize: vertical;
+            }
+            .form-grid .hint {
+                font-size: 12px;
+                color: #6b7280;
+                margin-top: 6px;
+            }
+            .alert {
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                color: #b91c1c;
+                padding: 10px 12px;
+                border-radius: 8px;
+                font-size: 13px;
+                margin-bottom: 16px;
+            }
             .menu-dropdown {
                 position: relative;
             }
@@ -152,6 +253,9 @@
                             };
                         @endphp
                         <a href="{{ route($dashboardRoute) }}">Inicio</a>
+                        @if ($role === \App\Models\User::ROLE_TEACHER)
+                            <a href="{{ route('teacher.courses.index') }}">Cursos</a>
+                        @endif
                     </nav>
                 </aside>
                 <main>
