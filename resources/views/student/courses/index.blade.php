@@ -26,6 +26,21 @@
                         <h3>{{ $course->name }}</h3>
                         <p>{{ $course->subtitle }}</p>
                     </div>
+                    @php
+                        $totalLessons = (int) ($lessonTotals->get($course->id, 0));
+                        $completedLessons = (int) ($completedTotals->get($course->id, 0));
+                        $progress = $totalLessons > 0 ? (int) round(($completedLessons / $totalLessons) * 100) : 0;
+                    @endphp
+                    <div class="course-progress">
+                        <div class="progress-meta">
+                            <span>Progreso</span>
+                            <span>{{ $progress }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar__fill" style="width: {{ $progress }}%"></div>
+                        </div>
+                        <span class="progress-count">{{ $completedLessons }} / {{ $totalLessons }} lecciones</span>
+                    </div>
                     @if ($hasAccess)
                         <a class="btn btn-secondary" href="{{ route('student.courses.show', $course) }}">Ver curso</a>
                     @else

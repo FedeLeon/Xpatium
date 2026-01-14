@@ -82,6 +82,7 @@ Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')-
     Route::get('/cursos', [StudentCourseController::class, 'index'])->name('courses.index');
     Route::get('/cursos/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
     Route::get('/lecciones/{lesson}', [StudentLessonController::class, 'show'])->name('lessons.show');
+    Route::post('/lecciones/{lesson}/completada', [StudentLessonController::class, 'toggleCompletion'])->name('lessons.toggleCompletion');
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
     Route::delete('/notificaciones/{notificationId}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notificaciones', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');

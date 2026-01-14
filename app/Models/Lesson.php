@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\CourseModule;
 use App\Models\LessonContent;
 use App\Models\LessonComment;
+use App\Models\User;
 
 class Lesson extends Model
 {
@@ -31,5 +32,12 @@ class Lesson extends Model
     public function comments()
     {
         return $this->hasMany(LessonComment::class);
+    }
+
+    public function completedBy()
+    {
+        return $this->belongsToMany(User::class, 'lesson_user')
+            ->withPivot('completed_at')
+            ->withTimestamps();
     }
 }

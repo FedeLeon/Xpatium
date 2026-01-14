@@ -11,6 +11,7 @@ use App\Models\Asset;
 use App\Models\StudentProfile;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\Lesson;
 
 class User extends Authenticatable
 {
@@ -95,5 +96,12 @@ class User extends Authenticatable
     public function enrolledCourses()
     {
         return $this->belongsToMany(Course::class, 'course_user');
+    }
+
+    public function completedLessons()
+    {
+        return $this->belongsToMany(Lesson::class, 'lesson_user')
+            ->withPivot('completed_at')
+            ->withTimestamps();
     }
 }
