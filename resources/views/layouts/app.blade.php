@@ -8,33 +8,49 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
+        @php
+            $role = auth()->user()?->role;
+        @endphp
         <div class="app">
             <header>
                 <div class="logo">Xpatium</div>
                 <div class="header-actions">
-                    <div class="menu-dropdown icon-badge">
-                        <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
-                        @if (!empty($notificationUnreadCount))
-                            <span class="badge">{{ $notificationUnreadCount }}</span>
-                        @endif
-                        <div class="dropdown">
-                            <strong class="dropdown-title">Notificaciones</strong>
-                            @php
-                                $notifications = auth()->user()?->notifications()->latest()->limit(5)->get() ?? collect();
-                            @endphp
-                            @forelse ($notifications as $notification)
-                                <div class="dropdown-item">
-                                    {{ $notification->data['message'] ?? 'Nueva notificacion' }}
-                                </div>
-                            @empty
-                                <div class="dropdown-empty">Sin notificaciones</div>
-                            @endforelse
-                            <form method="POST" action="{{ route('notifications.read') }}">
-                                @csrf
-                                <button type="submit">Marcar como leidas</button>
-                            </form>
+                    @if ($role === \App\Models\User::ROLE_STUDENT)
+                        <div class="menu-dropdown icon-badge">
+                            <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
+                            @if (!empty($notificationUnreadCount))
+                                <span class="badge">{{ $notificationUnreadCount }}</span>
+                            @endif
+                            <div class="dropdown">
+                                <strong class="dropdown-title">Notificaciones</strong>
+                                <a class="dropdown-item" href="{{ route('student.notifications.index') }}">Tienes un nuevo mensaje</a>
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="menu-dropdown icon-badge">
+                            <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
+                            @if (!empty($notificationUnreadCount))
+                                <span class="badge">{{ $notificationUnreadCount }}</span>
+                            @endif
+                            <div class="dropdown">
+                                <strong class="dropdown-title">Notificaciones</strong>
+                                @php
+                                    $notifications = auth()->user()?->notifications()->latest()->limit(5)->get() ?? collect();
+                                @endphp
+                                @forelse ($notifications as $notification)
+                                    <div class="dropdown-item">
+                                        {{ $notification->data['message'] ?? 'Nueva notificacion' }}
+                                    </div>
+                                @empty
+                                    <div class="dropdown-empty">Sin notificaciones</div>
+                                @endforelse
+                                <form method="POST" action="{{ route('notifications.read') }}">
+                                    @csrf
+                                    <button type="submit">Marcar como leidas</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
                     <button class="icon-btn" type="button" id="theme-toggle" aria-label="Cambiar tema" aria-pressed="false">🌙</button>
                     <div class="menu-dropdown">
                         <button class="icon-btn" type="button" aria-label="Perfil">👤</button>
@@ -54,7 +70,6 @@
                     <div class="menu-title">Menu</div>
                     <nav class="menu">
                         @php
-                            $role = auth()->user()?->role;
                             $dashboardRoute = match ($role) {
                                 \App\Models\User::ROLE_ADMIN => 'admin.dashboard',
                                 \App\Models\User::ROLE_TEACHER => 'teacher.dashboard',
@@ -75,6 +90,12 @@
                             </a>
                         @elseif ($role === \App\Models\User::ROLE_STUDENT)
                             <a href="{{ route('student.courses.index') }}">Cursos</a>
+                            <a href="{{ route('student.notifications.index') }}">
+                                Notificaciones
+                                @if (!empty($notificationUnreadCount))
+                                    <span class="badge badge-warn">{{ $notificationUnreadCount }}</span>
+                                @endif
+                            </a>
                             <a href="{{ route('chat.index') }}">
                                 Chat
                                 @if (!empty($chatUnreadCount))

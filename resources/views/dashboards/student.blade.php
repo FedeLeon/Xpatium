@@ -1,37 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Panel de alumno</h1>
-    <p>Accede a tus cursos, clases en vivo y materiales.</p>
+    <h1>Bienvenido, {{ auth()->user()->name }} {{ auth()->user()->last_name }}</h1>
+    <p>Este es tu espacio de aprendizaje. Continua con tus cursos activos.</p>
 
     <div class="card card-spaced">
-        <h3>Anuncios</h3>
-        @if ($announcements->isEmpty())
-            <p class="subtle">No hay anuncios disponibles.</p>
-        @else
-            <div class="list">
-                @foreach ($announcements as $announcement)
-                    <div class="card">
-                        <div>
-                            <h3>{{ $announcement->title }}</h3>
-                            <p>{{ $announcement->body }}</p>
-                            @if ($announcement->starts_at || $announcement->ends_at)
-                                <p class="subtle">
-                                    @if ($announcement->starts_at)
-                                        Desde {{ $announcement->starts_at->format('d/m/Y') }}
-                                    @endif
-                                    @if ($announcement->ends_at)
-                                        hasta {{ $announcement->ends_at->format('d/m/Y') }}
-                                    @endif
-                                </p>
-                            @endif
-                        </div>
-                        @if ($announcement->image_path)
-                            <img class="announcement-image" src="{{ asset('storage/' . $announcement->image_path) }}" alt="Imagen del anuncio">
-                        @endif
-                    </div>
-                @endforeach
+        <div class="section-head">
+            <div>
+                <h3>Cursos con acceso</h3>
+                <p class="subtle">Total de cursos habilitados para vos.</p>
             </div>
-        @endif
+            <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Ver todos</a>
+        </div>
+
+        <div class="stat-card">
+            <div>
+                <span class="stat-label">Cursos activos</span>
+                <span class="stat-value">{{ $courses->count() }}</span>
+            </div>
+            <span class="badge badge-warn">En progreso</span>
+        </div>
     </div>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Http\Controllers\Controller;
 use App\Models\StudentProfile;
 use App\Models\User;
+use App\Notifications\CourseAccessNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -105,7 +106,13 @@ class StudentController extends Controller
         }
 
         if ($data['action'] === 'grant') {
+            $alreadyEnrolled = $course->students()
+                ->where('users.id', $studentProfile->student_id)
+                ->exists();
             $course->students()->syncWithoutDetaching([$studentProfile->student_id]);
+            if (! $alreadyEnrolled) {
+                $studentProfile->student->notify(new CourseAccessNotification($request->user(), $course));
+            }
         } else {
             $course->students()->detach($studentProfile->student_id);
         }
