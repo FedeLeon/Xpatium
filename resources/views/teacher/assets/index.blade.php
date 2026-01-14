@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/teacher-assets.css') }}">
+    @endpush
+
     <div class="actions">
         <div>
             <h1>Gestor de contenidos</h1>
@@ -8,31 +12,77 @@
         </div>
     </div>
 
-    <div class="upload-card">
-        <div class="upload-head">
-            <h3>Subir archivos</h3>
-            <p class="subtle">Arrastra archivos o usa el boton para seleccionar.</p>
-        </div>
-        <div class="progress-bar">
-            <div id="uploadProgress" class="progress-bar__fill">0%</div>
-        </div>
-        <small id="uploadEta" class="subtle"></small>
+    @php
+        $formatBytes = function (int $bytes): string {
+            $units = ['B', 'KB', 'MB', 'GB'];
+            $unit = 0;
+            $size = (float) $bytes;
+            while ($size >= 1024 && $unit < count($units) - 1) {
+                $size /= 1024;
+                $unit++;
+            }
 
-        <form action="{{ route('teacher.assets.chunk') }}" class="dropzone" id="dropzoneForm">
-            @csrf
-            <div class="dz-message" data-dz-message>
-                <button type="button" id="selectFilesBtn" class="btn btn-secondary btn-icon">
-                    <span>📤</span>
-                    <span>Seleccionar archivos</span>
-                </button>
-                <div class="subtle">O arrastra aqui tus archivos</div>
+            return number_format($size, $unit === 0 ? 0 : 2).' '.$units[$unit];
+        };
+
+        $usedLabel = $formatBytes($storageUsedBytes);
+        $limitLabel = $formatBytes($storageLimitBytes);
+        $remainingLabel = $formatBytes(max(0, $storageLimitBytes - $storageUsedBytes));
+    @endphp
+
+    <div class="assets-top">
+        <div class="upload-card">
+            <div class="upload-head">
+                <h3>Subir archivos</h3>
+                <p class="subtle">Arrastra archivos o usa el boton para seleccionar.</p>
             </div>
-        </form>
+            <div class="progress-bar">
+                <div id="uploadProgress" class="progress-bar__fill">0%</div>
+            </div>
+            <small id="uploadEta" class="subtle"></small>
 
-        <button id="uploadFilesBtn" class="btn btn-icon">
-            <span>⬆️</span>
-            <span>Subir</span>
-        </button>
+            <form action="{{ route('teacher.assets.chunk') }}" class="dropzone" id="dropzoneForm">
+                @csrf
+                <div class="dz-message" data-dz-message>
+                    <button type="button" id="selectFilesBtn" class="btn btn-secondary btn-icon">
+                        <span>📤</span>
+                        <span>Seleccionar archivos</span>
+                    </button>
+                    <div class="subtle">O arrastra aqui tus archivos</div>
+                </div>
+            </form>
+
+            <button id="uploadFilesBtn" class="btn btn-icon">
+                <span>⬆️</span>
+                <span>Subir</span>
+            </button>
+        </div>
+
+        <div class="storage-card card">
+            <div class="storage-card__header">
+                <div>
+                    <h3>Uso de almacenamiento</h3>
+                    <p class="subtle">{{ auth()->user()->storagePlanLabel() }}</p>
+                </div>
+                <span class="badge">{{ number_format($storagePercent, 2) }}%</span>
+            </div>
+            <div class="storage-card__chart" style="--percent: {{ $storagePercent }};">
+                <div class="storage-card__value">
+                    <strong>{{ $usedLabel }}</strong>
+                    <span>de {{ $limitLabel }}</span>
+                </div>
+            </div>
+            <div class="storage-card__stats">
+                <div>
+                    <span class="stat-label">Disponible</span>
+                    <span class="stat-value">{{ $remainingLabel }}</span>
+                </div>
+                <div>
+                    <span class="stat-label">Archivos</span>
+                    <span class="stat-value">{{ $assetCount }}</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <form class="filters" method="GET" action="{{ route('teacher.assets.index') }}">
@@ -53,14 +103,6 @@
                 <option value="name_asc" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>Nombre (A→Z)</option>
                 <option value="name_desc" {{ ($sort ?? '') === 'name_desc' ? 'selected' : '' }}>Nombre (Z→A)</option>
             </select>
-        </div>
-        <div class="filters__group">
-            <label for="from">Desde</label>
-            <input id="from" name="from" type="date" value="{{ $from ?? '' }}">
-        </div>
-        <div class="filters__group">
-            <label for="to">Hasta</label>
-            <input id="to" name="to" type="date" value="{{ $to ?? '' }}">
         </div>
         <div class="filters__group filters__group--grow">
             <label for="q">Buscar</label>
@@ -103,7 +145,30 @@
                     <img src="{{ asset('storage/' . $asset->path) }}" alt="Imagen" class="asset-thumb">
                 @else
                     <div class="asset-placeholder asset-thumb">
-                        <span class="file-icon file-icon--{{ strtolower($fileLabel) }}">{{ $fileLabel }}</span>
+                        @php
+                            $iconMap = [
+                                'pdf' => 'pdf',
+                                'doc' => 'word',
+                                'docx' => 'word',
+                                'xls' => 'table',
+                                'xlsx' => 'table',
+                                'csv' => 'table',
+                                'ppt' => 'powerpoint',
+                                'pptx' => 'powerpoint',
+                                'zip' => 'zip',
+                                'rar' => 'zip',
+                                '7z' => 'zip',
+                                'mp3' => 'audio',
+                                'wav' => 'audio',
+                                'ogg' => 'audio',
+                                'flac' => 'audio',
+                                'txt' => 'document',
+                                'md' => 'document',
+                                'rtf' => 'document',
+                            ];
+                            $iconName = $iconMap[$ext] ?? 'document';
+                        @endphp
+                        <img class="asset-file-icon" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ strtoupper($ext ?: 'FILE') }}">
                     </div>
                 @endif
                 @php

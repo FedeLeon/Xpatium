@@ -1,0 +1,14 @@
+.table-scroll {
+    overflow-x: auto;
+}
+
+.plan-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.plan-form select {
+    min-width: 180px;
+}

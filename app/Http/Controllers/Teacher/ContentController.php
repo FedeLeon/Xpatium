@@ -51,7 +51,45 @@ class ContentController extends Controller
 
         $assets = $query->paginate(24)->appends($request->all());
 
-        return view('teacher.assets.index', compact('assets', 'type', 'sort', 'from', 'to', 'q'));
+        $user = $request->user();
+        $storageUsedBytes = (int) Asset::where('user_id', $user->id)->sum('size');
+        $missingSizeAssets = Asset::where('user_id', $user->id)
+            ->where(function ($query) {
+                $query->whereNull('size')->orWhere('size', 0);
+            })
+            ->get(['id', 'path', 'thumb_path']);
+
+        if ($missingSizeAssets->isNotEmpty()) {
+            foreach ($missingSizeAssets as $asset) {
+                if ($asset->path && Storage::disk('public')->exists($asset->path)) {
+                    $storageUsedBytes += (int) Storage::disk('public')->size($asset->path);
+                }
+                if ($asset->thumb_path && Storage::disk('public')->exists($asset->thumb_path)) {
+                    $storageUsedBytes += (int) Storage::disk('public')->size($asset->thumb_path);
+                }
+            }
+        }
+        $storageLimitBytes = $user->storageLimitBytes();
+        $storagePercent = $storageLimitBytes > 0
+            ? min(100, round(($storageUsedBytes / $storageLimitBytes) * 100, 2))
+            : 0;
+        $assetCount = (int) Asset::where('user_id', $user->id)->count();
+
+        return view(
+            'teacher.assets.index',
+            compact(
+                'assets',
+                'type',
+                'sort',
+                'from',
+                'to',
+                'q',
+                'storageUsedBytes',
+                'storageLimitBytes',
+                'storagePercent',
+                'assetCount'
+            )
+        );
     }
 
     public function store(Request $request): RedirectResponse

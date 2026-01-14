@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}">
+    @endpush
+
     <div class="actions">
         <div>
             <h1>Panel de admin</h1>
@@ -73,5 +77,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 @endsection

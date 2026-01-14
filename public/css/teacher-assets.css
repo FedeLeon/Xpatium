@@ -1,0 +1,142 @@
+.assets-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.storage-card {
+    display: grid;
+    gap: 16px;
+}
+
+.storage-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.storage-card__chart {
+    --size: 180px;
+    width: var(--size);
+    height: var(--size);
+    margin: 0 auto;
+    border-radius: 50%;
+    background: conic-gradient(#2563eb calc(var(--percent) * 1%), #e5e7eb 0);
+    display: grid;
+    place-items: center;
+}
+
+html[data-theme="dark"] .storage-card__chart {
+    background: conic-gradient(#3b82f6 calc(var(--percent) * 1%), #1f2937 0);
+}
+
+.storage-card__value {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    gap: 4px;
+    padding: 12px;
+}
+
+html[data-theme="dark"] .storage-card__value {
+    background: #111827;
+}
+
+.storage-card__value strong {
+    font-size: 18px;
+}
+
+.storage-card__value span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.storage-card__stats {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.assets-grid .asset-card {
+    grid-template-rows: 1fr auto;
+    aspect-ratio: 1 / 1;
+}
+
+.assets-grid .asset-card__link {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.assets-grid .asset-thumb,
+.assets-grid .asset-placeholder {
+    height: 100%;
+    width: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    flex: 1;
+    min-height: 0;
+}
+
+.assets-grid .asset-card__link {
+    overflow: hidden;
+}
+
+.assets-grid .asset-placeholder {
+    display: grid;
+    place-items: center;
+}
+
+.asset-file-icon {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+}
+
+.assets-grid .asset-meta {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 8px 10px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.assets-grid .asset-card__link {
+    height: 100%;
+    grid-template-rows: 1fr auto;
+}
+
+html[data-theme="dark"] .assets-grid .asset-meta {
+    background: #0b1220;
+    border-color: #1f2937;
+}
+
+.assets-grid .asset-meta strong {
+    font-size: 12px;
+    word-break: break-word;
+}
+
+.assets-grid .asset-meta small {
+    color: #6b7280;
+    word-break: break-word;
+}
+
+@media (max-width: 900px) {
+    .assets-top {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-card__chart {
+        --size: 160px;
+    }
+}

@@ -21,6 +21,10 @@ class User extends Authenticatable
     public const ROLE_ADMIN = 'admin';
     public const ROLE_TEACHER = 'teacher';
     public const ROLE_STUDENT = 'student';
+    public const STORAGE_PLAN_TRIAL = 'trial';
+    public const STORAGE_PLAN_20 = 'plan_20';
+    public const STORAGE_PLAN_40 = 'plan_40';
+    public const STORAGE_PLAN_80 = 'plan_80';
 
     /**
      * The attributes that are mass assignable.
@@ -42,6 +46,7 @@ class User extends Authenticatable
         'postal_code',
         'role',
         'status',
+        'storage_plan',
     ];
 
     /**
@@ -103,5 +108,33 @@ class User extends Authenticatable
         return $this->belongsToMany(Lesson::class, 'lesson_user')
             ->withPivot('completed_at')
             ->withTimestamps();
+    }
+
+    public static function storagePlans(): array
+    {
+        return [
+            self::STORAGE_PLAN_TRIAL => ['label' => 'Prueba 1GB', 'limit_gb' => 1],
+            self::STORAGE_PLAN_20 => ['label' => 'Plan 20GB', 'limit_gb' => 20],
+            self::STORAGE_PLAN_40 => ['label' => 'Plan 40GB', 'limit_gb' => 40],
+            self::STORAGE_PLAN_80 => ['label' => 'Plan 80GB', 'limit_gb' => 80],
+        ];
+    }
+
+    public function storagePlanKey(): string
+    {
+        $plans = self::storagePlans();
+        return array_key_exists($this->storage_plan, $plans) ? $this->storage_plan : self::STORAGE_PLAN_TRIAL;
+    }
+
+    public function storagePlanLabel(): string
+    {
+        $plan = self::storagePlans()[$this->storagePlanKey()];
+        return $plan['label'];
+    }
+
+    public function storageLimitBytes(): int
+    {
+        $plan = self::storagePlans()[$this->storagePlanKey()];
+        return (int) ($plan['limit_gb'] * 1024 * 1024 * 1024);
     }
 }

@@ -109,6 +109,8 @@
                                     <span class="badge">{{ $chatUnreadCount }}</span>
                                 @endif
                             </a>
+                        @elseif ($role === \App\Models\User::ROLE_ADMIN)
+                            <a href="{{ route('admin.plans.index') }}">Gestion de planes</a>
                         @endif
                     </nav>
                 </aside>

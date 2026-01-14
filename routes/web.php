@@ -38,7 +38,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/notificaciones/leidas', [NotificationController::class, 'markAllRead'])->name('notifications.read');
 });
 
-Route::view('/admin', 'dashboards.admin')->middleware(['auth', 'role:admin'])->name('admin.dashboard');
+Route::get('/admin', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.dashboard');
+Route::get('/admin/planes', [\App\Http\Controllers\Admin\PlanController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.plans.index');
+Route::put('/admin/planes/{user}', [\App\Http\Controllers\Admin\PlanController::class, 'update'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.plans.update');
 Route::get('/profesor', [\App\Http\Controllers\Teacher\DashboardController::class, 'index'])
     ->middleware(['auth', 'role:teacher'])
     ->name('teacher.dashboard');
