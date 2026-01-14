@@ -5,11 +5,18 @@
         <div>
             <h1>Modulos y lecciones</h1>
             <p class="subtle">{{ $course->name }}</p>
+            <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('moduleModal').showModal()">
+                <span>➕</span>
+                <span>Nuevo modulo</span>
+            </button>
         </div>
         <div>
             <a class="btn btn-secondary" href="{{ route('teacher.courses.show', $course) }}">Volver</a>
-            <button class="btn" type="button" onclick="document.getElementById('moduleModal').showModal()">Nuevo modulo</button>
         </div>
+    </div>
+
+    <div class="info-bubble">
+        Organiza tu curso en modulos y agrega lecciones debajo. Los alumnos veran el contenido en este orden.
     </div>
 
     @if ($course->modules->isEmpty())
@@ -18,56 +25,103 @@
 
     <div class="list">
         @foreach ($course->modules as $module)
-            <div class="card">
-                <div>
-                    <h3>{{ $module->title }}</h3>
-                    <p>{{ $module->subtitle }}</p>
-                    <p class="subtle">{{ $module->description }}</p>
+            <details class="module-accordion">
+                <summary class="module-summary">
+                    <div>
+                        <h3>{{ $module->title }}</h3>
+                        <p>{{ $module->subtitle }}</p>
+                    </div>
+                    <div class="module-actions">
+                        <span class="badge">{{ $module->lessons->count() }} lecciones</span>
+                        <button class="btn btn-secondary" type="button" onclick="event.stopPropagation(); document.getElementById('lessonModal-{{ $module->id }}').showModal();">Agregar leccion</button>
+                        <button class="btn btn-secondary" type="button" onclick="event.stopPropagation(); document.getElementById('editModuleModal-{{ $module->id }}').showModal();">Editar modulo</button>
+                        <form method="POST" action="{{ route('teacher.courses.modules.destroy', $module) }}" data-confirm="Se eliminara el modulo y sus lecciones." onclick="event.stopPropagation();">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-secondary" type="submit">Eliminar</button>
+                        </form>
+                    </div>
+                </summary>
+                <div class="module-body">
+                    @if ($module->description)
+                        <p class="subtle">{{ $module->description }}</p>
+                    @endif
+                    @if ($module->lessons->isNotEmpty())
+                        <div class="list lesson-list">
+                            @foreach ($module->lessons as $lesson)
+                                <div class="asset-item">
+                                    <strong>
+                                        <a href="{{ route('teacher.lessons.show', $lesson) }}">{{ $lesson->title }}</a>
+                                    </strong>
+                                    <form method="POST" action="{{ route('teacher.courses.lessons.destroy', $lesson) }}" data-confirm="Se eliminara la leccion." onclick="event.stopPropagation();">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-secondary" type="submit">Eliminar</button>
+                                    </form>
+                                </div>
+                                @if ($lesson->description)
+                                    <div class="subtle">{{ $lesson->description }}</div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="subtle">No hay lecciones todavia.</p>
+                    @endif
                 </div>
-                <div class="student-actions">
-                    <form method="POST" action="{{ route('teacher.courses.modules.destroy', $module) }}" data-confirm="Se eliminara el modulo y sus lecciones.">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-secondary" type="submit">Eliminar modulo</button>
-                    </form>
-                </div>
-                <div class="badge">{{ $module->lessons->count() }} lecciones</div>
+            </details>
 
-                <div class="form-grid form-grid-full">
-                    <form method="POST" action="{{ route('teacher.courses.lessons.store', $module) }}">
-                        @csrf
+            <dialog id="lessonModal-{{ $module->id }}">
+                <div class="modal-header">
+                    <strong>Nueva leccion</strong>
+                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('lessonModal-{{ $module->id }}').close()">Cerrar</button>
+                </div>
+                <form method="POST" action="{{ route('teacher.courses.lessons.store', $module) }}">
+                    @csrf
+                    <div class="modal-body form-grid">
                         <div>
-                            <label for="title-{{ $module->id }}">Nueva leccion</label>
-                            <input id="title-{{ $module->id }}" name="title" type="text" placeholder="Titulo de la leccion" required>
+                            <label for="title-{{ $module->id }}">Titulo</label>
+                            <input id="title-{{ $module->id }}" name="title" type="text" required>
                         </div>
                         <div>
                             <label for="description-{{ $module->id }}">Descripcion</label>
-                            <textarea id="description-{{ $module->id }}" name="description" placeholder="Que se vera en esta leccion"></textarea>
+                            <textarea id="description-{{ $module->id }}" name="description"></textarea>
                         </div>
-                        <button class="btn" type="submit">Agregar leccion</button>
-                    </form>
-                </div>
-
-                @if ($module->lessons->isNotEmpty())
-                    <div class="list">
-                        @foreach ($module->lessons as $lesson)
-                            <div class="asset-item">
-                                <strong>
-                                    <a href="{{ route('teacher.lessons.show', $lesson) }}">{{ $lesson->title }}</a>
-                                </strong>
-                                <form method="POST" action="{{ route('teacher.courses.lessons.destroy', $lesson) }}" data-confirm="Se eliminara la leccion.">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-secondary" type="submit">Eliminar</button>
-                                </form>
-                            </div>
-                            @if ($lesson->description)
-                                <div class="subtle">{{ $lesson->description }}</div>
-                            @endif
-                        @endforeach
                     </div>
-                @endif
-            </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" onclick="document.getElementById('lessonModal-{{ $module->id }}').close()">Cancelar</button>
+                        <button class="btn" type="submit">Guardar leccion</button>
+                    </div>
+                </form>
+            </dialog>
+
+            <dialog id="editModuleModal-{{ $module->id }}">
+                <div class="modal-header">
+                    <strong>Editar modulo</strong>
+                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('editModuleModal-{{ $module->id }}').close()">Cerrar</button>
+                </div>
+                <form method="POST" action="{{ route('teacher.courses.modules.update', $module) }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body form-grid">
+                        <div>
+                            <label for="edit-title-{{ $module->id }}">Titulo</label>
+                            <input id="edit-title-{{ $module->id }}" name="title" type="text" value="{{ $module->title }}" required>
+                        </div>
+                        <div>
+                            <label for="edit-subtitle-{{ $module->id }}">Subtitulo</label>
+                            <input id="edit-subtitle-{{ $module->id }}" name="subtitle" type="text" value="{{ $module->subtitle }}">
+                        </div>
+                        <div>
+                            <label for="edit-description-{{ $module->id }}">Descripcion</label>
+                            <textarea id="edit-description-{{ $module->id }}" name="description">{{ $module->description }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" onclick="document.getElementById('editModuleModal-{{ $module->id }}').close()">Cancelar</button>
+                        <button class="btn" type="submit">Guardar cambios</button>
+                    </div>
+                </form>
+            </dialog>
         @endforeach
     </div>
 

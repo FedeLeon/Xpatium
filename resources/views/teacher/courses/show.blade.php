@@ -6,16 +6,6 @@
             <h1>{{ $course->name }}</h1>
             <p>{{ $course->subtitle }}</p>
         </div>
-        <div class="student-actions">
-            <a class="btn btn-secondary" href="{{ route('teacher.courses.index') }}">Volver</a>
-            <a class="btn" href="{{ route('teacher.courses.edit', $course) }}">Editar curso</a>
-            <a class="btn btn-secondary" href="{{ route('teacher.courses.modules.index', $course) }}">Modulos y lecciones</a>
-            <form method="POST" action="{{ route('teacher.courses.destroy', $course) }}" data-confirm="Se eliminara el curso y todo su contenido.">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-secondary" type="submit">Eliminar</button>
-            </form>
-        </div>
     </div>
 
     <div class="card card-narrow">
@@ -36,6 +26,29 @@
             <h3>Fecha de inicio</h3>
             <p>{{ $course->start_date?->format('d/m/Y') ?? 'Sin fecha' }}</p>
         </div>
+    </div>
+
+    <div class="course-actions">
+        <a class="course-action" href="{{ route('teacher.courses.index') }}">
+            <span class="course-action__icon">↩️</span>
+            <span class="course-action__label">Volver</span>
+        </a>
+        <a class="course-action" href="{{ route('teacher.courses.edit', $course) }}">
+            <span class="course-action__icon">✏️</span>
+            <span class="course-action__label">Editar curso</span>
+        </a>
+        <a class="course-action" href="{{ route('teacher.courses.modules.index', $course) }}">
+            <span class="course-action__icon">🧩</span>
+            <span class="course-action__label">Modulos y lecciones</span>
+        </a>
+        <form method="POST" action="{{ route('teacher.courses.destroy', $course) }}" data-confirm="Se eliminara el curso y todo su contenido.">
+            @csrf
+            @method('DELETE')
+            <button class="course-action course-action--danger" type="submit">
+                <span class="course-action__icon">🗑️</span>
+                <span class="course-action__label">Eliminar</span>
+            </button>
+        </form>
     </div>
 
 @endsection

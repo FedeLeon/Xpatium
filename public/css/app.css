@@ -148,6 +148,207 @@ main {
     margin-bottom: 0;
 }
 
+.admin-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.admin-action {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    min-height: 120px;
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+html[data-theme="dark"] .admin-action {
+    background: #111827;
+    border-color: #1f2937;
+}
+
+.admin-action__icon {
+    font-size: 24px;
+}
+
+.admin-action__label {
+    font-size: 14px;
+}
+
+.course-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.course-action {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    min-height: 110px;
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #1f2937;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+html[data-theme="dark"] .course-action {
+    background: #111827;
+    border-color: #1f2937;
+    color: #e5e7eb;
+}
+
+.course-action--danger {
+    border-color: #ef4444;
+    color: #b91c1c;
+    background: #fef2f2;
+}
+
+html[data-theme="dark"] .course-action--danger {
+    background: #3f1d1d;
+    color: #fecaca;
+}
+
+.course-action__icon {
+    font-size: 24px;
+}
+
+.course-action__label {
+    font-size: 14px;
+    text-align: center;
+}
+
+.admin-course {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+html[data-theme="dark"] .admin-course {
+    background: #0b1220;
+}
+
+.admin-course__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.info-bubble {
+    background: #eef2ff;
+    color: #3730a3;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+html[data-theme="dark"] .info-bubble {
+    background: #1e1b4b;
+    color: #c7d2fe;
+}
+
+.module-card {
+    border-left: 4px solid #2563eb;
+}
+
+.lesson-list .asset-item {
+    justify-content: space-between;
+}
+
+.module-accordion {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+html[data-theme="dark"] .module-accordion {
+    border-color: #1f2937;
+    background: #111827;
+}
+
+.module-summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.module-summary::-webkit-details-marker {
+    display: none;
+}
+
+.module-summary h3 {
+    margin: 0;
+}
+
+.module-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.module-body {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: grid;
+    gap: 12px;
+}
+
+html[data-theme="dark"] .module-body {
+    border-top-color: #1f2937;
+}
+
+.lesson-list .asset-item {
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+    .module-summary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .module-actions {
+        width: 100%;
+    }
+}
+
+.modal-header {
+    background: #f9fafb;
+}
+
+html[data-theme="dark"] .modal-header {
+    background: #0b1220;
+}
+
+.modal-footer {
+    background: #f9fafb;
+}
+
+html[data-theme="dark"] .modal-footer {
+    background: #0b1220;
+}
+
 .dashboard-grid {
     display: grid;
     gap: 16px;
@@ -281,6 +482,12 @@ html[data-theme="dark"] .calendar-day {
     border-color: #e5e7eb;
     background: #ffffff;
     color: #1f2937;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 html[data-theme="dark"] .btn-secondary {
@@ -782,5 +989,15 @@ html[data-theme="dark"] .dropdown button:hover {
 
     .grid {
         grid-template-columns: 1fr;
+    }
+
+    .admin-course {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-course__actions {
+        width: 100%;
+        flex-wrap: wrap;
     }
 }

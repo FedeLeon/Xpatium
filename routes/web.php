@@ -56,6 +56,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::delete('/cursos/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
     Route::get('/cursos/{course}/contenido', [CourseModuleController::class, 'index'])->name('courses.modules.index');
     Route::post('/cursos/{course}/modulos', [CourseModuleController::class, 'storeModule'])->name('courses.modules.store');
+    Route::put('/modulos/{module}', [CourseModuleController::class, 'updateModule'])->name('courses.modules.update');
     Route::post('/modulos/{module}/lecciones', [CourseModuleController::class, 'storeLesson'])->name('courses.lessons.store');
     Route::delete('/modulos/{module}', [CourseModuleController::class, 'destroyModule'])->name('courses.modules.destroy');
     Route::delete('/lecciones/{lesson}', [CourseModuleController::class, 'destroyLesson'])->name('courses.lessons.destroy');

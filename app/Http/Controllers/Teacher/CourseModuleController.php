@@ -66,6 +66,24 @@ class CourseModuleController extends Controller
         return redirect()->route('teacher.courses.modules.index', $course);
     }
 
+    public function updateModule(Request $request, CourseModule $module): RedirectResponse
+    {
+        $course = $module->course;
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        $module->update($data);
+
+        return redirect()->route('teacher.courses.modules.index', $course);
+    }
+
     public function destroyModule(Request $request, CourseModule $module): RedirectResponse
     {
         $course = $module->course;
