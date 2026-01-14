@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/lessons-shared.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/teacher-lessons.css') }}">
+    @endpush
+
     <div class="actions">
         <div>
             <h1>{{ $lesson->title }}</h1>
@@ -18,28 +23,19 @@
             <h3>Agregar contenido</h3>
             <div class="tool-grid">
                 <button class="tool-btn" type="button" onclick="document.getElementById('textModal').showModal()">
-                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M5 6h14M9 6v12m-4 0h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
+                    <img class="tool-icon" src="{{ asset('icons/tools/text.svg') }}" alt="Texto">
                     <span>Texto</span>
                 </button>
                 <button class="tool-btn" type="button" onclick="document.getElementById('imageModal').showModal()">
-                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M4 6h16v12H4zM8 10l3 3 3-4 4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
-                    </svg>
+                    <img class="tool-icon" src="{{ asset('icons/tools/image.svg') }}" alt="Imagen">
                     <span>Imagen</span>
                 </button>
                 <button class="tool-btn" type="button" onclick="document.getElementById('videoModal').showModal()">
-                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M4 6h10v12H4zM14 10l6-3v10l-6-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    </svg>
+                    <img class="tool-icon" src="{{ asset('icons/tools/video.svg') }}" alt="Video">
                     <span>Video</span>
                 </button>
                 <button class="tool-btn" type="button" onclick="document.getElementById('fileModal').showModal()">
-                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M8 4h6l4 4v12H8zM14 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    </svg>
+                    <img class="tool-icon" src="{{ asset('icons/tools/file.svg') }}" alt="Archivo">
                     <span>Archivo</span>
                 </button>
             </div>

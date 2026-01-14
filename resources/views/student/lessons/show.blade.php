@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/lessons-shared.css') }}">
+    @endpush
+
     <div class="lesson-layout">
         <aside class="lesson-sidebar">
             <div class="lesson-sidebar__header">
