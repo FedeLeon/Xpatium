@@ -2,7 +2,7 @@
     $indent = $level > 5 ? 5 : $level;
     $initial = strtoupper(substr($comment->user->name ?? 'A', 0, 1));
 @endphp
-<div class="comment-thread comment-level-{{ $indent }}">
+<div id="comment-{{ $comment->id }}" class="comment-thread comment-level-{{ $indent }}">
     <div class="comment-card">
         <div class="comment-avatar">{{ $initial }}</div>
         <div class="comment-body">

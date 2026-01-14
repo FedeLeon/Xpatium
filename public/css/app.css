@@ -725,6 +725,101 @@ html[data-theme="dark"] .modal-footer {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.dashboard-card-grid {
+    margin-top: 16px;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 240px));
+    justify-content: start;
+}
+
+.dashboard-card {
+    justify-items: center;
+    text-align: center;
+}
+
+.dashboard-card .section-head {
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-card .stat-card {
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-card--alert {
+    border-color: #facc15;
+    background: linear-gradient(180deg, rgba(254, 240, 138, 0.2), rgba(255, 255, 255, 0.92));
+    box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.28), 0 18px 30px rgba(15, 23, 42, 0.2);
+    animation: announcementPulse 2.2s ease-in-out infinite;
+}
+
+html[data-theme="dark"] .dashboard-card--alert {
+    border-color: #facc15;
+    background: linear-gradient(180deg, rgba(250, 204, 21, 0.18), rgba(17, 24, 39, 0.96));
+    box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.28), 0 18px 32px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes announcementPulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.28), 0 18px 30px rgba(15, 23, 42, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(250, 204, 21, 0.22), 0 22px 36px rgba(15, 23, 42, 0.24);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-card--alert {
+        animation: none;
+    }
+}
+
+.announcement-status {
+    display: grid;
+    gap: 6px;
+    justify-items: center;
+}
+
+.announcement-count {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    background: #eef2ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
+}
+
+html[data-theme="dark"] .announcement-count {
+    background: #1f2a44;
+    color: #c7d2fe;
+    border-color: #334155;
+}
+
+@media (max-width: 1280px) {
+    .dashboard-card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 220px));
+    }
+}
+
+@media (max-width: 900px) {
+    .dashboard-card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(190px, 210px));
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .widget {
     background: #ffffff;
     border: 1px solid #e5e7eb;
@@ -878,6 +973,12 @@ html[data-theme="dark"] .calendar-day {
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
 }
 
+.btn-secondary:hover {
+    background: #f3f4f6;
+    border-color: #cbd5f5;
+    color: #1f2937;
+}
+
 .btn:active {
     transform: translateY(0);
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
@@ -892,6 +993,12 @@ html[data-theme="dark"] .calendar-day {
 html[data-theme="dark"] .btn-secondary {
     border-color: #1f2937;
     background: #111827;
+    color: #e5e7eb;
+}
+
+html[data-theme="dark"] .btn-secondary:hover {
+    background: #0b1220;
+    border-color: #334155;
     color: #e5e7eb;
 }
 
@@ -1424,6 +1531,68 @@ html[data-theme="dark"] .badge-warn {
     border-radius: 10px;
     max-height: 240px;
     object-fit: cover;
+}
+
+.announcement-list {
+    gap: 14px;
+}
+
+.announcement-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+    background: #ffffff;
+}
+
+html[data-theme="dark"] .announcement-item {
+    background: #111827;
+    border-color: #1f2937;
+}
+
+.announcement-item--unread {
+    border-color: #facc15;
+    box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.12);
+}
+
+html[data-theme="dark"] .announcement-item--unread {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.16);
+}
+
+.announcement-item__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.announcement-summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.announcement-summary::-webkit-details-marker {
+    display: none;
+}
+
+.announcement-summary h3 {
+    margin: 0;
+}
+
+.announcement-body {
+    display: grid;
+    gap: 10px;
+}
+
+.announcement-item__actions {
+    display: flex;
+    justify-content: center;
 }
 
 dialog {

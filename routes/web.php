@@ -12,6 +12,7 @@ use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\StudentController;
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
 use App\Http\Controllers\Student\LessonController as StudentLessonController;
+use App\Http\Controllers\Student\AnnouncementController as StudentAnnouncementController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -91,6 +92,7 @@ Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')-
     Route::get('/cursos/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
     Route::get('/lecciones/{lesson}', [StudentLessonController::class, 'show'])->name('lessons.show');
     Route::post('/lecciones/{lesson}/completada', [StudentLessonController::class, 'toggleCompletion'])->name('lessons.toggleCompletion');
+    Route::post('/anuncios/{announcement}/leido', [StudentAnnouncementController::class, 'markRead'])->name('announcements.read');
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
     Route::delete('/notificaciones/{notificationId}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notificaciones', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');

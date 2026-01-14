@@ -15,6 +15,14 @@ class ImageService
         $sourceFull = $disk->path($sourcePath);
         $disk->makeDirectory($destDir);
 
+        if (! class_exists(ImageManager::class)) {
+            return [
+                'path' => $sourcePath,
+                'mime' => $disk->mimeType($sourcePath) ?? 'image/jpeg',
+                'size' => $disk->size($sourcePath) ?? 0,
+            ];
+        }
+
         $destName = Str::uuid()->toString().'.webp';
         $destPath = trim($destDir, '/').'/'.$destName;
         $destFull = $disk->path($destPath);
@@ -33,6 +41,10 @@ class ImageService
 
     public static function createImageThumbWebp(string $diskName, string $sourcePath, string $destDir, int $width = 360, int $height = 240, int $quality = 80): ?string
     {
+        if (! class_exists(ImageManager::class)) {
+            return null;
+        }
+
         $disk = Storage::disk($diskName);
         $sourceFull = $disk->path($sourcePath);
         $disk->makeDirectory($destDir);

@@ -23,11 +23,17 @@ class LessonCommentNotification extends Notification
     {
         $lesson = $this->comment->lesson;
         $course = $lesson->module->course;
+        $actor = $this->comment->user?->name ?? 'Alguien';
+        $parentId = $this->comment->parent_id;
 
         return [
-            'message' => 'Nuevo comentario en '.$lesson->title.' ('.$course->name.').',
+            'message' => $parentId
+                ? $actor.' respondio a tu comentario en '.$lesson->title.'.'
+                : 'Nuevo comentario en '.$lesson->title.' ('.$course->name.').',
             'lesson_id' => $lesson->id,
             'course_id' => $course->id,
+            'comment_id' => $this->comment->id,
+            'parent_id' => $parentId,
         ];
     }
 }
