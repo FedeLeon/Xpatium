@@ -14,12 +14,16 @@ class CourseController extends Controller
     {
         $profile = StudentProfile::where('student_id', $request->user()->id)->first();
         $courses = collect();
-        $enrolledIds = [];
 
         if ($profile) {
-            $courses = Course::where('user_id', $profile->teacher_id)->latest()->get();
-            $enrolledIds = $request->user()->enrolledCourses()->pluck('courses.id')->all();
+            $courses = $request->user()
+                ->enrolledCourses()
+                ->where('courses.user_id', $profile->teacher_id)
+                ->latest('courses.created_at')
+                ->get();
         }
+
+        $enrolledIds = $courses->pluck('id')->all();
 
         return view('student.courses.index', compact('courses', 'enrolledIds'));
     }
@@ -31,7 +35,10 @@ class CourseController extends Controller
             abort(404);
         }
 
-        $hasAccess = $request->user()->enrolledCourses()->where('courses.id', $course->id)->exists();
+        $hasAccess = $request->user()
+            ->enrolledCourses()
+            ->where('courses.id', $course->id)
+            ->exists();
         if (! $hasAccess) {
             abort(403);
         }
