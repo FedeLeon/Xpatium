@@ -30,13 +30,16 @@
                             ? ($conversation->title ?: 'Grupo sin titulo')
                             : $conversation->participants->where('id', '!=', $currentUser->id)->first()?->name;
                     @endphp
-                    <a class="chat-item" href="{{ route('chat.show', $conversation) }}">
-                        <strong>{{ $title }}</strong><br>
-                        @if ($lastMessage)
-                            <small>{{ $lastMessage->body }}</small>
-                        @else
-                            <small>Sin mensajes</small>
-                        @endif
+                    <a class="chat-item {{ $activeConversation && $activeConversation->id === $conversation->id ? 'chat-item--active' : '' }}" href="{{ route('chat.show', $conversation) }}">
+                        <div class="chat-avatar">{{ strtoupper(substr($title ?? 'C', 0, 1)) }}</div>
+                        <div class="chat-item__content">
+                            <strong>{{ $title }}</strong>
+                            @if ($lastMessage)
+                                <small>{{ $lastMessage->body }}</small>
+                            @else
+                                <small>Sin mensajes</small>
+                            @endif
+                        </div>
                     </a>
                 @endforeach
             @endif
@@ -64,25 +67,58 @@
                     @if ($activeConversation->messages->isEmpty())
                         <p class="subtle">No hay mensajes todavia.</p>
                     @else
+                        @php
+                            $otherParticipant = $activeConversation->participants->where('id', '!=', $currentUser->id)->first();
+                            $otherLastRead = $otherParticipant?->pivot?->last_read_at;
+                        @endphp
                         @foreach ($activeConversation->messages as $message)
                             <div class="bubble {{ $message->user_id === $currentUser->id ? 'me' : 'other' }}">
                                 {{ $message->body }}
-                                <small>{{ $message->user->name }}</small>
+                                <small class="bubble-meta">
+                                    {{ $message->created_at->format('H:i') }}
+                                    @if ($message->user_id === $currentUser->id && $activeConversation->type === \App\Models\Conversation::TYPE_DIRECT)
+                                        @if ($otherLastRead && $message->created_at->lte($otherLastRead))
+                                            · Visto ✓✓
+                                        @endif
+                                    @endif
+                                </small>
                             </div>
                         @endforeach
                     @endif
                 </div>
-                <form method="POST" action="{{ route('chat.messages.store', $activeConversation) }}" class="form-grid">
+                <form method="POST" action="{{ route('chat.messages.store', $activeConversation) }}" class="form-grid chat-input" data-chat-form>
                     @csrf
                     <div>
                         <label for="body">Mensaje</label>
                         <textarea id="body" name="body" required></textarea>
                     </div>
-                    <button class="btn" type="submit">Enviar</button>
+                    <button class="btn" type="submit">
+                        <span>✈️</span>
+                        <span>Enviar</span>
+                    </button>
                 </form>
             @endif
         </div>
     </div>
+
+    <script>
+        (function () {
+            var form = document.querySelector('[data-chat-form]');
+            if (!form) {
+                return;
+            }
+            var textarea = form.querySelector('textarea');
+            if (!textarea) {
+                return;
+            }
+            textarea.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    form.submit();
+                }
+            });
+        })();
+    </script>
 
     @if (auth()->user()->role === \App\Models\User::ROLE_TEACHER)
         <dialog id="directModal">

@@ -769,20 +769,23 @@ html[data-theme="dark"] .modal-footer {
 
 .chat-layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 320px 1fr;
     gap: 16px;
-    min-height: 60vh;
+    min-height: 70vh;
 }
 
 .chat-list {
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 12px;
     display: grid;
-    gap: 8px;
+    gap: 10px;
     max-height: 70vh;
     overflow: auto;
+    align-content: start;
+    justify-items: start;
+    grid-auto-rows: max-content;
 }
 
 html[data-theme="dark"] .chat-list {
@@ -791,31 +794,76 @@ html[data-theme="dark"] .chat-list {
 }
 
 .chat-item {
-    display: block;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid transparent;
     text-decoration: none;
     color: #111827;
+    background: #f9fafb;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    align-self: start;
+}
+
+.chat-item--active {
+    border-color: #2563eb;
+    background: #eef2ff;
 }
 
 html[data-theme="dark"] .chat-item {
-    border-color: #1f2937;
     color: #e5e7eb;
+    background: #0b1220;
+}
+
+html[data-theme="dark"] .chat-item--active {
+    border-color: #3b82f6;
+    background: #1e1b4b;
+}
+
+.chat-item strong {
+    font-size: 14px;
 }
 
 .chat-item small {
     color: #6b7280;
+    font-size: 12px;
+}
+
+.chat-item__content {
+    display: grid;
+    gap: 4px;
+}
+
+.chat-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #ffffff;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+html[data-theme="dark"] .chat-avatar {
+    background: #1d4ed8;
 }
 
 .chat-window {
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 16px;
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto 1fr auto;
     gap: 12px;
+    padding: 0;
+    overflow: hidden;
 }
 
 html[data-theme="dark"] .chat-window {
@@ -823,36 +871,61 @@ html[data-theme="dark"] .chat-window {
     border-color: #1f2937;
 }
 
+.chat-window .actions {
+    margin: 0;
+    padding: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+html[data-theme="dark"] .chat-window .actions {
+    border-bottom-color: #1f2937;
+}
+
 .messages {
     display: grid;
     gap: 10px;
     max-height: 55vh;
     overflow: auto;
-    padding-right: 6px;
+    padding: 16px;
+    background: #f9fafb;
+    align-content: start;
+    justify-items: start;
+}
+
+html[data-theme="dark"] .messages {
+    background: #0b1220;
 }
 
 .bubble {
-    max-width: 70%;
-    padding: 10px 12px;
-    border-radius: 14px;
+    max-width: 65%;
+    padding: 10px 14px;
+    border-radius: 18px;
     font-size: 14px;
     line-height: 1.4;
+    width: fit-content;
+    align-self: start;
 }
 
 .bubble.me {
     margin-left: auto;
     background: #2563eb;
     color: #ffffff;
+    border-bottom-right-radius: 6px;
+    justify-self: end;
 }
 
 .bubble.other {
     margin-right: auto;
-    background: #f3f4f6;
+    background: #ffffff;
     color: #111827;
+    border: 1px solid #e5e7eb;
+    border-bottom-left-radius: 6px;
+    justify-self: start;
 }
 
 html[data-theme="dark"] .bubble.other {
-    background: #0b1220;
+    background: #111827;
+    border-color: #1f2937;
     color: #e5e7eb;
 }
 
@@ -861,6 +934,40 @@ html[data-theme="dark"] .bubble.other {
     font-size: 11px;
     margin-top: 6px;
     opacity: 0.7;
+}
+
+.bubble-meta {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.chat-input {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+}
+
+.chat-input label {
+    display: none;
+}
+
+.chat-input textarea {
+    min-height: 48px;
+}
+
+.chat-input button {
+    gap: 6px;
+}
+
+.chat-window .form-grid {
+    max-width: 100%;
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+}
+
+html[data-theme="dark"] .chat-window .form-grid {
+    border-top-color: #1f2937;
+    background: #111827;
 }
 
 .menu-dropdown {
