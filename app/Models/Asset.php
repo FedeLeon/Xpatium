@@ -13,6 +13,7 @@ class Asset extends Model
         'user_id',
         'type',
         'path',
+        'thumb_path',
         'original_name',
         'mime',
         'size',

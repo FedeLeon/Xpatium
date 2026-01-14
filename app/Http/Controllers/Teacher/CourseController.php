@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -40,6 +41,8 @@ class CourseController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('courses', 'public');
+            $converted = ImageService::convertToWebp('public', $imagePath, 'courses');
+            $imagePath = $converted['path'];
         }
 
         $course = Course::create([
@@ -94,7 +97,9 @@ class CourseController extends Controller
             if ($course->image_path) {
                 Storage::disk('public')->delete($course->image_path);
             }
-            $course->image_path = $request->file('image')->store('courses', 'public');
+            $imagePath = $request->file('image')->store('courses', 'public');
+            $converted = ImageService::convertToWebp('public', $imagePath, 'courses');
+            $course->image_path = $converted['path'];
         }
 
         $course->fill([

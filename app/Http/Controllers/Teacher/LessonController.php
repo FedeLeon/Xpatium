@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Asset;
 use App\Models\Lesson;
 use App\Models\LessonContent;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -71,15 +72,33 @@ class LessonController extends Controller
         } elseif ($request->hasFile('file') && $data['type'] !== 'text') {
             $file = $request->file('file');
             $path = $file->store('assets/'.$request->user()->id.'/'.$data['type'], 'public');
+            $mime = $file->getClientMimeType();
+            $size = $file->getSize();
+
+            if ($data['type'] === 'image') {
+                $converted = ImageService::convertToWebp('public', $path, 'assets/'.$request->user()->id.'/image');
+                $path = $converted['path'];
+                $mime = $converted['mime'];
+                $size = $converted['size'];
+            }
 
             $asset = Asset::create([
                 'user_id' => $request->user()->id,
                 'type' => $data['type'],
                 'path' => $path,
                 'original_name' => $file->getClientOriginalName(),
-                'mime' => $file->getClientMimeType(),
-                'size' => $file->getSize(),
+                'mime' => $mime,
+                'size' => $size,
             ]);
+
+            $thumbDir = 'assets/'.$request->user()->id.'/thumbs';
+            if ($data['type'] === 'image') {
+                $asset->thumb_path = ImageService::createImageThumbWebp('public', $asset->path, $thumbDir);
+                $asset->save();
+            } elseif ($data['type'] === 'video') {
+                $asset->thumb_path = ImageService::createVideoThumbWebp('public', $asset->path, $thumbDir);
+                $asset->save();
+            }
 
             $assetId = $asset->id;
         } elseif ($data['type'] !== 'text') {

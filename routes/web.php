@@ -62,6 +62,8 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::delete('/lecciones/{lesson}', [CourseModuleController::class, 'destroyLesson'])->name('courses.lessons.destroy');
     Route::get('/gestor-contenidos', [ContentController::class, 'index'])->name('assets.index');
     Route::post('/gestor-contenidos', [ContentController::class, 'store'])->name('assets.store');
+    Route::post('/gestor-contenidos/chunk', [ContentController::class, 'uploadChunk'])->name('assets.chunk');
+    Route::delete('/gestor-contenidos/{asset}', [ContentController::class, 'destroy'])->name('assets.destroy');
     Route::get('/lecciones/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::post('/lecciones/{lesson}/contenido', [LessonController::class, 'storeContent'])->name('lessons.content.store');
     Route::get('/alumnos', [StudentController::class, 'index'])->name('students.index');
