@@ -39,7 +39,7 @@
                 <h3>Datos personales</h3>
                 <span class="subtle">Informacion de contacto y residencia.</span>
             </div>
-            <div class="profile-grid">
+            <div class="profile-grid profile-grid--two">
                 <div class="profile-field">
                     <label for="name">Nombre</label>
                     <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}">
@@ -84,25 +84,31 @@
                 <h3>Credenciales</h3>
                 <span class="subtle">Acceso y seguridad de la cuenta.</span>
             </div>
-            <div class="profile-grid">
+            <div class="profile-grid profile-grid--two">
                 <div class="profile-field">
                     <label for="email">Correo electronico</label>
-                    <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}">
+                    <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" autocomplete="off">
                 </div>
                 <div class="profile-field">
                     <label for="password">Nueva contrasena</label>
-                    <input id="password" name="password" type="password">
+                    <input id="password" name="password" type="password" autocomplete="new-password">
                 </div>
                 <div class="profile-field">
                     <label for="password_confirmation">Confirmar contrasena</label>
-                    <input id="password_confirmation" name="password_confirmation" type="password">
+                    <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password">
                 </div>
             </div>
         </div>
 
         <div class="actions profile-actions">
             <div></div>
-            <button class="btn btn-primary" type="submit">Guardar cambios</button>
+            @if (session('status'))
+                <button class="btn btn-success" type="submit">✓ Guardado</button>
+            @elseif ($errors->any())
+                <button class="btn btn-danger" type="submit">✕ Error al guardar</button>
+            @else
+                <button class="btn btn-primary" type="submit">Guardar cambios</button>
+            @endif
         </div>
     </form>
 @endsection

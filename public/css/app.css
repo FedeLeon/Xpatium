@@ -760,6 +760,18 @@ html[data-theme="dark"] .calendar-day {
     color: #1f2937;
 }
 
+.btn-success {
+    border-color: #16a34a;
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.btn-danger {
+    border-color: #dc2626;
+    background: #dc2626;
+    color: #ffffff;
+}
+
 .btn-primary {
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     border-color: transparent;
@@ -909,6 +921,10 @@ html[data-theme="dark"] .stat-value {
     grid-template-columns: 1fr;
 }
 
+.profile-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .profile-grid label {
     display: block;
     margin-bottom: 6px;
@@ -924,12 +940,28 @@ html[data-theme="dark"] .stat-value {
     font-size: 14px;
     background: #ffffff;
     color: #1f2937;
+    box-sizing: border-box;
 }
 
 html[data-theme="dark"] .profile-grid input {
     border-color: #1f2937;
     background: #0b1220;
     color: #e5e7eb;
+}
+
+.profile-grid input:-webkit-autofill,
+.profile-grid input:-webkit-autofill:hover,
+.profile-grid input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #1f2937;
+    box-shadow: 0 0 0 1000px #ffffff inset;
+    transition: background-color 9999s ease-out 0s;
+}
+
+html[data-theme="dark"] .profile-grid input:-webkit-autofill,
+html[data-theme="dark"] .profile-grid input:-webkit-autofill:hover,
+html[data-theme="dark"] .profile-grid input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e5e7eb;
+    box-shadow: 0 0 0 1000px #0b1220 inset;
 }
 
 .profile-field {
@@ -1054,6 +1086,10 @@ html[data-theme="dark"] .alert.alert-success {
 
     .profile-form {
         width: 100%;
+    }
+
+    .profile-grid--two {
+        grid-template-columns: 1fr;
     }
 }
 
