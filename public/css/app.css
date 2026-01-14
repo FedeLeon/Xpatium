@@ -751,12 +751,29 @@ html[data-theme="dark"] .calendar-day {
     color: #ffffff;
     text-decoration: none;
     font-weight: 600;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 
 .btn-secondary {
     border-color: #e5e7eb;
     background: #ffffff;
     color: #1f2937;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-color: transparent;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
 }
 
 .btn-icon {
@@ -884,6 +901,160 @@ html[data-theme="dark"] .stat-card {
 
 html[data-theme="dark"] .stat-value {
     color: #e5e7eb;
+}
+
+.profile-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr;
+}
+
+.profile-grid label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.profile-grid input {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    background: #ffffff;
+    color: #1f2937;
+}
+
+html[data-theme="dark"] .profile-grid input {
+    border-color: #1f2937;
+    background: #0b1220;
+    color: #e5e7eb;
+}
+
+.profile-field {
+    min-width: 0;
+}
+
+.profile-avatar {
+    display: grid;
+    gap: 10px;
+    align-items: start;
+    justify-items: center;
+    text-align: center;
+}
+
+.profile-avatar input[type="file"] {
+    display: none;
+}
+
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 999px;
+    border: 2px dashed #cbd5f5;
+    display: grid;
+    place-items: center;
+    position: relative;
+    cursor: pointer;
+    background: #f8fafc;
+    overflow: hidden;
+}
+
+html[data-theme="dark"] .avatar-circle {
+    border-color: #1f2937;
+    background: #0b1220;
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-circle span {
+    font-weight: 700;
+    color: #6b7280;
+    font-size: 24px;
+}
+
+.avatar-edit {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: #111827;
+    color: #ffffff;
+    font-size: 10px;
+    padding: 4px 6px;
+    border-radius: 999px;
+}
+
+.alert-success {
+    background: #ecfdf3;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+html[data-theme="dark"] .alert-success,
+html[data-theme="dark"] .alert.alert-success {
+    background: #052e16;
+    border-color: #14532d;
+    color: #bbf7d0;
+}
+
+.profile-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.profile-form {
+    display: grid;
+    gap: 18px;
+    width: min(70%, 960px);
+    margin: 0 auto;
+}
+
+.profile-card {
+    padding: 20px;
+    width: 100%;
+}
+
+.profile-grid input {
+    box-sizing: border-box;
+}
+
+.profile-card--compact {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.profile-card__title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.profile-actions {
+    margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+    .profile-card {
+        padding: 16px;
+    }
+
+    .profile-card__title {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-form {
+        width: 100%;
+    }
 }
 
 .notification-list {
@@ -1079,6 +1250,12 @@ html[data-theme="dark"] .alert {
     background: #3f1d1d;
     border-color: #7f1d1d;
     color: #fecaca;
+}
+
+.alert.alert-success {
+    background: #ecfdf3;
+    border-color: #bbf7d0;
+    color: #166534;
 }
 
 .subtle {
@@ -1390,8 +1567,7 @@ html[data-theme="dark"] .dropdown {
     border-color: #1f2937;
 }
 
-.menu-dropdown:focus-within .dropdown,
-.menu-dropdown:hover .dropdown {
+.menu-dropdown:focus-within .dropdown {
     display: block;
 }
 
@@ -1503,5 +1679,9 @@ html[data-theme="dark"] .dropdown button:hover {
     .admin-course__actions {
         width: 100%;
         flex-wrap: wrap;
+    }
+
+    .profile-grid-span {
+        grid-column: span 1;
     }
 }

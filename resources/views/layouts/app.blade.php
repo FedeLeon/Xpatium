@@ -55,7 +55,11 @@
                     <div class="menu-dropdown">
                         <button class="icon-btn" type="button" aria-label="Perfil">👤</button>
                         <div class="dropdown">
-                            <a href="#">Configuracion</a>
+                            @if ($role === \App\Models\User::ROLE_STUDENT)
+                                <a href="{{ route('student.profile.edit') }}">Perfil</a>
+                            @else
+                                <a href="#">Configuracion</a>
+                            @endif
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit">Cerrar sesion</button>
@@ -96,6 +100,7 @@
                                     <span class="badge badge-warn">{{ $notificationUnreadCount }}</span>
                                 @endif
                             </a>
+                            <a href="{{ route('student.profile.edit') }}">Perfil</a>
                             <a href="{{ route('chat.index') }}">
                                 Chat
                                 @if (!empty($chatUnreadCount))

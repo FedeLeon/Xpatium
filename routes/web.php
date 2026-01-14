@@ -85,4 +85,6 @@ Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')-
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
     Route::delete('/notificaciones/{notificationId}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notificaciones', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
+    Route::get('/perfil', [\App\Http\Controllers\Student\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/perfil', [\App\Http\Controllers\Student\ProfileController::class, 'update'])->name('profile.update');
 });
