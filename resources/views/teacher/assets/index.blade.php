@@ -72,17 +72,38 @@
         </div>
     </form>
 
-    <div class="assets-grid">
+    <form id="bulkDeleteForm" method="POST" action="{{ route('teacher.assets.bulkDestroy') }}">
+        @csrf
+        @method('DELETE')
+        <div class="assets-grid">
         @forelse ($assets as $asset)
-            <a class="asset-card asset-card--link" href="{{ asset('storage/' . $asset->path) }}" target="_blank" rel="noopener">
+            <div class="asset-card asset-card--link" data-card>
+                <label class="asset-check">
+                    <input type="checkbox" name="assets[]" value="{{ $asset->id }}" class="asset-selector">
+                    <span></span>
+                </label>
+                <a class="asset-card__link" href="{{ asset('storage/' . $asset->path) }}" target="_blank" rel="noopener">
                 <span class="asset-view-icon">🔍</span>
+                @php
+                    $ext = strtolower(pathinfo($asset->original_name, PATHINFO_EXTENSION));
+                    $fileLabel = match ($ext) {
+                        'pdf' => 'PDF',
+                        'doc', 'docx' => 'DOC',
+                        'xls', 'xlsx' => 'XLS',
+                        'ppt', 'pptx' => 'PPT',
+                        'zip', 'rar', '7z' => 'ZIP',
+                        'mp3', 'wav' => 'AUD',
+                        'mp4', 'mov', 'mkv', 'webm' => 'VID',
+                        default => strtoupper($ext ?: substr($asset->type, 0, 1)),
+                    };
+                @endphp
                 @if ($asset->thumb_path)
                     <img src="{{ asset('storage/' . $asset->thumb_path) }}" alt="Miniatura" class="asset-thumb">
                 @elseif ($asset->type === 'image')
                     <img src="{{ asset('storage/' . $asset->path) }}" alt="Imagen" class="asset-thumb">
                 @else
                     <div class="asset-placeholder asset-thumb">
-                        <span>{{ strtoupper(substr($asset->type, 0, 1)) }}</span>
+                        <span class="file-icon file-icon--{{ strtolower($fileLabel) }}">{{ $fileLabel }}</span>
                     </div>
                 @endif
                 @php
@@ -103,18 +124,19 @@
                         <span class="badge badge-warn">Sin miniatura</span>
                     @endif
                 </div>
-                <form method="POST" action="{{ route('teacher.assets.destroy', $asset) }}" data-confirm="Se eliminara el archivo y su miniatura." onclick="event.stopPropagation();">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-secondary btn-icon asset-delete" type="submit">
-                        <span>🗑️</span>
-                        <span>Eliminar</span>
-                    </button>
-                </form>
-            </a>
+                </a>
+            </div>
         @empty
             <p class="subtle">No hay archivos subidos todavia.</p>
         @endforelse
+        </div>
+    </form>
+
+    <div class="bulk-actions">
+        <button class="btn btn-secondary" type="submit" form="bulkDeleteForm" data-confirm="Se eliminaran los archivos seleccionados.">
+            <span>🗑️</span>
+            <span>Eliminar seleccionados</span>
+        </button>
     </div>
 
     <div class="pagination-wrapper">
@@ -136,8 +158,10 @@
             forceChunking: true,
             chunkSize: 5 * 1024 * 1024,
             timeout: 0,
-            parallelChunkUploads: true,
-            parallelUploads: 2,
+            parallelChunkUploads: false,
+            parallelUploads: 1,
+            retryChunks: true,
+            retryChunksLimit: 3,
             maxFilesize: 1024,
             clickable: '#selectFilesBtn',
             previewsContainer: null
@@ -163,6 +187,12 @@
         dz.on('queuecomplete', function () {
             etaEl.textContent = '';
             window.location.reload();
+        });
+
+        dz.on('complete', function () {
+            if (dz.getQueuedFiles().length > 0 && dz.getUploadingFiles().length === 0) {
+                dz.processQueue();
+            }
         });
 
         function human(sec) {

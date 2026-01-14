@@ -384,6 +384,13 @@ html[data-theme="dark"] .filters select {
     color: inherit;
 }
 
+.asset-card__link {
+    display: grid;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+}
+
 html[data-theme="dark"] .asset-card {
     background: #111827;
     border-color: #1f2937;
@@ -408,6 +415,31 @@ html[data-theme="dark"] .asset-card {
     font-weight: 700;
 }
 
+.file-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.file-icon--pdf { background: #fee2e2; color: #991b1b; }
+.file-icon--doc { background: #dbeafe; color: #1e40af; }
+.file-icon--xls { background: #dcfce7; color: #166534; }
+.file-icon--ppt { background: #ffedd5; color: #9a3412; }
+.file-icon--zip { background: #fef9c3; color: #854d0e; }
+.file-icon--aud { background: #ede9fe; color: #5b21b6; }
+.file-icon--vid { background: #d1fae5; color: #065f46; }
+
+html[data-theme="dark"] .file-icon {
+    background: #1f2937;
+    color: #e5e7eb;
+}
+
 html[data-theme="dark"] .asset-placeholder {
     background: #0b1220;
     color: #9ca3af;
@@ -423,9 +455,6 @@ html[data-theme="dark"] .asset-placeholder {
     font-size: 13px;
 }
 
-.asset-delete {
-    justify-self: start;
-}
 
 .asset-card--link:hover {
     border-color: #2563eb;
@@ -450,6 +479,47 @@ html[data-theme="dark"] .asset-placeholder {
 
 .asset-card--link:hover .asset-view-icon {
     opacity: 1;
+}
+
+.asset-check {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+.asset-check input {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid #cbd5f5;
+    background: #ffffff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.asset-check input:checked {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.asset-check input:checked::after {
+    content: "✓";
+    color: #ffffff;
+    font-size: 12px;
+}
+
+html[data-theme="dark"] .asset-check input {
+    background: #111827;
+    border-color: #1f2937;
+}
+
+.bulk-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .info-bubble {

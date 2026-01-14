@@ -77,6 +77,30 @@ class ContentController extends Controller
         return redirect()->route('teacher.assets.index');
     }
 
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'assets' => ['required', 'array'],
+            'assets.*' => ['integer'],
+        ]);
+
+        $assets = Asset::where('user_id', $request->user()->id)
+            ->whereIn('id', $data['assets'])
+            ->get();
+
+        foreach ($assets as $asset) {
+            if ($asset->path) {
+                Storage::disk('public')->delete($asset->path);
+            }
+            if ($asset->thumb_path) {
+                Storage::disk('public')->delete($asset->thumb_path);
+            }
+            $asset->delete();
+        }
+
+        return redirect()->route('teacher.assets.index');
+    }
+
     public function uploadChunk(Request $request): JsonResponse
     {
         $handlerClass = HandlerFactory::classFromRequest($request);
