@@ -9,32 +9,143 @@
         <a class="btn btn-secondary" href="{{ route('teacher.courses.modules.index', $course) }}">Volver</a>
     </div>
 
-    <div class="actions">
-        <button class="btn" type="button" onclick="document.getElementById('textModal').showModal()">Texto</button>
-        <button class="btn" type="button" onclick="document.getElementById('imageModal').showModal()">Imagen</button>
-        <button class="btn" type="button" onclick="document.getElementById('videoModal').showModal()">Video</button>
-        <button class="btn" type="button" onclick="document.getElementById('fileModal').showModal()">Archivo</button>
-    </div>
+    @php
+        $preview = $lesson->contents->groupBy('type');
+    @endphp
 
-    <div class="card">
-        <h3>Contenido</h3>
-        @if ($lesson->contents->isEmpty())
-            <p class="subtle">Todavia no hay contenido cargado.</p>
-        @else
-            <div class="list">
-                @foreach ($lesson->contents as $content)
+    <div class="teacher-lesson-layout">
+        <aside class="teacher-lesson-tools card">
+            <h3>Agregar contenido</h3>
+            <div class="tool-grid">
+                <button class="tool-btn" type="button" onclick="document.getElementById('textModal').showModal()">
+                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 6h14M9 6v12m-4 0h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Texto</span>
+                </button>
+                <button class="tool-btn" type="button" onclick="document.getElementById('imageModal').showModal()">
+                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 6h16v12H4zM8 10l3 3 3-4 4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                    </svg>
+                    <span>Imagen</span>
+                </button>
+                <button class="tool-btn" type="button" onclick="document.getElementById('videoModal').showModal()">
+                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 6h10v12H4zM14 10l6-3v10l-6-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Video</span>
+                </button>
+                <button class="tool-btn" type="button" onclick="document.getElementById('fileModal').showModal()">
+                    <svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M8 4h6l4 4v12H8zM14 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Archivo</span>
+                </button>
+            </div>
+        </aside>
+
+        <section class="teacher-lesson-preview">
+            <div class="card preview-card">
+                <div class="preview-header">
+                    <h3>Vista previa de la leccion</h3>
+                    <span class="badge">Asi lo ve el alumno</span>
+                </div>
+
+                <div class="list">
                     <div class="card">
-                        <div class="badge">{{ strtoupper($content->type) }}</div>
-                        @if ($content->type === 'text')
-                            <p>{{ $content->text_content }}</p>
-                        @elseif ($content->asset)
-                            <p>{{ $content->asset->original_name }}</p>
-                            <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
+                        <h3>Video</h3>
+                        @if (($preview['video'] ?? collect())->isEmpty())
+                            <p class="subtle">No hay video.</p>
+                        @else
+                            @foreach ($preview['video'] as $content)
+                                @if ($content->asset)
+                                    <video class="lesson-video" controls>
+                                        <source src="{{ asset('storage/' . $content->asset->path) }}" type="{{ $content->asset->mime }}">
+                                    </video>
+                                @endif
+                            @endforeach
                         @endif
                     </div>
-                @endforeach
+
+                    <div class="card">
+                        <h3>Imagenes</h3>
+                        @if (($preview['image'] ?? collect())->isEmpty())
+                            <p class="subtle">No hay imagenes.</p>
+                        @else
+                            <div class="grid">
+                                @foreach ($preview['image'] as $content)
+                                    @if ($content->asset)
+                                        <a class="content-image-link" href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">
+                                            <img class="content-image" src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
+                                        </a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="card">
+                        <h3>Archivos</h3>
+                        @if (($preview['file'] ?? collect())->isEmpty())
+                            <p class="subtle">No hay archivos.</p>
+                        @else
+                            <div class="asset-list preview-file-list">
+                                @foreach ($preview['file'] as $content)
+                                    @if ($content->asset)
+                                        @php
+                                            $ext = strtolower(pathinfo($content->asset->original_name, PATHINFO_EXTENSION));
+                                            $extLabel = $ext ? strtoupper($ext) : 'FILE';
+                                            $iconMap = [
+                                                'pdf' => 'pdf',
+                                                'doc' => 'word',
+                                                'docx' => 'word',
+                                                'xls' => 'table',
+                                                'xlsx' => 'table',
+                                                'csv' => 'table',
+                                                'ppt' => 'powerpoint',
+                                                'pptx' => 'powerpoint',
+                                                'zip' => 'zip',
+                                                'rar' => 'zip',
+                                                '7z' => 'zip',
+                                                'mp3' => 'audio',
+                                                'wav' => 'audio',
+                                                'ogg' => 'audio',
+                                                'flac' => 'audio',
+                                                'txt' => 'document',
+                                                'md' => 'document',
+                                                'rtf' => 'document',
+                                            ];
+                                            $iconName = $iconMap[$ext] ?? 'document';
+                                        @endphp
+                                        <div class="asset-item preview-file-item">
+                                            <img class="file-icon-img preview-file-icon" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ $extLabel }}">
+                                            <div class="preview-file-meta">
+                                                <span class="preview-file-name">{{ $content->asset->original_name }}</span>
+                                                <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="card">
+                        <h3>Textos</h3>
+                        @if (($preview['text'] ?? collect())->isEmpty())
+                            <p class="subtle">No hay textos.</p>
+                        @else
+                            <div class="list">
+                                @foreach ($preview['text'] as $content)
+                                    <p>{{ $content->text_content }}</p>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
-        @endif
+        </section>
     </div>
 
     <dialog id="textModal">
@@ -69,11 +180,12 @@
             <div class="modal-body form-grid">
                 <div>
                     <label>Imagenes ya subidas</label>
-                    <div class="asset-list">
+                    <div class="asset-list asset-grid">
                         @forelse (($assets['image'] ?? collect()) as $asset)
-                            <label class="asset-item">
+                            <label class="asset-item asset-item--grid">
                                 <input type="radio" name="asset_id" value="{{ $asset->id }}">
-                                <span>{{ $asset->original_name }}</span>
+                                <img class="asset-thumb" src="{{ asset('storage/' . ($asset->thumb_path ?: $asset->path)) }}" alt="Miniatura de imagen">
+                                <span class="asset-item__name">{{ $asset->original_name }}</span>
                             </label>
                         @empty
                             <p class="subtle">Sin imagenes.</p>
@@ -103,11 +215,16 @@
             <div class="modal-body form-grid">
                 <div>
                     <label>Videos ya subidos</label>
-                    <div class="asset-list">
+                    <div class="asset-list asset-grid">
                         @forelse (($assets['video'] ?? collect()) as $asset)
-                            <label class="asset-item">
+                            <label class="asset-item asset-item--grid">
                                 <input type="radio" name="asset_id" value="{{ $asset->id }}">
-                                <span>{{ $asset->original_name }}</span>
+                                @if ($asset->thumb_path)
+                                    <img class="asset-thumb" src="{{ asset('storage/' . $asset->thumb_path) }}" alt="Miniatura de video">
+                                @else
+                                    <span class="asset-thumb asset-thumb--fallback">VIDEO</span>
+                                @endif
+                                <span class="asset-item__name">{{ $asset->original_name }}</span>
                             </label>
                         @empty
                             <p class="subtle">Sin videos.</p>
@@ -137,11 +254,37 @@
             <div class="modal-body form-grid">
                 <div>
                     <label>Archivos ya subidos</label>
-                    <div class="asset-list">
+                    <div class="asset-list asset-grid">
                         @forelse (($assets['file'] ?? collect()) as $asset)
-                            <label class="asset-item">
+                            <label class="asset-item asset-item--grid">
                                 <input type="radio" name="asset_id" value="{{ $asset->id }}">
-                                <span>{{ $asset->original_name }}</span>
+                                @php
+                                    $ext = strtolower(pathinfo($asset->original_name, PATHINFO_EXTENSION));
+                                    $extLabel = $ext ? strtoupper($ext) : 'FILE';
+                                    $iconMap = [
+                                        'pdf' => 'pdf',
+                                        'doc' => 'word',
+                                        'docx' => 'word',
+                                        'xls' => 'table',
+                                        'xlsx' => 'table',
+                                        'csv' => 'table',
+                                        'ppt' => 'powerpoint',
+                                        'pptx' => 'powerpoint',
+                                        'zip' => 'zip',
+                                        'rar' => 'zip',
+                                        '7z' => 'zip',
+                                        'mp3' => 'audio',
+                                        'wav' => 'audio',
+                                        'ogg' => 'audio',
+                                        'flac' => 'audio',
+                                        'txt' => 'document',
+                                        'md' => 'document',
+                                        'rtf' => 'document',
+                                    ];
+                                    $iconName = $iconMap[$ext] ?? 'document';
+                                @endphp
+                                <img class="file-icon-img" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ $extLabel }}">
+                                <span class="asset-item__name">{{ $asset->original_name }}</span>
                             </label>
                         @empty
                             <p class="subtle">Sin archivos.</p>

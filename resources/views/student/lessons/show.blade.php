@@ -49,13 +49,15 @@
                     @if (($contents['image'] ?? collect())->isEmpty())
                         <p class="subtle">No hay imagenes.</p>
                     @else
-                        <div class="grid">
-                            @foreach ($contents['image'] as $content)
-                                @if ($content->asset)
-                                    <img src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
-                                @endif
-                            @endforeach
-                        </div>
+                    <div class="grid">
+                        @foreach ($contents['image'] as $content)
+                            @if ($content->asset)
+                                <a class="content-image-link" href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">
+                                    <img class="content-image" src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
                     @endif
                 </div>
 
@@ -64,16 +66,44 @@
                     @if (($contents['file'] ?? collect())->isEmpty())
                         <p class="subtle">No hay archivos.</p>
                     @else
-                        <div class="asset-list">
-                            @foreach ($contents['file'] as $content)
-                                @if ($content->asset)
-                                    <div class="asset-item">
-                                        <span>{{ $content->asset->original_name }}</span>
-                                        <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
-                                    </div>
-                                @endif
-                            @endforeach
+            <div class="asset-list preview-file-list">
+                @foreach ($contents['file'] as $content)
+                    @if ($content->asset)
+                        @php
+                            $ext = strtolower(pathinfo($content->asset->original_name, PATHINFO_EXTENSION));
+                            $extLabel = $ext ? strtoupper($ext) : 'FILE';
+                            $iconMap = [
+                                'pdf' => 'pdf',
+                                'doc' => 'word',
+                                'docx' => 'word',
+                                'xls' => 'table',
+                                'xlsx' => 'table',
+                                'csv' => 'table',
+                                'ppt' => 'powerpoint',
+                                'pptx' => 'powerpoint',
+                                'zip' => 'zip',
+                                'rar' => 'zip',
+                                '7z' => 'zip',
+                                'mp3' => 'audio',
+                                'wav' => 'audio',
+                                'ogg' => 'audio',
+                                'flac' => 'audio',
+                                'txt' => 'document',
+                                'md' => 'document',
+                                'rtf' => 'document',
+                            ];
+                            $iconName = $iconMap[$ext] ?? 'document';
+                        @endphp
+                        <div class="asset-item preview-file-item">
+                            <img class="file-icon-img preview-file-icon" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ $extLabel }}">
+                            <div class="preview-file-meta">
+                                <span class="preview-file-name">{{ $content->asset->original_name }}</span>
+                                <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
+                            </div>
                         </div>
+                    @endif
+                @endforeach
+            </div>
                     @endif
                 </div>
 
