@@ -480,13 +480,40 @@ html[data-theme="dark"] .asset-card {
     color: #111827;
 }
 
-.file-icon--pdf { background: #fee2e2; color: #991b1b; }
-.file-icon--doc { background: #dbeafe; color: #1e40af; }
-.file-icon--xls { background: #dcfce7; color: #166534; }
-.file-icon--ppt { background: #ffedd5; color: #9a3412; }
-.file-icon--zip { background: #fef9c3; color: #854d0e; }
-.file-icon--aud { background: #ede9fe; color: #5b21b6; }
-.file-icon--vid { background: #d1fae5; color: #065f46; }
+.file-icon--pdf {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.file-icon--doc {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.file-icon--xls {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.file-icon--ppt {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.file-icon--zip {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.file-icon--aud {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.file-icon--vid {
+    background: #d1fae5;
+    color: #065f46;
+}
 
 html[data-theme="dark"] .file-icon {
     background: #1f2937;
@@ -788,6 +815,7 @@ html[data-theme="dark"] .modal-footer {
 }
 
 @media (max-width: 1024px) {
+
     .dashboard-grid--teacher .widget,
     .dashboard-grid--teacher .widget--metrics,
     .dashboard-grid--teacher .widget--clock {
@@ -801,6 +829,7 @@ html[data-theme="dark"] .modal-footer {
     gap: 16px;
     grid-template-columns: repeat(auto-fit, minmax(200px, 240px));
     justify-content: start;
+    margin-bottom: 20px;
 }
 
 .dashboard-card {
@@ -832,10 +861,12 @@ html[data-theme="dark"] .dashboard-card--alert {
 }
 
 @keyframes announcementPulse {
+
     0%,
     100% {
         box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.28), 0 18px 30px rgba(15, 23, 42, 0.2);
     }
+
     50% {
         box-shadow: 0 0 0 6px rgba(250, 204, 21, 0.22), 0 22px 36px rgba(15, 23, 42, 0.24);
     }

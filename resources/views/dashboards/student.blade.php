@@ -15,7 +15,6 @@
                     <h3>Mis cursos</h3>
                     <p class="subtle">Total de cursos habilitados.</p>
                 </div>
-                <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Ver cursos activos</a>
             </div>
 
             <div class="stat-card">
@@ -24,6 +23,8 @@
                     <span class="stat-value">{{ $courses->count() }}</span>
                 </div>
             </div>
+
+            <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Ver cursos</a>
         </div>
 
         <div class="card dashboard-card {{ $hasUnreadAnnouncements ? 'dashboard-card--alert' : '' }}">
