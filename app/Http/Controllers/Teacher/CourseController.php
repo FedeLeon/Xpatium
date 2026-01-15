@@ -15,6 +15,7 @@ class CourseController extends Controller
     public function index(Request $request): View
     {
         $courses = Course::where('user_id', $request->user()->id)
+            ->withCount(['modules', 'lessons'])
             ->latest()
             ->get();
 

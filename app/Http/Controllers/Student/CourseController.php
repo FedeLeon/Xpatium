@@ -22,6 +22,7 @@ class CourseController extends Controller
             $courses = $request->user()
                 ->enrolledCourses()
                 ->where('courses.user_id', $profile->teacher_id)
+                ->withCount('modules')
                 ->latest('courses.created_at')
                 ->get();
         }

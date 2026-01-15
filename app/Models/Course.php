@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CourseModule;
+use App\Models\Lesson;
 
 class Course extends Model
 {
@@ -33,6 +34,11 @@ class Course extends Model
     public function modules()
     {
         return $this->hasMany(CourseModule::class);
+    }
+
+    public function lessons()
+    {
+        return $this->hasManyThrough(Lesson::class, CourseModule::class, 'course_id', 'module_id');
     }
 
     public function students()

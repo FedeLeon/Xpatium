@@ -23,11 +23,15 @@
             </div>
             <div class="profile-avatar">
                 <label class="avatar-circle" for="avatar">
-                    @if ($user->avatar_path)
-                        <img src="{{ asset('storage/' . $user->avatar_path) }}" alt="Foto de perfil">
-                    @else
-                        <span>{{ strtoupper(substr($user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}</span>
-                    @endif
+                    <img
+                        id="avatar-preview"
+                        src="{{ $user->avatar_path ? asset('storage/' . $user->avatar_path) : '' }}"
+                        alt="Foto de perfil"
+                        class="{{ $user->avatar_path ? '' : 'is-hidden' }}"
+                    >
+                    <span id="avatar-initials" class="{{ $user->avatar_path ? 'is-hidden' : '' }}">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
+                    </span>
                 </label>
                 <input id="avatar" name="avatar" type="file" accept="image/*">
                 <p class="subtle">Hace clic en el circulo para subir una imagen.</p>
@@ -111,4 +115,31 @@
             @endif
         </div>
     </form>
+
+    <script>
+        (function () {
+            var input = document.getElementById('avatar');
+            var preview = document.getElementById('avatar-preview');
+            var initials = document.getElementById('avatar-initials');
+            if (!input || !preview || !initials) {
+                return;
+            }
+            input.addEventListener('change', function (event) {
+                var file = event.target.files && event.target.files[0];
+                if (!file) {
+                    preview.classList.add('is-hidden');
+                    preview.removeAttribute('src');
+                    initials.classList.remove('is-hidden');
+                    return;
+                }
+                var url = URL.createObjectURL(file);
+                preview.onload = function () {
+                    URL.revokeObjectURL(url);
+                };
+                preview.src = url;
+                preview.classList.remove('is-hidden');
+                initials.classList.add('is-hidden');
+            });
+        })();
+    </script>
 @endsection
