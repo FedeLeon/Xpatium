@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,7 +16,11 @@ class NotificationController extends Controller
             ->latest()
             ->get();
 
-        return view('student.notifications.index', compact('notifications'));
+        $view = $request->user()->role === User::ROLE_TEACHER
+            ? 'teacher.notifications.index'
+            : 'student.notifications.index';
+
+        return view($view, compact('notifications'));
     }
 
     public function destroy(Request $request, string $notificationId): RedirectResponse

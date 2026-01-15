@@ -101,6 +101,9 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::post('/reuniones', [TeacherMeetingController::class, 'store'])->name('meetings.store');
     Route::get('/reuniones/{meeting}', [MeetingRoomController::class, 'show'])->name('meetings.show');
     Route::delete('/reuniones/{meeting}', [TeacherMeetingController::class, 'destroy'])->name('meetings.destroy');
+    Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::delete('/notificaciones/{notificationId}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notificaciones', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
     Route::get('/perfil', [ProfileController::class, 'edit'])
         ->defaults('update_route', 'teacher.profile.update')
         ->name('profile.edit');

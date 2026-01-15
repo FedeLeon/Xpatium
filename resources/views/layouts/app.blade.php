@@ -17,7 +17,7 @@
             <header>
                 <div class="logo">Xpatium</div>
                 <div class="header-actions">
-                    @if ($role === \App\Models\User::ROLE_STUDENT)
+                    @if ($role === \App\Models\User::ROLE_STUDENT || $role === \App\Models\User::ROLE_TEACHER)
                         <div class="menu-dropdown icon-badge">
                             <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
                             @if (!empty($notificationUnreadCount))
@@ -25,7 +25,16 @@
                             @endif
                             <div class="dropdown">
                                 <strong class="dropdown-title">Notificaciones</strong>
-                                <a class="dropdown-item" href="{{ route('student.notifications.index') }}">Tienes un nuevo mensaje</a>
+                                @php
+                                    $notificationsRoute = $role === \App\Models\User::ROLE_TEACHER
+                                        ? 'teacher.notifications.index'
+                                        : 'student.notifications.index';
+                                @endphp
+                                @if (!empty($notificationUnreadCount))
+                                    <a class="dropdown-item" href="{{ route($notificationsRoute) }}">Tienes una nueva notificacion</a>
+                                @else
+                                    <div class="dropdown-empty">Sin notificaciones</div>
+                                @endif
                             </div>
                         </div>
                     @else
@@ -93,6 +102,12 @@
                             <a href="{{ route('teacher.meetings.index') }}">Reuniones</a>
                             <a href="{{ route('teacher.assets.index') }}">Gestor de contenidos</a>
                             <a href="{{ route('teacher.students.index') }}">Alumnos</a>
+                            <a href="{{ route('teacher.notifications.index') }}">
+                                Notificaciones
+                                @if (!empty($notificationUnreadCount))
+                                    <span class="badge badge-warn">{{ $notificationUnreadCount }}</span>
+                                @endif
+                            </a>
                             <a href="{{ route('teacher.profile.edit') }}">Perfil</a>
                             <a href="{{ route('chat.index') }}">
                                 Chat
