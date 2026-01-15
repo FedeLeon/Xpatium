@@ -12,6 +12,7 @@ use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\StudentController;
 use App\Http\Controllers\Admin\ErrorLogController;
 use App\Http\Controllers\Teacher\MeetingController as TeacherMeetingController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
 use App\Http\Controllers\Student\LessonController as StudentLessonController;
 use App\Http\Controllers\Student\AnnouncementController as StudentAnnouncementController;
@@ -100,6 +101,10 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::post('/reuniones', [TeacherMeetingController::class, 'store'])->name('meetings.store');
     Route::get('/reuniones/{meeting}', [MeetingRoomController::class, 'show'])->name('meetings.show');
     Route::delete('/reuniones/{meeting}', [TeacherMeetingController::class, 'destroy'])->name('meetings.destroy');
+    Route::get('/perfil', [ProfileController::class, 'edit'])
+        ->defaults('update_route', 'teacher.profile.update')
+        ->name('profile.edit');
+    Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')->group(function () {
@@ -116,3 +121,11 @@ Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')-
     Route::get('/reuniones', [StudentMeetingController::class, 'index'])->name('meetings.index');
     Route::get('/reuniones/{meeting}', [MeetingRoomController::class, 'show'])->name('meetings.show');
 });
+
+Route::get('/admin/perfil', [ProfileController::class, 'edit'])
+    ->defaults('update_route', 'admin.profile.update')
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.profile.edit');
+Route::put('/admin/perfil', [ProfileController::class, 'update'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.profile.update');

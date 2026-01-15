@@ -12,7 +12,7 @@
         <div class="alert alert-success">{{ session('status') }}</div>
     @endif
 
-    <form class="profile-form" method="POST" action="{{ route('student.profile.update') }}" enctype="multipart/form-data">
+    <form class="profile-form" method="POST" action="{{ route($updateRouteName ?? 'student.profile.update') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 

@@ -57,11 +57,15 @@
                     <div class="menu-dropdown">
                         <button class="icon-btn" type="button" aria-label="Perfil">👤</button>
                         <div class="dropdown">
-                            @if ($role === \App\Models\User::ROLE_STUDENT)
-                                <a href="{{ route('student.profile.edit') }}">Perfil</a>
-                            @else
-                                <a href="#">Configuracion</a>
-                            @endif
+                            @php
+                                $profileRoute = match ($role) {
+                                    \App\Models\User::ROLE_ADMIN => 'admin.profile.edit',
+                                    \App\Models\User::ROLE_TEACHER => 'teacher.profile.edit',
+                                    \App\Models\User::ROLE_STUDENT => 'student.profile.edit',
+                                    default => 'home',
+                                };
+                            @endphp
+                            <a href="{{ route($profileRoute) }}">Perfil</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit">Cerrar sesion</button>
@@ -89,6 +93,7 @@
                             <a href="{{ route('teacher.meetings.index') }}">Reuniones</a>
                             <a href="{{ route('teacher.assets.index') }}">Gestor de contenidos</a>
                             <a href="{{ route('teacher.students.index') }}">Alumnos</a>
+                            <a href="{{ route('teacher.profile.edit') }}">Perfil</a>
                             <a href="{{ route('chat.index') }}">
                                 Chat
                                 @if (!empty($chatUnreadCount))
