@@ -41,7 +41,10 @@
         @endphp
         <div class="app">
             <header>
-                <div class="logo">Xpatium</div>
+                <div class="logo">
+                    <img src="{{ asset('logo.png') }}" alt="Logo Xpatium" class="logo-mark logo-mark--inline">
+                    <span class="logo-text">patium</span>
+                </div>
                 <div class="header-actions">
                     @if ($role === \App\Models\User::ROLE_STUDENT || $role === \App\Models\User::ROLE_TEACHER)
                         <div class="menu-dropdown icon-badge">

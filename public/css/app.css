@@ -44,6 +44,28 @@ html[data-theme="dark"] header {
 .logo {
     font-weight: 700;
     letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.logo-mark {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block;
+}
+
+.logo-mark--inline {
+    width: 40px;
+    height: 40px;
+    margin-right: -12px;
+}
+
+.logo-text {
+    font-size: 18px;
+    letter-spacing: 0.3px;
+    line-height: 1;
 }
 
 .header-actions {
