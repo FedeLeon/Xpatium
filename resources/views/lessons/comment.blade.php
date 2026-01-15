@@ -1,10 +1,17 @@
 @php
     $indent = $level > 5 ? 5 : $level;
     $initial = strtoupper(substr($comment->user->name ?? 'A', 0, 1));
+    $avatarUrl = $comment->user?->avatar_path ? asset('storage/' . $comment->user->avatar_path) : null;
 @endphp
 <div id="comment-{{ $comment->id }}" class="comment-thread comment-level-{{ $indent }}">
     <div class="comment-card">
-        <div class="comment-avatar">{{ $initial }}</div>
+        <div class="comment-avatar">
+            @if ($avatarUrl)
+                <img src="{{ $avatarUrl }}" alt="Avatar de {{ $comment->user->name ?? 'usuario' }}">
+            @else
+                {{ $initial }}
+            @endif
+        </div>
         <div class="comment-body">
             <div class="comment-bubble">
                 <strong>{{ $comment->user->name }}</strong>

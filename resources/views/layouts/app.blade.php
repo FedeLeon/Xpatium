@@ -11,7 +11,10 @@
     </head>
     <body>
         @php
-            $role = auth()->user()?->role;
+            $currentUser = auth()->user();
+            $role = $currentUser?->role;
+            $avatarUrl = $currentUser?->avatar_path ? asset('storage/' . $currentUser->avatar_path) : null;
+            $avatarInitial = strtoupper(substr($currentUser?->name ?? 'U', 0, 1));
         @endphp
         <div class="app">
             <header>
@@ -64,7 +67,13 @@
                     @endif
                     <button class="icon-btn" type="button" id="theme-toggle" aria-label="Cambiar tema" aria-pressed="false">🌙</button>
                     <div class="menu-dropdown">
-                        <button class="icon-btn" type="button" aria-label="Perfil">👤</button>
+                        <button class="icon-btn icon-btn--avatar" type="button" aria-label="Perfil">
+                            @if ($avatarUrl)
+                                <img src="{{ $avatarUrl }}" alt="Foto de perfil">
+                            @else
+                                <span class="avatar-initials">{{ $avatarInitial }}</span>
+                            @endif
+                        </button>
                         <div class="dropdown">
                             @php
                                 $profileRoute = match ($role) {

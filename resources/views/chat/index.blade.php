@@ -26,12 +26,23 @@
                 @foreach ($conversations as $conversation)
                     @php
                         $lastMessage = $conversation->messages->first();
+                        $otherParticipant = $conversation->participants->where('id', '!=', $currentUser->id)->first();
                         $title = $conversation->type === \App\Models\Conversation::TYPE_GROUP
                             ? ($conversation->title ?: 'Grupo sin titulo')
-                            : $conversation->participants->where('id', '!=', $currentUser->id)->first()?->name;
+                            : $otherParticipant?->name;
+                        $avatarUrl = $conversation->type === \App\Models\Conversation::TYPE_GROUP
+                            ? null
+                            : ($otherParticipant?->avatar_path ? asset('storage/' . $otherParticipant->avatar_path) : null);
+                        $avatarInitial = strtoupper(substr($title ?? 'C', 0, 1));
                     @endphp
                     <a class="chat-item {{ $activeConversation && $activeConversation->id === $conversation->id ? 'chat-item--active' : '' }}" href="{{ route('chat.show', $conversation) }}">
-                        <div class="chat-avatar">{{ strtoupper(substr($title ?? 'C', 0, 1)) }}</div>
+                        <div class="chat-avatar">
+                            @if ($avatarUrl)
+                                <img src="{{ $avatarUrl }}" alt="Avatar de {{ $title ?? 'usuario' }}">
+                            @else
+                                {{ $avatarInitial }}
+                            @endif
+                        </div>
                         <div class="chat-item__content">
                             <strong>{{ $title }}</strong>
                             @if ($lastMessage)

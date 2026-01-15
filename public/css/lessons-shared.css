@@ -222,10 +222,18 @@ html[data-theme="dark"] .completion-toggle__box {
     justify-content: center;
     font-size: 14px;
     flex-shrink: 0;
+    overflow: hidden;
 }
 
 html[data-theme="dark"] .comment-avatar {
     background: #1d4ed8;
+}
+
+.comment-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .comment-body {
