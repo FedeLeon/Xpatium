@@ -111,6 +111,7 @@
                             </a>
                         @elseif ($role === \App\Models\User::ROLE_ADMIN)
                             <a href="{{ route('admin.plans.index') }}">Gestion de planes</a>
+                            <a href="{{ route('admin.errors.index') }}">Errores del sistema</a>
                         @endif
                     </nav>
                 </aside>
@@ -166,5 +167,6 @@
                 });
             });
         </script>
+        @include('partials.alerts')
     </body>
 </html>

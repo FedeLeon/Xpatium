@@ -12,8 +12,18 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showLogin(): View
+    public function showLogin(Request $request): View|RedirectResponse
     {
+        if (Auth::check()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()
+                ->route('login')
+                ->with('status', 'Se cerro tu sesion anterior. Ingresa nuevamente.');
+        }
+
         return view('auth.login');
     }
 

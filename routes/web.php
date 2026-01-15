@@ -10,6 +10,7 @@ use App\Http\Controllers\Teacher\ContentController;
 use App\Http\Controllers\Teacher\AnnouncementController;
 use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\StudentController;
+use App\Http\Controllers\Admin\ErrorLogController;
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
 use App\Http\Controllers\Student\LessonController as StudentLessonController;
 use App\Http\Controllers\Student\AnnouncementController as StudentAnnouncementController;
@@ -17,8 +18,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'landing')->name('home');
 
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     Route::get('/registro', [AuthController::class, 'showRegisterRole'])->name('register');
     Route::post('/registro/rol', [AuthController::class, 'storeRegisterRole'])->name('register.role');
@@ -48,6 +50,12 @@ Route::get('/admin/planes', [\App\Http\Controllers\Admin\PlanController::class, 
 Route::put('/admin/planes/{user}', [\App\Http\Controllers\Admin\PlanController::class, 'update'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.plans.update');
+Route::get('/admin/errores', [ErrorLogController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.errors.index');
+Route::get('/admin/errores/{errorLog}', [ErrorLogController::class, 'show'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.errors.show');
 Route::get('/profesor', [\App\Http\Controllers\Teacher\DashboardController::class, 'index'])
     ->middleware(['auth', 'role:teacher'])
     ->name('teacher.dashboard');

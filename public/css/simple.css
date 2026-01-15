@@ -18,6 +18,26 @@ main {
     border-radius: 12px;
 }
 
+a.btn,
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn.btn-secondary {
+    background: #ffffff;
+    color: #1f2937;
+}
+
 @media (max-width: 640px) {
     main {
         margin: 20px 12px;

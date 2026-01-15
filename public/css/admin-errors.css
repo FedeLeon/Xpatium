@@ -1,0 +1,44 @@
+.table-scroll {
+    overflow-x: auto;
+}
+
+.error-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.error-grid strong,
+.error-block strong {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+html[data-theme="dark"] .error-grid strong,
+html[data-theme="dark"] .error-block strong {
+    color: #9ca3af;
+}
+
+.error-detail p {
+    margin: 0;
+}
+
+.error-block {
+    margin-top: 16px;
+}
+
+.error-block pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 14px;
+    border-radius: 12px;
+    overflow: auto;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}

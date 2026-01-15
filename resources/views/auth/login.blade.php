@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Iniciar sesion</title>
         <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
         <main>
@@ -48,5 +49,6 @@
                 <a href="{{ route('register') }}">Registrate</a>
             </p>
         </main>
+        @include('partials.alerts')
     </body>
 </html>
