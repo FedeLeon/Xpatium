@@ -725,6 +725,31 @@ html[data-theme="dark"] .modal-footer {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.dashboard-grid--teacher {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: stretch;
+}
+
+.dashboard-grid--teacher .widget {
+    grid-column: span 6;
+}
+
+.dashboard-grid--teacher .widget--metrics {
+    grid-column: span 7;
+}
+
+.dashboard-grid--teacher .widget--clock {
+    grid-column: span 5;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid--teacher .widget,
+    .dashboard-grid--teacher .widget--metrics,
+    .dashboard-grid--teacher .widget--clock {
+        grid-column: 1 / -1;
+    }
+}
+
 .dashboard-card-grid {
     margin-top: 16px;
     display: grid;
@@ -852,13 +877,84 @@ html[data-theme="dark"] .widget {
 }
 
 .metric {
-    background: #f9fafb;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(255, 255, 255, 0.9));
+    border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 86px;
 }
 
 html[data-theme="dark"] .metric {
-    background: #0b1220;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(15, 23, 42, 0.9));
+    border-color: #1f2937;
+}
+
+.metric-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    flex-shrink: 0;
+}
+
+.metric-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+html[data-theme="dark"] .metric-icon {
+    color: #93c5fd;
+    background: rgba(37, 99, 235, 0.2);
+    border-color: rgba(147, 197, 253, 0.3);
+}
+
+.metric--students .metric-icon {
+    color: #0f766e;
+    background: #ecfeff;
+    border-color: #99f6e4;
+}
+
+.metric--lessons .metric-icon {
+    color: #a16207;
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+
+.metric--announcements .metric-icon {
+    color: #b91c1c;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+html[data-theme="dark"] .metric--students .metric-icon {
+    color: #5eead4;
+    background: rgba(15, 118, 110, 0.2);
+    border-color: rgba(94, 234, 212, 0.2);
+}
+
+html[data-theme="dark"] .metric--lessons .metric-icon {
+    color: #facc15;
+    background: rgba(161, 98, 7, 0.2);
+    border-color: rgba(250, 204, 21, 0.25);
+}
+
+html[data-theme="dark"] .metric--announcements .metric-icon {
+    color: #fca5a5;
+    background: rgba(185, 28, 28, 0.2);
+    border-color: rgba(252, 165, 165, 0.25);
+}
+
+.metric-body {
+    display: grid;
+    gap: 4px;
 }
 
 .metric-label {
@@ -868,13 +964,54 @@ html[data-theme="dark"] .metric {
 }
 
 .metric-value {
-    font-size: 20px;
+    font-size: 22px;
+    font-weight: 700;
 }
 
 .clock {
     display: grid;
-    gap: 6px;
+    gap: 10px;
     align-items: start;
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+}
+
+html[data-theme="dark"] .clock {
+    background: #0b1220;
+    border-color: #1f2937;
+}
+
+.clock-panel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.clock-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #2563eb;
+}
+
+html[data-theme="dark"] .clock-icon {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: #1f2937;
+    color: #93c5fd;
+}
+
+.clock-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
 }
 
 .clock-date {
@@ -883,7 +1020,7 @@ html[data-theme="dark"] .metric {
 }
 
 .clock-time {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 700;
 }
 
