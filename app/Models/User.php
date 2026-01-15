@@ -12,6 +12,7 @@ use App\Models\StudentProfile;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Lesson;
+use App\Models\Meeting;
 
 class User extends Authenticatable
 {
@@ -107,6 +108,17 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Lesson::class, 'lesson_user')
             ->withPivot('completed_at')
+            ->withTimestamps();
+    }
+
+    public function hostedMeetings()
+    {
+        return $this->hasMany(Meeting::class, 'teacher_id');
+    }
+
+    public function meetings()
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_user')
             ->withTimestamps();
     }
 

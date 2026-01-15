@@ -11,9 +11,12 @@ use App\Http\Controllers\Teacher\AnnouncementController;
 use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\StudentController;
 use App\Http\Controllers\Admin\ErrorLogController;
+use App\Http\Controllers\Teacher\MeetingController as TeacherMeetingController;
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
 use App\Http\Controllers\Student\LessonController as StudentLessonController;
 use App\Http\Controllers\Student\AnnouncementController as StudentAnnouncementController;
+use App\Http\Controllers\Student\MeetingController as StudentMeetingController;
+use App\Http\Controllers\MeetingRoomController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'landing')->name('home');
@@ -93,6 +96,10 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::post('/anuncios', [AnnouncementController::class, 'store'])->name('announcements.store');
     Route::put('/anuncios/{announcement}/estado', [AnnouncementController::class, 'updateStatus'])->name('announcements.status');
     Route::delete('/anuncios/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+    Route::get('/reuniones', [TeacherMeetingController::class, 'index'])->name('meetings.index');
+    Route::post('/reuniones', [TeacherMeetingController::class, 'store'])->name('meetings.store');
+    Route::get('/reuniones/{meeting}', [MeetingRoomController::class, 'show'])->name('meetings.show');
+    Route::delete('/reuniones/{meeting}', [TeacherMeetingController::class, 'destroy'])->name('meetings.destroy');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')->group(function () {
@@ -106,4 +113,6 @@ Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')-
     Route::delete('/notificaciones', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
     Route::get('/perfil', [\App\Http\Controllers\Student\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/perfil', [\App\Http\Controllers\Student\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/reuniones', [StudentMeetingController::class, 'index'])->name('meetings.index');
+    Route::get('/reuniones/{meeting}', [MeetingRoomController::class, 'show'])->name('meetings.show');
 });

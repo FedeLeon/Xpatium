@@ -49,6 +49,34 @@
         </div>
     </div>
 
+    <div class="widget widget-wide">
+        <div class="widget-header">
+            <h3>Calendario</h3>
+            <span class="subtle">Tus proximas reuniones.</span>
+        </div>
+        <div class="calendar">
+            <div class="calendar-header" id="student-calendar-title">Mes</div>
+            <div class="calendar-grid" id="student-calendar-grid"></div>
+        </div>
+        @if ($upcomingMeetings->isEmpty())
+            <p class="subtle">No hay reuniones proximas.</p>
+        @else
+            <div class="list">
+                @foreach ($upcomingMeetings as $meeting)
+                    <div class="card meeting-card">
+                        <div>
+                            <strong>{{ $meeting->title }}</strong>
+                            <div class="subtle">
+                                {{ $meeting->scheduled_for->format('d/m/Y H:i') }} · {{ $meeting->duration_minutes }} min
+                            </div>
+                        </div>
+                        <a class="btn btn-secondary" href="{{ route('student.meetings.show', $meeting) }}">Ver</a>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+
     <dialog id="studentAnnouncementModal">
         <div class="modal-header">
             <strong>Anuncios</strong>
@@ -106,4 +134,66 @@
             @endif
         </div>
     </dialog>
+
+    <script>
+        (function () {
+            var calendarTitle = document.getElementById('student-calendar-title');
+            var calendarGrid = document.getElementById('student-calendar-grid');
+            if (!calendarTitle || !calendarGrid) {
+                return;
+            }
+
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth();
+            var firstDay = new Date(year, month, 1);
+            var lastDay = new Date(year, month + 1, 0);
+            var startWeekday = firstDay.getDay();
+            var totalDays = lastDay.getDate();
+            calendarTitle.textContent = now.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+
+            var meetingDays = @json($calendarMeetings->map(function ($meeting) {
+                return [
+                    'date' => $meeting->scheduled_for->toDateString(),
+                    'title' => $meeting->title,
+                ];
+            })->values());
+            var meetingMap = {};
+            meetingDays.forEach(function (meeting) {
+                if (!meetingMap[meeting.date]) {
+                    meetingMap[meeting.date] = [];
+                }
+                meetingMap[meeting.date].push(meeting.title);
+            });
+
+            var weekdays = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
+            weekdays.forEach(function (day) {
+                var cell = document.createElement('div');
+                cell.className = 'calendar-day calendar-day--header';
+                cell.textContent = day;
+                calendarGrid.appendChild(cell);
+            });
+
+            for (var i = 0; i < startWeekday; i++) {
+                var empty = document.createElement('div');
+                empty.className = 'calendar-day calendar-day--empty';
+                calendarGrid.appendChild(empty);
+            }
+
+            for (var d = 1; d <= totalDays; d++) {
+                var cell = document.createElement('div');
+                cell.className = 'calendar-day';
+                if (d === now.getDate()) {
+                    cell.className += ' calendar-day--today';
+                }
+                var dateKey = new Date(year, month, d).toISOString().slice(0, 10);
+                if (meetingMap[dateKey]) {
+                    cell.className += ' calendar-day--event';
+                    cell.title = meetingMap[dateKey].join(', ');
+                }
+                cell.textContent = d;
+                calendarGrid.appendChild(cell);
+            }
+        })();
+    </script>
 @endsection

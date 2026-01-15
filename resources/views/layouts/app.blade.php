@@ -86,6 +86,7 @@
                         <a href="{{ route($dashboardRoute) }}">Inicio</a>
                         @if ($role === \App\Models\User::ROLE_TEACHER)
                             <a href="{{ route('teacher.courses.index') }}">Cursos</a>
+                            <a href="{{ route('teacher.meetings.index') }}">Reuniones</a>
                             <a href="{{ route('teacher.assets.index') }}">Gestor de contenidos</a>
                             <a href="{{ route('teacher.students.index') }}">Alumnos</a>
                             <a href="{{ route('chat.index') }}">
@@ -96,6 +97,7 @@
                             </a>
                         @elseif ($role === \App\Models\User::ROLE_STUDENT)
                             <a href="{{ route('student.courses.index') }}">Cursos</a>
+                            <a href="{{ route('student.meetings.index') }}">Reuniones</a>
                             <a href="{{ route('student.notifications.index') }}">
                                 Notificaciones
                                 @if (!empty($notificationUnreadCount))

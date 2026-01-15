@@ -18,6 +18,8 @@ class DashboardController extends Controller
         $announcements = collect();
         $readAnnouncementIds = [];
         $unreadAnnouncementsCount = 0;
+        $calendarMeetings = collect();
+        $upcomingMeetings = collect();
 
         if ($profile) {
             $courses = $request->user()
@@ -52,13 +54,31 @@ class DashboardController extends Controller
                     ->whereNotIn('id', $readAnnouncementIds)
                     ->count();
             }
+
+            $calendarStart = now()->startOfMonth();
+            $calendarEnd = now()->endOfMonth();
+            $calendarMeetings = $request->user()
+                ->meetings()
+                ->whereBetween('scheduled_for', [$calendarStart, $calendarEnd])
+                ->orderBy('scheduled_for')
+                ->get();
+
+            $upcomingMeetings = $request->user()
+                ->meetings()
+                ->with('teacher')
+                ->where('scheduled_for', '>=', now()->startOfDay())
+                ->orderBy('scheduled_for')
+                ->limit(5)
+                ->get();
         }
 
         return view('dashboards.student', compact(
             'courses',
             'announcements',
             'readAnnouncementIds',
-            'unreadAnnouncementsCount'
+            'unreadAnnouncementsCount',
+            'calendarMeetings',
+            'upcomingMeetings'
         ));
     }
 }
