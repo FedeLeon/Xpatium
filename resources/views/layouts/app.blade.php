@@ -15,6 +15,29 @@
             $role = $currentUser?->role;
             $avatarUrl = $currentUser?->avatar_path ? asset('storage/' . $currentUser->avatar_path) : null;
             $avatarInitial = strtoupper(substr($currentUser?->name ?? 'U', 0, 1));
+            $profileRoute = match ($role) {
+                \App\Models\User::ROLE_ADMIN => 'admin.profile.edit',
+                \App\Models\User::ROLE_TEACHER => 'teacher.profile.edit',
+                \App\Models\User::ROLE_STUDENT => 'student.profile.edit',
+                default => 'home',
+            };
+            $needsProfilePrompt = false;
+            if ($currentUser && in_array($role, [\App\Models\User::ROLE_TEACHER, \App\Models\User::ROLE_STUDENT], true)) {
+                $requiredFields = ['name', 'last_name', 'birth_date', 'phone', 'address', 'country', 'state', 'city', 'postal_code'];
+                $missingField = false;
+                foreach ($requiredFields as $field) {
+                    if (empty($currentUser->{$field})) {
+                        $missingField = true;
+                        break;
+                    }
+                }
+                $profileComplete = ! $missingField && ! empty($currentUser->avatar_path);
+                $promptKey = 'profile_prompt_seen_' . now()->toDateString();
+                if (! $profileComplete && ! session()->has($promptKey)) {
+                    $needsProfilePrompt = true;
+                    session()->put($promptKey, true);
+                }
+            }
         @endphp
         <div class="app">
             <header>
@@ -75,14 +98,6 @@
                             @endif
                         </button>
                         <div class="dropdown">
-                            @php
-                                $profileRoute = match ($role) {
-                                    \App\Models\User::ROLE_ADMIN => 'admin.profile.edit',
-                                    \App\Models\User::ROLE_TEACHER => 'teacher.profile.edit',
-                                    \App\Models\User::ROLE_STUDENT => 'student.profile.edit',
-                                    default => 'home',
-                                };
-                            @endphp
                             <a href="{{ route($profileRoute) }}">Perfil</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -147,6 +162,15 @@
                     </nav>
                 </aside>
                 <main>
+                    @if ($needsProfilePrompt)
+                        <div class="alert alert-profile">
+                            <div>
+                                <strong>Completa tu perfil</strong>
+                                <div class="subtle">Para continuar, completa tus datos personales y sube una imagen de perfil.</div>
+                            </div>
+                            <a class="btn btn-secondary" href="{{ route($profileRoute) }}">Ir al perfil</a>
+                        </div>
+                    @endif
                     @yield('content')
                 </main>
             </div>
