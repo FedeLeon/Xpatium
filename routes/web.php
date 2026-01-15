@@ -15,7 +15,7 @@ use App\Http\Controllers\Student\LessonController as StudentLessonController;
 use App\Http\Controllers\Student\AnnouncementController as StudentAnnouncementController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::view('/', 'landing')->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
