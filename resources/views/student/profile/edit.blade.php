@@ -66,15 +66,18 @@
                 </div>
                 <div class="profile-field">
                     <label for="country">Pais</label>
-                    <input id="country" name="country" type="text" value="{{ old('country', $user->country) }}">
+                    <input id="country" name="country" type="text" list="country-options" value="{{ old('country', $user->country) }}">
+                    <datalist id="country-options"></datalist>
                 </div>
                 <div class="profile-field">
                     <label for="state">Provincia / Estado</label>
-                    <input id="state" name="state" type="text" value="{{ old('state', $user->state) }}">
+                    <input id="state" name="state" type="text" list="state-options" value="{{ old('state', $user->state) }}">
+                    <datalist id="state-options"></datalist>
                 </div>
                 <div class="profile-field">
                     <label for="city">Ciudad / Localidad</label>
-                    <input id="city" name="city" type="text" value="{{ old('city', $user->city) }}">
+                    <input id="city" name="city" type="text" list="city-options" value="{{ old('city', $user->city) }}">
+                    <datalist id="city-options"></datalist>
                 </div>
                 <div class="profile-field">
                     <label for="postal_code">Codigo postal</label>
@@ -139,6 +142,152 @@
                 preview.src = url;
                 preview.classList.remove('is-hidden');
                 initials.classList.add('is-hidden');
+            });
+        })();
+
+        (function () {
+            var countryInput = document.getElementById('country');
+            var stateInput = document.getElementById('state');
+            var cityInput = document.getElementById('city');
+            var countryList = document.getElementById('country-options');
+            var stateList = document.getElementById('state-options');
+            var cityList = document.getElementById('city-options');
+
+            if (!countryInput || !stateInput || !cityInput || !countryList || !stateList || !cityList) {
+                return;
+            }
+
+            function clearDatalist(list) {
+                while (list.firstChild) {
+                    list.removeChild(list.firstChild);
+                }
+            }
+
+            function fillDatalist(list, items) {
+                clearDatalist(list);
+                items.forEach(function (item) {
+                    var option = document.createElement('option');
+                    option.value = item;
+                    list.appendChild(option);
+                });
+            }
+
+            function normalizeCountryName(value) {
+                return (value || '')
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .trim();
+            }
+
+            function isArgentina(value) {
+                var normalized = normalizeCountryName(value);
+                return normalized === 'argentina' || normalized === 'republica argentina';
+            }
+
+            function fetchCountries() {
+                if (countryList.dataset.loaded) {
+                    return Promise.resolve();
+                }
+                return fetch('https://restcountries.com/v3.1/all?fields=name')
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        var countries = Array.isArray(data)
+                            ? data.map(function (country) { return country.name && country.name.common ? country.name.common : ''; })
+                                .filter(Boolean)
+                                .sort()
+                            : [];
+                        fillDatalist(countryList, countries);
+                        countryList.dataset.loaded = '1';
+                    })
+                    .catch(function () {});
+            }
+
+            function fetchStates(country) {
+                if (!country) {
+                    clearDatalist(stateList);
+                    clearDatalist(cityList);
+                    return Promise.resolve();
+                }
+                if (!isArgentina(country)) {
+                    clearDatalist(stateList);
+                    clearDatalist(cityList);
+                    return Promise.resolve();
+                }
+                stateInput.dataset.country = country;
+                return fetch('https://apis.datos.gob.ar/georef/api/provincias?aplanar=true')
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        if (stateInput.dataset.country !== country) {
+                            return;
+                        }
+                        var states = Array.isArray(data.provincias)
+                            ? data.provincias.map(function (state) { return state.nombre; }).sort()
+                            : [];
+                        fillDatalist(stateList, states);
+                    })
+                    .catch(function () {});
+            }
+
+            function fetchCities(country, state) {
+                if (!country || !state || !isArgentina(country)) {
+                    clearDatalist(cityList);
+                    return Promise.resolve();
+                }
+                cityInput.dataset.key = country + '::' + state;
+                var url = 'https://apis.datos.gob.ar/georef/api/localidades?aplanar=true&max=5000&provincia='
+                    + encodeURIComponent(state);
+                return fetch(url)
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        if (cityInput.dataset.key !== country + '::' + state) {
+                            return;
+                        }
+                        var cities = Array.isArray(data.localidades)
+                            ? data.localidades.map(function (city) { return city.nombre; }).sort()
+                            : [];
+                        fillDatalist(cityList, cities);
+                    })
+                    .catch(function () {});
+            }
+
+            function handleCountryChange() {
+                var country = countryInput.value.trim();
+                if (country !== countryInput.dataset.lastCountry) {
+                    stateInput.value = '';
+                    cityInput.value = '';
+                    clearDatalist(stateList);
+                    clearDatalist(cityList);
+                    countryInput.dataset.lastCountry = country;
+                }
+                fetchStates(country);
+            }
+
+            function handleStateChange() {
+                var country = countryInput.value.trim();
+                var state = stateInput.value.trim();
+                if (state !== stateInput.dataset.lastState) {
+                    cityInput.value = '';
+                    clearDatalist(cityList);
+                    stateInput.dataset.lastState = state;
+                }
+                fetchCities(country, state);
+            }
+
+            countryInput.addEventListener('focus', fetchCountries);
+            countryInput.addEventListener('change', handleCountryChange);
+            countryInput.addEventListener('blur', handleCountryChange);
+            stateInput.addEventListener('change', handleStateChange);
+            stateInput.addEventListener('blur', handleStateChange);
+
+            fetchCountries().then(function () {
+                if (countryInput.value.trim()) {
+                    fetchStates(countryInput.value.trim()).then(function () {
+                        if (stateInput.value.trim()) {
+                            fetchCities(countryInput.value.trim(), stateInput.value.trim());
+                        }
+                    });
+                }
             });
         })();
     </script>

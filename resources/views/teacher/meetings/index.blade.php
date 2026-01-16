@@ -5,15 +5,67 @@
         <div>
             <h1>Reuniones</h1>
             <p>Agenda reuniones individuales o grupales con tus alumnos.</p>
+            <button class="btn btn-icon meeting-new-btn" type="button" onclick="document.getElementById('meetingModal').showModal()">
+                <span aria-hidden="true">+</span>
+                Nueva reunion
+            </button>
         </div>
     </div>
 
-    <div class="dashboard-grid dashboard-grid--teacher">
-        <div class="widget widget-wide">
-            <div class="widget-header">
-                <h3>Crear reunion</h3>
+    <div class="widget widget-wide">
+        <div class="widget-header">
+            <h3>Reuniones programadas</h3>
+        </div>
+        @if ($meetings->isEmpty())
+            <p class="subtle">No hay reuniones agendadas.</p>
+        @else
+            <div class="meeting-grid-table">
+                <div class="meeting-grid-row meeting-grid-head">
+                    <div>Titulo</div>
+                    <div>Fecha</div>
+                    <div>Tipo</div>
+                    <div>Alumnos</div>
+                    <div>Acciones</div>
+                </div>
+                @foreach ($meetings as $meeting)
+                    @php
+                        $attendeeNames = $meeting->attendees
+                            ->map(fn ($attendee) => trim($attendee->name.' '.$attendee->last_name))
+                            ->implode(', ');
+                    @endphp
+                    <div class="meeting-grid-row">
+                        <div class="meeting-grid-title">{{ $meeting->title }}</div>
+                        <div>{{ $meeting->scheduled_for->format('d/m/Y H:i') }}</div>
+                        <div>{{ $meeting->meeting_type === 'individual' ? 'Individual' : 'Grupal' }}</div>
+                        <div class="meeting-grid-attendees">{{ $attendeeNames ?: 'Sin alumnos' }}</div>
+                        <div class="meeting-grid-actions">
+                            <a class="btn btn-secondary" href="{{ $meeting->daily_room_url }}" target="_blank" rel="noopener">
+                                Abrir reunion
+                            </a>
+                            <form method="POST" action="{{ route('teacher.meetings.destroy', $meeting) }}"
+                                  data-confirm="Se eliminara la reunion y no podras recuperarla.">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-secondary" type="submit">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
             </div>
+        @endif
+    </div>
 
+    @php
+        $selectedStudents = old('student_ids', []);
+        $hasStudents = $students->isNotEmpty();
+    @endphp
+
+    <dialog id="meetingModal">
+        <div class="modal-header">
+            <strong>Nueva reunion</strong>
+            <button class="btn btn-secondary" type="button" onclick="document.getElementById('meetingModal').close()">Cerrar</button>
+        </div>
+        <div class="modal-body">
             @if ($errors->any())
                 <div class="alert">
                     <strong>Revisa los datos:</strong>
@@ -24,8 +76,7 @@
                     </ul>
                 </div>
             @endif
-
-            <form method="POST" action="{{ route('teacher.meetings.store') }}" class="form-grid">
+            <form id="meeting-form" method="POST" action="{{ route('teacher.meetings.store') }}" class="form-grid">
                 @csrf
                 <div class="form-field">
                     <label for="meeting-title">Titulo</label>
@@ -56,69 +107,93 @@
                 </div>
                 <div class="form-field form-field--wide">
                     <label>Alumnos</label>
-                    @if ($students->isEmpty())
+                    @if (! $hasStudents)
                         <p class="subtle">No hay alumnos activos para asignar.</p>
                     @else
-                        <div class="checkbox-grid">
-                            @foreach ($students as $student)
-                                <label class="checkbox">
-                                    <input type="checkbox" name="student_ids[]" value="{{ $student->student_id }}"
-                                        {{ in_array($student->student_id, old('student_ids', []), true) ? 'checked' : '' }}>
-                                    <span>{{ $student->student->name }} {{ $student->student->last_name }}</span>
-                                </label>
-                            @endforeach
+                        <div class="meeting-student-actions">
+                            <button class="btn btn-secondary btn-icon" type="button"
+                                    onclick="document.getElementById('studentPickerModal').showModal()">
+                                <span aria-hidden="true">+</span>
+                                Elegir alumnos
+                            </button>
+                            <span id="student-selection-count" class="subtle">0 seleccionados</span>
                         </div>
                     @endif
                 </div>
-                <div class="form-actions">
-                    <button class="btn" type="submit">Crear reunion</button>
-                </div>
             </form>
         </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" onclick="document.getElementById('meetingModal').close()">Cancelar</button>
+            <button class="btn" type="submit" form="meeting-form" {{ $hasStudents ? '' : 'disabled' }}>Crear reunion</button>
+        </div>
+    </dialog>
 
-        <div class="widget widget-wide">
-            <div class="widget-header">
-                <h3>Proximas reuniones</h3>
-            </div>
-            @if ($meetings->isEmpty())
-                <p class="subtle">No hay reuniones agendadas.</p>
+    <dialog id="studentPickerModal">
+        <div class="modal-header">
+            <strong>Seleccionar alumnos</strong>
+            <button class="btn btn-secondary" type="button" onclick="document.getElementById('studentPickerModal').close()">Cerrar</button>
+        </div>
+        <div class="modal-body">
+            @if (! $hasStudents)
+                <p class="subtle">No hay alumnos activos para asignar.</p>
             @else
-                <div class="list">
-                    @foreach ($meetings as $meeting)
+                <div class="meeting-students">
+                    @foreach ($students as $student)
                         @php
-                            $attendeeNames = $meeting->attendees
-                                ->map(fn ($attendee) => trim($attendee->name.' '.$attendee->last_name))
-                                ->implode(', ');
+                            $studentUser = $student->student;
+                            $fullName = trim($studentUser->name.' '.$studentUser->last_name);
+                            $avatarUrl = $studentUser->avatar_path ? asset('storage/' . $studentUser->avatar_path) : null;
+                            $initials = strtoupper(substr($studentUser->name, 0, 1)).strtoupper(substr($studentUser->last_name ?? '', 0, 1));
                         @endphp
-                        <div class="card meeting-card">
-                            <div>
-                                <strong>{{ $meeting->title }}</strong>
-                                <div class="subtle">
-                                    {{ $meeting->scheduled_for->format('d/m/Y H:i') }} · {{ $meeting->duration_minutes }} min
-                                </div>
-                                <div class="subtle">
-                                    {{ $meeting->meeting_type === 'individual' ? 'Individual' : 'Grupal' }}
-                                </div>
-                                <div class="subtle">
-                                    Alumnos: {{ $attendeeNames ?: 'Sin alumnos' }}
-                                </div>
-                            </div>
-                            <div class="actions actions-tight">
-                                <a class="btn btn-secondary" href="{{ route('teacher.meetings.show', $meeting) }}">Entrar</a>
-                                <a class="btn btn-secondary" href="{{ $meeting->daily_room_url }}" target="_blank" rel="noopener">
-                                    Abrir en nueva pestaña
-                                </a>
-                                <form method="POST" action="{{ route('teacher.meetings.destroy', $meeting) }}"
-                                      data-confirm="Se eliminara la reunion y no podras recuperarla.">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-secondary" type="submit">Eliminar</button>
-                                </form>
-                            </div>
-                        </div>
+                        <label class="meeting-student {{ in_array($student->student_id, $selectedStudents, true) ? 'is-selected' : '' }}">
+                            <input type="checkbox" form="meeting-form" name="student_ids[]" value="{{ $student->student_id }}"
+                                {{ in_array($student->student_id, $selectedStudents, true) ? 'checked' : '' }}>
+                            <span class="chat-avatar meeting-student__avatar">
+                                @if ($avatarUrl)
+                                    <img src="{{ $avatarUrl }}" alt="{{ $fullName }}">
+                                @else
+                                    {{ $initials }}
+                                @endif
+                            </span>
+                            <span class="meeting-student__name">{{ $fullName }}</span>
+                        </label>
                     @endforeach
                 </div>
             @endif
         </div>
-    </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" onclick="document.getElementById('studentPickerModal').close()">Listo</button>
+        </div>
+    </dialog>
+
+    <script>
+        (function () {
+            var countEl = document.getElementById('student-selection-count');
+            var studentInputs = document.querySelectorAll('.meeting-student input[type="checkbox"]');
+            if (!countEl || !studentInputs.length) {
+                return;
+            }
+
+            var updateCount = function () {
+                var count = 0;
+                studentInputs.forEach(function (input) {
+                    if (input.checked) {
+                        count += 1;
+                    }
+                    input.closest('.meeting-student').classList.toggle('is-selected', input.checked);
+                });
+                countEl.textContent = count + ' seleccionados';
+            };
+
+            studentInputs.forEach(function (input) {
+                input.addEventListener('change', updateCount);
+            });
+
+            updateCount();
+
+            @if ($errors->any())
+                document.getElementById('meetingModal').showModal();
+            @endif
+        })();
+    </script>
 @endsection

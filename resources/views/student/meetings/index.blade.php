@@ -36,14 +36,6 @@
                                 Disponible desde {{ $joinAt->format('d/m/Y H:i') }}
                             </div>
                         </div>
-                        <a class="btn meeting-join {{ $meeting->join_available ? '' : 'is-disabled' }}"
-                           href="{{ route('student.meetings.show', $meeting) }}"
-                           data-meeting-join
-                           data-meeting-start="{{ $startAt->timestamp }}"
-                           data-meeting-end="{{ $endAt->timestamp }}"
-                           aria-disabled="{{ $meeting->join_available ? 'false' : 'true' }}">
-                            Entrar
-                        </a>
                         <a class="btn btn-secondary meeting-join {{ $meeting->join_available ? '' : 'is-disabled' }}"
                            href="{{ $meeting->daily_room_url }}"
                            target="_blank"

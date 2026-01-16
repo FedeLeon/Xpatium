@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Meeting;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class MeetingRoomController extends Controller
 {
-    public function show(Request $request, Meeting $meeting): View
+    public function show(Request $request, Meeting $meeting): RedirectResponse
     {
         $user = $request->user();
         $isTeacher = $user->role === User::ROLE_TEACHER && $meeting->teacher_id === $user->id;
@@ -20,13 +20,17 @@ class MeetingRoomController extends Controller
             abort(404);
         }
 
-        $canJoin = true;
-        $joinAvailableAt = null;
-        if ($isStudent) {
-            $joinAvailableAt = $meeting->scheduled_for->copy()->subMinutes(15);
-            $canJoin = now()->greaterThanOrEqualTo($joinAvailableAt);
+        if (! $meeting->daily_room_url) {
+            abort(404);
         }
 
-        return view('meetings.show', compact('meeting', 'canJoin', 'joinAvailableAt'));
+        if ($isStudent) {
+            $joinAvailableAt = $meeting->scheduled_for->copy()->subMinutes(15);
+            if (now()->lessThan($joinAvailableAt)) {
+                abort(403, 'La reunion estara disponible desde '.$joinAvailableAt->format('d/m/Y H:i').'.');
+            }
+        }
+
+        return redirect()->away($meeting->daily_room_url);
     }
 }
