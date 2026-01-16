@@ -3,10 +3,16 @@
 @section('content')
     <div class="actions">
         <div>
-            <h1>Cursos</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                Cursos
+            </h1>
             <p>Gestiona tus cursos publicados.</p>
         </div>
-        <a class="btn" href="{{ route('teacher.courses.create') }}">Crear curso</a>
+        <a class="btn btn-action" href="{{ route('teacher.courses.create') }}">Crear curso</a>
     </div>
 
     @if ($courses->isEmpty())

@@ -159,7 +159,9 @@ html[data-theme="dark"] aside {
 }
 
 .menu a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 10px 12px;
     border-radius: 8px;
     color: #1f2937;
@@ -167,8 +169,31 @@ html[data-theme="dark"] aside {
     border: 1px solid transparent;
 }
 
+.menu-icon {
+    width: 18px;
+    text-align: center;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu-label {
+    flex: 1 1 auto;
+}
+
 .menu a .badge {
-    margin-left: 8px;
+    margin-left: auto;
 }
 
 .menu a:hover {
@@ -189,10 +214,53 @@ main {
     padding: 24px;
 }
 
+.view-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.view-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #6b7280;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    overflow: hidden;
+    flex: 0 0 auto;
+}
+
+html[data-theme="dark"] .view-avatar {
+    background: #1f2937;
+    color: #9ca3af;
+}
+
+.view-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.view-title svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 .actions {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     gap: 12px;
     margin-bottom: 16px;
 }
@@ -984,6 +1052,11 @@ html[data-theme="dark"] .metric {
 .metric-icon svg {
     width: 22px;
     height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 html[data-theme="dark"] .metric-icon {
@@ -1077,6 +1150,16 @@ html[data-theme="dark"] .clock {
     color: #2563eb;
 }
 
+.clock-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 html[data-theme="dark"] .clock-icon {
     background: rgba(15, 23, 42, 0.8);
     border-color: #1f2937;
@@ -1149,8 +1232,8 @@ html[data-theme="dark"] .calendar-day {
     justify-content: center;
     padding: 10px 14px;
     border-radius: 8px;
-    border: 1px solid #2563eb;
-    background: #2563eb;
+    border: 1px solid #16a34a;
+    background: #16a34a;
     color: #ffffff;
     text-decoration: none;
     font-weight: 600;
@@ -1176,9 +1259,9 @@ html[data-theme="dark"] .calendar-day {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    background: linear-gradient(135deg, #16a34a, #15803d);
     border-color: transparent;
-    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 10px 20px rgba(22, 163, 74, 0.25);
 }
 
 .btn:hover {
@@ -1201,6 +1284,30 @@ html[data-theme="dark"] .calendar-day {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+}
+
+.btn-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.btn-action {
+    width: 220px;
+    max-width: 100%;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-action::before {
+    content: "+";
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
 }
 
 html[data-theme="dark"] .btn-secondary {
@@ -1711,11 +1818,161 @@ html[data-theme="dark"] .asset-item {
     border-color: #1f2937;
 }
 
+.course-access-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.course-access-item {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+html[data-theme="dark"] .course-access-item {
+    border-color: #1f2937;
+    background: #111827;
+}
+
+.course-access-item__media {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-weight: 700;
+    color: #6b7280;
+}
+
+html[data-theme="dark"] .course-access-item__media {
+    background: #1f2937;
+    color: #9ca3af;
+}
+
+.course-access-item__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.course-access-item__name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.course-access-item__form {
+    margin: 0;
+}
+
+.switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.switch-input {
+    position: absolute;
+    width: 44px;
+    height: 24px;
+    opacity: 0;
+    margin: 0;
+}
+
+.switch-slider {
+    width: 44px;
+    height: 24px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    border: 1px solid #d1d5db;
+    position: relative;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.switch-slider::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    top: 2px;
+    left: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.switch-input:checked + .switch-slider {
+    background: #22c55e;
+    border-color: #16a34a;
+}
+
+.switch-input:checked + .switch-slider::after {
+    transform: translateX(20px);
+}
+
+.switch-input:focus-visible + .switch-slider {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+}
+
+html[data-theme="dark"] .switch-slider {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+html[data-theme="dark"] .switch-input:checked + .switch-slider {
+    background: #22c55e;
+    border-color: #16a34a;
+}
+
 
 .student-actions {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+}
+
+.student-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.student-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #6b7280;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    overflow: hidden;
+    flex: 0 0 auto;
+}
+
+html[data-theme="dark"] .student-avatar {
+    background: #1f2937;
+    color: #9ca3af;
+}
+
+.student-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 table {
@@ -2655,4 +2912,56 @@ html[data-theme="dark"] .meeting-student__name {
     border-radius: 12px;
     overflow: hidden;
     background: #0b1220;
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 14px;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.25);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 2000;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    min-width: 220px;
+}
+
+.toast--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast--success {
+    background: #16a34a;
+}
+
+.toast--error {
+    background: #dc2626;
+}
+
+.toast__icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.toast__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.toast__title {
+    font-weight: 700;
+}
+
+.toast__subtitle {
+    opacity: 0.9;
+    font-size: 13px;
 }

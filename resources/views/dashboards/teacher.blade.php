@@ -3,7 +3,13 @@
 @section('content')
     <div class="actions">
         <div>
-            <h1>Panel de profesor</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 9l9-7 9 7"></path>
+                    <path d="M9 22V12h6v10"></path>
+                </svg>
+                Panel de profesor
+            </h1>
             <p>Resumen general de tu academia.</p>
         </div>
     </div>
@@ -16,8 +22,9 @@
             <div class="metric-grid">
                 <div class="metric metric--courses">
                     <div class="metric-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M4 5.5a2 2 0 0 1 2-2h9a3 3 0 0 1 3 3V19a1 1 0 0 1-1.6.8l-2.9-2.2H6a2 2 0 0 1-2-2V5.5zm2-1a1 1 0 0 0-1 1V15a1 1 0 0 0 1 1h7.1l2.9 2.2V6.5a2 2 0 0 0-2-2H6z"/>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                         </svg>
                     </div>
                     <div class="metric-body">
@@ -27,8 +34,11 @@
                 </div>
                 <div class="metric metric--students">
                     <div class="metric-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M16 11a4 4 0 1 0-3.9-5H6a3 3 0 0 0-3 3v9a2 2 0 0 0 2 2h7.1a5 5 0 0 0 9.4-2.5V16a5 5 0 0 0-5-5zM8 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1.5c-2.4 0-4.5 1.2-4.5 3V18h9v-1.5c0-1.8-2.1-3-4.5-3zm11-2.5a4 4 0 1 1-4 4 4 4 0 0 1 4-4z"/>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M17 21v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-1a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
                     </div>
                     <div class="metric-body">
@@ -38,8 +48,12 @@
                 </div>
                 <div class="metric metric--lessons">
                     <div class="metric-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M5 4a2 2 0 0 1 2-2h8a3 3 0 0 1 3 3v14a1 1 0 0 1-1.6.8L13 17.5H7a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v11.5a1 1 0 0 0 1 1h6.2l2.8 2.1V5a2 2 0 0 0-2-2H7z"/>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <path d="M14 2v6h6"></path>
+                            <path d="M16 13H8"></path>
+                            <path d="M16 17H8"></path>
+                            <path d="M10 9H8"></path>
                         </svg>
                     </div>
                     <div class="metric-body">
@@ -49,8 +63,10 @@
                 </div>
                 <div class="metric metric--announcements">
                     <div class="metric-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3 8a2 2 0 0 1 2-2h8.6l4.7-2.7A1 1 0 0 1 20 4v12a1 1 0 0 1-1.7.7L13.6 14H6l-1 4H3l1-4a2 2 0 0 1-1-2V8zm3 0v4h7.9l4.1 2.3V5.7L13.9 8H6z"/>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 11h6l7-4v10l-7-4H3z"></path>
+                            <path d="M3 11v2"></path>
+                            <path d="M9 15l1 4"></path>
                         </svg>
                     </div>
                     <div class="metric-body">
@@ -68,8 +84,9 @@
             <div class="clock">
                 <div class="clock-panel">
                     <div class="clock-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 1 1-8 8 8 8 0 0 1 8-8zm-1 3h2v5.2l3.6 2.1-1 1.7L11 13V7z"/>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 7v6l4 2"></path>
                         </svg>
                     </div>
                     <div>

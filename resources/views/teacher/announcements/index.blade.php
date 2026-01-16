@@ -3,10 +3,17 @@
 @section('content')
     <div class="actions">
         <div>
-            <h1>Anuncios</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 11h6l7-4v10l-7-4H3z"></path>
+                    <path d="M3 11v2"></path>
+                    <path d="M9 15l1 4"></path>
+                </svg>
+                Anuncios
+            </h1>
             <p>Publica avisos para tus alumnos.</p>
         </div>
-        <button class="btn" type="button" onclick="document.getElementById('announcementModal').showModal()">Nuevo anuncio</button>
+        <button class="btn btn-action" type="button" onclick="document.getElementById('announcementModal').showModal()">Nuevo anuncio</button>
     </div>
 
     @if ($announcements->isEmpty())
@@ -50,7 +57,7 @@
                         <form method="POST" action="{{ route('teacher.announcements.destroy', $announcement) }}" data-confirm="Se eliminara el anuncio.">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-secondary" type="submit">Eliminar</button>
+                            <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
                     </div>
                 </div>

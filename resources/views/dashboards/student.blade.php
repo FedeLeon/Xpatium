@@ -1,7 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Bienvenido, {{ auth()->user()->name }} {{ auth()->user()->last_name }}</h1>
+    @php
+        $studentAvatarUrl = auth()->user()?->avatar_path ? asset('storage/' . auth()->user()->avatar_path) : null;
+        $studentInitial = strtoupper(substr(auth()->user()?->name ?? 'A', 0, 1));
+    @endphp
+    <h1 class="view-title">
+        <span class="view-avatar">
+            @if ($studentAvatarUrl)
+                <img src="{{ $studentAvatarUrl }}" alt="Foto de {{ auth()->user()->name }}">
+            @else
+                {{ $studentInitial }}
+            @endif
+        </span>
+        Bienvenido, {{ auth()->user()->name }} {{ auth()->user()->last_name }}
+    </h1>
     <p>Este es tu espacio de aprendizaje. Continua con tus cursos activos.</p>
 
     @php

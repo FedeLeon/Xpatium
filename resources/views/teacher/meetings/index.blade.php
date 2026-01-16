@@ -3,10 +3,17 @@
 @section('content')
     <div class="actions">
         <div>
-            <h1>Reuniones</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M16 2v4"></path>
+                    <path d="M8 2v4"></path>
+                    <path d="M3 10h18"></path>
+                </svg>
+                Reuniones
+            </h1>
             <p>Agenda reuniones individuales o grupales con tus alumnos.</p>
-            <button class="btn btn-icon meeting-new-btn" type="button" onclick="document.getElementById('meetingModal').showModal()">
-                <span aria-hidden="true">+</span>
+            <button class="btn btn-action meeting-new-btn" type="button" onclick="document.getElementById('meetingModal').showModal()">
                 Nueva reunion
             </button>
         </div>
@@ -46,7 +53,7 @@
                                   data-confirm="Se eliminara la reunion y no podras recuperarla.">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-secondary" type="submit">Eliminar</button>
+                                <button class="btn btn-danger" type="submit">Eliminar</button>
                             </form>
                         </div>
                     </div>

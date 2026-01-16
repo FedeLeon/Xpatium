@@ -3,10 +3,20 @@
 @section('content')
     <div class="actions">
         <div>
-            <h1>Alumnos</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M17 21v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-1a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Alumnos
+            </h1>
             <p>Gestiona los alumnos registrados en tu academia.</p>
+            <button class="btn btn-action" type="button" onclick="document.getElementById('studentModal').showModal()">
+                Agregar alumno
+            </button>
         </div>
-        <button class="btn" type="button" onclick="document.getElementById('studentModal').showModal()">Agregar alumno</button>
     </div>
 
     @if ($students->isEmpty())
@@ -24,7 +34,22 @@
             <tbody>
                 @foreach ($students as $record)
                     <tr>
-                        <td>{{ $record->student->name }} {{ $record->student->last_name }}</td>
+                        <td>
+                            @php
+                                $studentAvatarUrl = $record->student->avatar_path ? asset('storage/' . $record->student->avatar_path) : null;
+                                $studentInitials = strtoupper(substr($record->student->name ?? 'A', 0, 1));
+                            @endphp
+                            <div class="student-cell">
+                                <span class="student-avatar">
+                                    @if ($studentAvatarUrl)
+                                        <img src="{{ $studentAvatarUrl }}" alt="Foto de {{ $record->student->name }}">
+                                    @else
+                                        {{ $studentInitials }}
+                                    @endif
+                                </span>
+                                <span>{{ $record->student->name }} {{ $record->student->last_name }}</span>
+                            </div>
+                        </td>
                         <td>{{ $record->student->email }}</td>
                         <td>{{ $record->student->status }}</td>
                         <td>
@@ -34,22 +59,49 @@
                                     @method('PUT')
                                     @if ($record->student->status === 'activo')
                                         <input type="hidden" name="status" value="bloqueado">
-                                        <button class="btn btn-secondary" type="submit">Bloquear</button>
-                                    @else
-                                        <input type="hidden" name="status" value="activo">
-                                        <button class="btn btn-secondary" type="submit">Activar</button>
-                                    @endif
-                                </form>
-                                <button class="btn btn-secondary" type="button" onclick="document.getElementById('coursesModal-{{ $record->id }}').showModal()">Cursos</button>
-                                <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el alumno y su acceso.">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-secondary" type="submit">Eliminar</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
+                                    <button class="btn btn-secondary btn-icon" type="submit">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                        Bloquear
+                                    </button>
+                                @else
+                                    <input type="hidden" name="status" value="activo">
+                                    <button class="btn btn-secondary btn-icon" type="submit">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="9"></circle>
+                                            <path d="M9 12l2 2 4-4"></path>
+                                        </svg>
+                                        Activar
+                                    </button>
+                                @endif
+                            </form>
+                            <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('coursesModal-{{ $record->id }}').showModal()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                </svg>
+                                Cursos
+                            </button>
+                            <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el alumno y su acceso.">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-icon" type="submit">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                                        <path d="M10 11v6"></path>
+                                        <path d="M14 11v6"></path>
+                                    </svg>
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
     @endif
@@ -61,24 +113,36 @@
                 <button class="btn btn-secondary" type="button" onclick="document.getElementById('coursesModal-{{ $record->id }}').close()">Cerrar</button>
             </div>
             <div class="modal-body">
-                <div class="list">
+                <div class="course-access-list">
                     @forelse ($courses as $course)
                         @php
                             $hasAccess = $enrolledMap[$record->student_id][$course->id] ?? false;
                         @endphp
-                        <div class="asset-item">
-                            <span>{{ $course->name }}</span>
-                            <form method="POST" action="{{ route('teacher.students.courses.access', $record) }}">
+                        <div class="course-access-item">
+                            <div class="course-access-item__media">
+                                @if ($course->image_path)
+                                    <img src="{{ asset('storage/' . $course->image_path) }}" alt="Miniatura de {{ $course->name }}">
+                                @else
+                                    <span class="course-access-item__fallback">{{ strtoupper(substr($course->name, 0, 1)) }}</span>
+                                @endif
+                            </div>
+                            <div class="course-access-item__name">{{ $course->name }}</div>
+                            <form class="course-access-item__form" method="POST" action="{{ route('teacher.students.courses.access', $record) }}">
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="course_id" value="{{ $course->id }}">
-                                @if ($hasAccess)
-                                    <input type="hidden" name="action" value="revoke">
-                                    <button class="btn btn-secondary" type="submit">Quitar</button>
-                                @else
-                                    <input type="hidden" name="action" value="grant">
-                                    <button class="btn" type="submit">Dar acceso</button>
-                                @endif
+                                <input class="course-access-action" type="hidden" name="action" value="{{ $hasAccess ? 'revoke' : 'grant' }}">
+                                <label class="switch">
+                                    <input
+                                        class="switch-input"
+                                        type="checkbox"
+                                        {{ $hasAccess ? 'checked' : '' }}
+                                        aria-label="Acceso al curso {{ $course->name }}"
+                                        data-course="{{ $course->name }}"
+                                        data-student="{{ $record->student->name }} {{ $record->student->last_name }}"
+                                    >
+                                    <span class="switch-slider" aria-hidden="true"></span>
+                                </label>
                             </form>
                         </div>
                     @empty
@@ -120,4 +184,88 @@
             </div>
         </form>
     </dialog>
+    <script>
+        document.addEventListener('change', function (event) {
+            var input = event.target;
+            if (!input.classList.contains('switch-input')) {
+                return;
+            }
+            var form = input.closest('form');
+            if (!form) {
+                return;
+            }
+            var actionField = form.querySelector('.course-access-action');
+            if (actionField) {
+                actionField.value = input.checked ? 'grant' : 'revoke';
+            }
+            var formData = new FormData(form);
+            var checkedState = input.checked;
+            var url = form.getAttribute('action');
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            }).then(function (response) {
+                if (!response.ok) {
+                    throw new Error('request_failed');
+                }
+                var courseName = input.getAttribute('data-course') || 'Curso';
+                var studentName = input.getAttribute('data-student') || 'Alumno';
+                var title = checkedState ? 'Acceso habilitado' : 'Acceso revocado';
+                var type = checkedState ? 'success' : 'error';
+                showToast({
+                    title: title,
+                    subtitle: courseName + ' para ' + studentName,
+                    type: type
+                });
+            }).catch(function () {
+                input.checked = !checkedState;
+                if (actionField) {
+                    actionField.value = input.checked ? 'grant' : 'revoke';
+                }
+                var courseName = input.getAttribute('data-course') || 'Curso';
+                var studentName = input.getAttribute('data-student') || 'Alumno';
+                showToast({
+                    title: 'Error al actualizar',
+                    subtitle: courseName + ' para ' + studentName,
+                    type: 'error'
+                });
+            });
+        });
+
+        function showToast(options) {
+            var toast = document.createElement('div');
+            var type = options && options.type ? options.type : 'success';
+            toast.className = 'toast toast--' + type;
+            toast.setAttribute('role', 'status');
+            toast.setAttribute('aria-live', 'polite');
+            var icon = document.createElement('span');
+            icon.className = 'toast__icon';
+            icon.textContent = type === 'error' ? '⛔' : '✅';
+            var text = document.createElement('div');
+            text.className = 'toast__text';
+            var title = document.createElement('div');
+            title.className = 'toast__title';
+            title.textContent = options && options.title ? options.title : '';
+            var subtitle = document.createElement('div');
+            subtitle.className = 'toast__subtitle';
+            subtitle.textContent = options && options.subtitle ? options.subtitle : '';
+            text.appendChild(title);
+            text.appendChild(subtitle);
+            toast.appendChild(icon);
+            toast.appendChild(text);
+            document.body.appendChild(toast);
+            requestAnimationFrame(function () {
+                toast.classList.add('toast--visible');
+            });
+            setTimeout(function () {
+                toast.classList.remove('toast--visible');
+                setTimeout(function () {
+                    toast.remove();
+                }, 200);
+            }, 2600);
+        }
+    </script>
 @endsection

@@ -5,9 +5,8 @@
         <div>
             <h1>Modulos y lecciones</h1>
             <p class="subtle">{{ $course->name }}</p>
-            <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('moduleModal').showModal()">
-                <span>➕</span>
-                <span>Nuevo modulo</span>
+            <button class="btn btn-action" type="button" onclick="document.getElementById('moduleModal').showModal()">
+                Nuevo modulo
             </button>
         </div>
         <div>
@@ -38,7 +37,7 @@
                         <form method="POST" action="{{ route('teacher.courses.modules.destroy', $module) }}" data-confirm="Se eliminara el modulo y sus lecciones." onclick="event.stopPropagation();">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-secondary" type="submit">Eliminar</button>
+                            <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
                     </div>
                 </summary>
@@ -56,7 +55,7 @@
                                     <form method="POST" action="{{ route('teacher.courses.lessons.destroy', $lesson) }}" data-confirm="Se eliminara la leccion." onclick="event.stopPropagation();">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-secondary" type="submit">Eliminar</button>
+                                        <button class="btn btn-danger" type="submit">Eliminar</button>
                                     </form>
                                 </div>
                                 @if ($lesson->description)

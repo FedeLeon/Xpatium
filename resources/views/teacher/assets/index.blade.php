@@ -7,7 +7,13 @@
 
     <div class="actions">
         <div>
-            <h1>Gestor de contenidos</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 7h5l2 2h11v10a2 2 0 0 1-2 2H3z"></path>
+                    <path d="M3 7V6a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Gestor de contenidos
+            </h1>
             <p>Subi archivos y usa miniaturas optimizadas en la app.</p>
         </div>
     </div>
@@ -198,7 +204,7 @@
     </form>
 
     <div class="bulk-actions">
-        <button class="btn btn-secondary" type="submit" form="bulkDeleteForm" data-confirm="Se eliminaran los archivos seleccionados.">
+        <button class="btn btn-danger" type="submit" form="bulkDeleteForm" data-confirm="Se eliminaran los archivos seleccionados.">
             <span>🗑️</span>
             <span>Eliminar seleccionados</span>
         </button>

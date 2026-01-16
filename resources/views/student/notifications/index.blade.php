@@ -3,7 +3,13 @@
 @section('content')
     <div class="actions">
         <div>
-            <h1>Notificaciones</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                Notificaciones
+            </h1>
             <p>Mensajes recientes sobre tus cursos.</p>
         </div>
         <div class="section-actions">
@@ -17,7 +23,7 @@
                 <form method="POST" action="{{ route('student.notifications.destroyAll') }}">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-secondary" type="submit">Borrar todo</button>
+                    <button class="btn btn-danger" type="submit">Borrar todo</button>
                 </form>
             @endif
         </div>
@@ -51,7 +57,7 @@
                         <form method="POST" action="{{ route('student.notifications.destroy', $notification->id) }}">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-secondary" type="submit">Borrar</button>
+                            <button class="btn btn-danger" type="submit">Borrar</button>
                         </form>
                     </div>
                 </div>

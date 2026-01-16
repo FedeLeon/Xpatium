@@ -3,7 +3,15 @@
 @section('content')
     <div class="actions">
         <div>
-            <h1>Reuniones</h1>
+            <h1 class="view-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M16 2v4"></path>
+                    <path d="M8 2v4"></path>
+                    <path d="M3 10h18"></path>
+                </svg>
+                Reuniones
+            </h1>
             <p>Proximas reuniones programadas por tu profesor.</p>
         </div>
     </div>
