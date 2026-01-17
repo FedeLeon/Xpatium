@@ -20,7 +20,7 @@ class LessonController extends Controller
             abort(404);
         }
 
-        $lesson->load('contents.asset');
+        $lesson->load('contents.asset', 'quiz.questions.options');
         $comments = $lesson->comments()
             ->whereNull('parent_id')
             ->with(['user', 'replies.user'])
@@ -110,6 +110,42 @@ class LessonController extends Controller
             'type' => $data['type'],
             'asset_id' => $assetId,
             'text_content' => $data['type'] === 'text' ? $data['text_content'] : null,
+        ]);
+
+        return redirect()->route('teacher.lessons.show', $lesson);
+    }
+
+    public function destroyContent(Request $request, LessonContent $content): RedirectResponse
+    {
+        $lesson = $content->lesson;
+        $course = $lesson->module->course;
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $content->delete();
+
+        return redirect()->route('teacher.lessons.show', $lesson);
+    }
+
+    public function updateContent(Request $request, LessonContent $content): RedirectResponse
+    {
+        $lesson = $content->lesson;
+        $course = $lesson->module->course;
+        if ($course->user_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        if ($content->type !== 'text') {
+            return back()->withErrors(['content' => 'Solo se pueden editar textos.']);
+        }
+
+        $data = $request->validate([
+            'text_content' => ['required', 'string'],
+        ]);
+
+        $content->update([
+            'text_content' => $data['text_content'],
         ]);
 
         return redirect()->route('teacher.lessons.show', $lesson);

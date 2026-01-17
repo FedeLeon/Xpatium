@@ -1286,6 +1286,17 @@ html[data-theme="dark"] .calendar-day {
     gap: 8px;
 }
 
+.btn-icon img {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-icon-only {
+    padding: 8px;
+    min-width: auto;
+}
+
+
 .btn-icon svg {
     width: 16px;
     height: 16px;
@@ -1295,6 +1306,7 @@ html[data-theme="dark"] .calendar-day {
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+
 
 .btn-action {
     width: 220px;

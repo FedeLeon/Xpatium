@@ -38,6 +38,14 @@
                     <img class="tool-icon" src="{{ asset('icons/tools/file.svg') }}" alt="Archivo">
                     <span>Archivo</span>
                 </button>
+                <button
+                    class="tool-btn"
+                    type="button"
+                    onclick="document.getElementById('{{ $lesson->quiz ? 'addQuestionModal' : 'quizModal' }}').showModal()"
+                >
+                    <img class="tool-icon" src="{{ asset('icons/tools/quiz.svg') }}" alt="Cuestionario">
+                    <span>Cuestionario</span>
+                </button>
             </div>
         </aside>
 
@@ -56,9 +64,16 @@
                         @else
                             @foreach ($preview['video'] as $content)
                                 @if ($content->asset)
-                                    <video class="lesson-video" controls>
-                                        <source src="{{ asset('storage/' . $content->asset->path) }}" type="{{ $content->asset->mime }}">
-                                    </video>
+                                    <div class="lesson-preview-item">
+                                        <video class="lesson-video" controls>
+                                            <source src="{{ asset('storage/' . $content->asset->path) }}" type="{{ $content->asset->mime }}">
+                                        </video>
+                                        <form class="content-remove-form" method="POST" action="{{ route('teacher.lessons.content.destroy', $content) }}" data-confirm="Se quitara el contenido de la leccion.">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger" type="submit">Quitar</button>
+                                        </form>
+                                    </div>
                                 @endif
                             @endforeach
                         @endif
@@ -72,9 +87,16 @@
                             <div class="grid">
                                 @foreach ($preview['image'] as $content)
                                     @if ($content->asset)
-                                        <a class="content-image-link" href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">
-                                            <img class="content-image" src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
-                                        </a>
+                                        <div class="lesson-preview-item">
+                                            <a class="content-image-link" href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">
+                                                <img class="content-image" src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
+                                            </a>
+                                            <form class="content-remove-form" method="POST" action="{{ route('teacher.lessons.content.destroy', $content) }}" data-confirm="Se quitara el contenido de la leccion.">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-danger" type="submit">Quitar</button>
+                                            </form>
+                                        </div>
                                     @endif
                                 @endforeach
                             </div>
@@ -113,17 +135,22 @@
                                                 'rtf' => 'document',
                                             ];
                                             $iconName = $iconMap[$ext] ?? 'document';
-                                        @endphp
-                                        <div class="asset-item preview-file-item">
-                                            <img class="file-icon-img preview-file-icon" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ $extLabel }}">
-                                            <div class="preview-file-meta">
-                                                <span class="preview-file-name">{{ $content->asset->original_name }}</span>
-                                                <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
+                                @endphp
+                                <div class="asset-item preview-file-item">
+                                    <img class="file-icon-img preview-file-icon" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ $extLabel }}">
+                                    <div class="preview-file-meta">
+                                        <span class="preview-file-name">{{ $content->asset->original_name }}</span>
+                                        <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
+                                        <form class="content-remove-form" method="POST" action="{{ route('teacher.lessons.content.destroy', $content) }}" data-confirm="Se quitara el contenido de la leccion.">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger" type="submit">Quitar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                         @endif
                     </div>
 
@@ -134,11 +161,149 @@
                         @else
                             <div class="list">
                                 @foreach ($preview['text'] as $content)
-                                    <p>{{ $content->text_content }}</p>
+                                    <div class="lesson-preview-item">
+                                        <p>{{ $content->text_content }}</p>
+                                        <div class="actions inline-actions">
+                                            <button class="btn btn-secondary" type="button" onclick="document.getElementById('editTextModal-{{ $content->id }}').showModal()">Editar</button>
+                                            <form method="POST" action="{{ route('teacher.lessons.content.destroy', $content) }}" data-confirm="Se quitara el contenido de la leccion.">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-danger" type="submit">Quitar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <dialog id="editTextModal-{{ $content->id }}">
+                                        <div class="modal-header">
+                                            <strong>Editar texto</strong>
+                                            <button class="btn btn-secondary" type="button" onclick="document.getElementById('editTextModal-{{ $content->id }}').close()">Cerrar</button>
+                                        </div>
+                                        <form method="POST" action="{{ route('teacher.lessons.content.update', $content) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-body form-grid">
+                                                <div>
+                                                    <label for="text_content_{{ $content->id }}">Texto</label>
+                                                    <textarea id="text_content_{{ $content->id }}" name="text_content" required>{{ $content->text_content }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" onclick="document.getElementById('editTextModal-{{ $content->id }}').close()">Cancelar</button>
+                                                <button class="btn" type="submit">Guardar cambios</button>
+                                            </div>
+                                        </form>
+                                    </dialog>
                                 @endforeach
                             </div>
                         @endif
                     </div>
+
+                    @if (! $lesson->quiz)
+                        <div class="card">
+                            <h3>Cuestionario</h3>
+                            <p class="subtle">Crea un cuestionario desde la botonera de herramientas.</p>
+                        </div>
+                    @else
+                        <div class="card">
+                            <div class="quiz-header">
+                                <div>
+                                    <h3>Cuestionario</h3>
+                                    <p class="subtle">{{ $lesson->quiz->title }}</p>
+                                    @if ($lesson->quiz->description)
+                                        <p>{{ $lesson->quiz->description }}</p>
+                                    @endif
+                                </div>
+                                <div class="inline-actions">
+                                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('addQuestionModal').showModal()">Agregar pregunta</button>
+                                    <form method="POST" action="{{ route('teacher.lessons.quiz.destroy', $lesson) }}" data-confirm="Se eliminara el cuestionario y sus preguntas.">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger" type="submit">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            @if ($lesson->quiz->questions->isEmpty())
+                                <p class="subtle">Todavia no hay preguntas.</p>
+                            @else
+                                <div class="list">
+                                    @foreach ($lesson->quiz->questions as $question)
+                                        <div class="card">
+                                            <div class="actions inline-actions">
+                                                <strong>{{ $loop->iteration }}. {{ $question->prompt }}</strong>
+                                                <div class="actions inline-actions">
+                                                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('editQuestionModal-{{ $question->id }}').showModal()">Editar</button>
+                                                    <form method="POST" action="{{ route('teacher.lessons.quiz.questions.destroy', $question) }}" data-confirm="Se eliminara la pregunta.">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger" type="submit">Eliminar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="list">
+                                                @foreach ($question->options as $option)
+                                                    <div>
+                                                        <span>{{ $option->option_text }}</span>
+                                                        @if ($option->is_correct)
+                                                            <span class="badge">Correcta</span>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        @php
+                                            $optionsByPosition = $question->options->keyBy('position');
+                                        @endphp
+                                        <dialog id="editQuestionModal-{{ $question->id }}">
+                                            <div class="modal-header">
+                                                <strong>Editar pregunta</strong>
+                                                <button class="btn btn-secondary" type="button" onclick="document.getElementById('editQuestionModal-{{ $question->id }}').close()">Cerrar</button>
+                                            </div>
+                                            <form method="POST" action="{{ route('teacher.lessons.quiz.questions.update', $question) }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="modal-body form-grid">
+                                                    <div>
+                                                        <label for="question_prompt_{{ $question->id }}">Pregunta</label>
+                                                        <textarea id="question_prompt_{{ $question->id }}" name="prompt" required>{{ $question->prompt }}</textarea>
+                                                    </div>
+                                                    <div>
+                                                        <label for="question_option_1_{{ $question->id }}">Opcion 1</label>
+                                                        <input id="question_option_1_{{ $question->id }}" name="option_1" type="text" required value="{{ $optionsByPosition->get(1)?->option_text }}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="question_option_2_{{ $question->id }}">Opcion 2</label>
+                                                        <input id="question_option_2_{{ $question->id }}" name="option_2" type="text" required value="{{ $optionsByPosition->get(2)?->option_text }}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="question_option_3_{{ $question->id }}">Opcion 3 (opcional)</label>
+                                                        <input id="question_option_3_{{ $question->id }}" name="option_3" type="text" value="{{ $optionsByPosition->get(3)?->option_text }}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="question_option_4_{{ $question->id }}">Opcion 4 (opcional)</label>
+                                                        <input id="question_option_4_{{ $question->id }}" name="option_4" type="text" value="{{ $optionsByPosition->get(4)?->option_text }}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="question_correct_{{ $question->id }}">Opcion correcta</label>
+                                                        <select id="question_correct_{{ $question->id }}" name="correct_option" required>
+                                                            <option value="1" {{ $optionsByPosition->get(1)?->is_correct ? 'selected' : '' }}>Opcion 1</option>
+                                                            <option value="2" {{ $optionsByPosition->get(2)?->is_correct ? 'selected' : '' }}>Opcion 2</option>
+                                                            <option value="3" {{ $optionsByPosition->get(3)?->is_correct ? 'selected' : '' }}>Opcion 3</option>
+                                                            <option value="4" {{ $optionsByPosition->get(4)?->is_correct ? 'selected' : '' }}>Opcion 4</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('editQuestionModal-{{ $question->id }}').close()">Cancelar</button>
+                                                    <button class="btn" type="submit">Guardar cambios</button>
+                                                </div>
+                                            </form>
+                                        </dialog>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                        </div>
+                    @endif
                 </div>
             </div>
         </section>
@@ -298,6 +463,144 @@
             </div>
         </form>
     </dialog>
+
+    @if (! $lesson->quiz)
+        <dialog id="quizModal">
+            <div class="modal-header">
+                <strong>Crear cuestionario</strong>
+                <button class="btn btn-secondary" type="button" onclick="document.getElementById('quizModal').close()">Cerrar</button>
+            </div>
+            <form method="POST" action="{{ route('teacher.lessons.quiz.store', $lesson) }}">
+                @csrf
+                <div class="modal-body form-grid" id="quiz-step-1">
+                    <div>
+                        <label for="quiz_title">Titulo</label>
+                        <input id="quiz_title" name="title" type="text" required>
+                    </div>
+                    <div>
+                        <label for="quiz_description">Descripcion</label>
+                        <textarea id="quiz_description" name="description"></textarea>
+                    </div>
+                </div>
+                <div class="modal-body form-grid" id="quiz-step-2" style="display: none;">
+                    <div>
+                        <label for="quiz_prompt">Pregunta</label>
+                        <textarea id="quiz_prompt" name="prompt" required></textarea>
+                    </div>
+                    <div>
+                        <label for="quiz_option_1">Opcion 1</label>
+                        <input id="quiz_option_1" name="option_1" type="text" required>
+                    </div>
+                    <div>
+                        <label for="quiz_option_2">Opcion 2</label>
+                        <input id="quiz_option_2" name="option_2" type="text" required>
+                    </div>
+                    <div>
+                        <label for="quiz_option_3">Opcion 3 (opcional)</label>
+                        <input id="quiz_option_3" name="option_3" type="text">
+                    </div>
+                    <div>
+                        <label for="quiz_option_4">Opcion 4 (opcional)</label>
+                        <input id="quiz_option_4" name="option_4" type="text">
+                    </div>
+                    <div>
+                        <label for="quiz_correct_option">Opcion correcta</label>
+                        <select id="quiz_correct_option" name="correct_option" required>
+                            <option value="1">Opcion 1</option>
+                            <option value="2">Opcion 2</option>
+                            <option value="3">Opcion 3</option>
+                            <option value="4">Opcion 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('quizModal').close()">Cancelar</button>
+                    <button class="btn btn-secondary" type="button" id="quiz-next-step">Siguiente</button>
+                    <button class="btn btn-secondary" type="button" id="quiz-prev-step" style="display: none;">Volver</button>
+                    <button class="btn" type="submit" id="quiz-save" style="display: none;">Crear cuestionario</button>
+                </div>
+            </form>
+        </dialog>
+        <script>
+            (() => {
+                const modal = document.getElementById('quizModal');
+                if (!modal) {
+                    return;
+                }
+                const step1 = document.getElementById('quiz-step-1');
+                const step2 = document.getElementById('quiz-step-2');
+                const nextBtn = document.getElementById('quiz-next-step');
+                const prevBtn = document.getElementById('quiz-prev-step');
+                const saveBtn = document.getElementById('quiz-save');
+
+                const showStep1 = () => {
+                    step1.style.display = 'grid';
+                    step2.style.display = 'none';
+                    nextBtn.style.display = 'inline-flex';
+                    prevBtn.style.display = 'none';
+                    saveBtn.style.display = 'none';
+                };
+
+                const showStep2 = () => {
+                    step1.style.display = 'none';
+                    step2.style.display = 'grid';
+                    nextBtn.style.display = 'none';
+                    prevBtn.style.display = 'inline-flex';
+                    saveBtn.style.display = 'inline-flex';
+                };
+
+                nextBtn.addEventListener('click', showStep2);
+                prevBtn.addEventListener('click', showStep1);
+                modal.addEventListener('close', showStep1);
+            })();
+        </script>
+    @else
+
+        <dialog id="addQuestionModal">
+            <div class="modal-header">
+                <strong>Agregar pregunta</strong>
+                <button class="btn btn-secondary" type="button" onclick="document.getElementById('addQuestionModal').close()">Cerrar</button>
+            </div>
+            <form method="POST" action="{{ route('teacher.lessons.quiz.questions.store', $lesson) }}">
+                @csrf
+                <div class="modal-body form-grid">
+                    <div>
+                        <label for="question_prompt">Pregunta</label>
+                        <textarea id="question_prompt" name="prompt" required></textarea>
+                    </div>
+                    <div>
+                        <label for="option_1">Opcion 1</label>
+                        <input id="option_1" name="option_1" type="text" required>
+                    </div>
+                    <div>
+                        <label for="option_2">Opcion 2</label>
+                        <input id="option_2" name="option_2" type="text" required>
+                    </div>
+                    <div>
+                        <label for="option_3">Opcion 3 (opcional)</label>
+                        <input id="option_3" name="option_3" type="text">
+                    </div>
+                    <div>
+                        <label for="option_4">Opcion 4 (opcional)</label>
+                        <input id="option_4" name="option_4" type="text">
+                    </div>
+                    <div>
+                        <label for="correct_option">Opcion correcta</label>
+                        <select id="correct_option" name="correct_option" required>
+                            <option value="1">Opcion 1</option>
+                            <option value="2">Opcion 2</option>
+                            <option value="3">Opcion 3</option>
+                            <option value="4">Opcion 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('addQuestionModal').close()">Cancelar</button>
+                    <button class="btn" type="submit">Agregar pregunta</button>
+                </div>
+            </form>
+        </dialog>
+    @endif
 
     <div class="card card-spaced">
         <h3>Comentarios</h3>

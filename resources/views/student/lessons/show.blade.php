@@ -124,6 +124,42 @@
                     @endif
                 </div>
 
+                <div class="card">
+                    <h3>Cuestionario</h3>
+                    @if (! $quiz)
+                        <p class="subtle">No hay cuestionario disponible.</p>
+                    @elseif ($quiz->questions->isEmpty())
+                        <p class="subtle">El cuestionario todavia no tiene preguntas.</p>
+                    @else
+                        <p class="subtle">{{ $quiz->title }}</p>
+                        @if ($latestAttempt)
+                            <p class="subtle">Ultimo intento: {{ $latestAttempt->score }} / {{ $latestAttempt->total_questions }}</p>
+                        @endif
+                        <form method="POST" action="{{ route('student.lessons.quiz.store', $lesson) }}" class="form-grid">
+                            @csrf
+                            @foreach ($quiz->questions as $question)
+                                <div class="card">
+                                    <strong>{{ $loop->iteration }}. {{ $question->prompt }}</strong>
+                                    <div class="list">
+                                        @foreach ($question->options as $option)
+                                            <label>
+                                                <input
+                                                    type="radio"
+                                                    name="answers[{{ $question->id }}]"
+                                                    value="{{ $option->id }}"
+                                                    {{ $loop->first ? 'required' : '' }}
+                                                >
+                                                <span>{{ $option->option_text }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+                            <button class="btn" type="submit">Enviar cuestionario</button>
+                        </form>
+                    @endif
+                </div>
+
                 <div class="card lesson-completion-card">
                     <form method="POST" action="{{ route('student.lessons.toggleCompletion', $lesson) }}" class="lesson-completion">
                         @csrf

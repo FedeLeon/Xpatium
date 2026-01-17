@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\CourseModule;
 use App\Models\LessonContent;
 use App\Models\LessonComment;
+use App\Models\LessonQuiz;
 use App\Models\User;
 
 class Lesson extends Model
@@ -39,5 +40,10 @@ class Lesson extends Model
         return $this->belongsToMany(User::class, 'lesson_user')
             ->withPivot('completed_at')
             ->withTimestamps();
+    }
+
+    public function quiz()
+    {
+        return $this->hasOne(LessonQuiz::class);
     }
 }

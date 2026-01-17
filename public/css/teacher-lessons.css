@@ -94,6 +94,36 @@ html[data-theme="dark"] .tool-btn:hover {
     flex-wrap: wrap;
 }
 
+.actions.inline-actions {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 0;
+    gap: 10px;
+}
+
+.inline-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.inline-actions form {
+    margin: 0;
+}
+
+.content-remove-form {
+    margin-top: 8px;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
 .asset-grid {
     display: flex;
     flex-wrap: wrap;

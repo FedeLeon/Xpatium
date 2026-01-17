@@ -26,7 +26,7 @@ class LessonController extends Controller
             abort(403);
         }
 
-        $lesson->load('module.lessons');
+        $lesson->load('module.lessons', 'quiz.questions.options');
         $contents = $lesson->contents()->with('asset')->get()->groupBy('type');
         $comments = $lesson->comments()
             ->whereNull('parent_id')
@@ -45,6 +45,11 @@ class LessonController extends Controller
             ->where('lessons.id', $lesson->id)
             ->exists();
 
+        $quiz = $lesson->quiz;
+        $latestAttempt = $quiz
+            ? $quiz->attempts()->where('user_id', $request->user()->id)->latest('completed_at')->first()
+            : null;
+
         return view(
             'student.lessons.show',
             compact(
@@ -56,7 +61,9 @@ class LessonController extends Controller
                 'module',
                 'moduleLessons',
                 'previousLesson',
-                'nextLesson'
+                'nextLesson',
+                'quiz',
+                'latestAttempt'
             )
         );
     }
