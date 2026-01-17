@@ -29,7 +29,6 @@ Thumbs.db
 /bootstrap/cache/*
 
 # Public build artifacts
-/public/build
 /public/hot
 /public/storage
 

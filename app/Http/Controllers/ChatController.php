@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\StudentProfile;
@@ -81,7 +82,7 @@ class ChatController extends Controller
         return view('chat.index', compact('conversations', 'students', 'activeConversation'));
     }
 
-    public function storeMessage(Request $request, Conversation $conversation): RedirectResponse
+    public function storeMessage(Request $request, Conversation $conversation)
     {
         $user = $request->user();
         if (! $conversation->participants->contains($user->id)) {
@@ -92,11 +93,31 @@ class ChatController extends Controller
             'body' => ['required', 'string', 'max:2000'],
         ]);
 
-        Message::create([
+        $message = Message::create([
             'conversation_id' => $conversation->id,
             'user_id' => $user->id,
             'body' => $data['body'],
         ]);
+
+        broadcast(new MessageSent($message))->toOthers();
+
+        if ($request->expectsJson()) {
+            $avatarUrl = $user->avatar_path ? asset('storage/' . $user->avatar_path) : null;
+            return response()->json([
+                'message' => [
+                    'id' => $message->id,
+                    'body' => $message->body,
+                    'time' => $message->created_at->format('H:i'),
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'last_name' => $user->last_name,
+                        'avatar_url' => $avatarUrl,
+                        'initial' => strtoupper(substr($user->name ?? 'A', 0, 1)),
+                    ],
+                ],
+            ]);
+        }
 
         return redirect()->route('chat.show', $conversation);
     }

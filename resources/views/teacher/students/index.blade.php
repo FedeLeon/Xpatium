@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/teacher-students.css') }}">
+    @endpush
+
     <div class="actions">
         <div>
             <h1 class="view-title">
@@ -40,12 +44,15 @@
                                 $studentInitials = strtoupper(substr($record->student->name ?? 'A', 0, 1));
                             @endphp
                             <div class="student-cell">
-                                <span class="student-avatar">
-                                    @if ($studentAvatarUrl)
-                                        <img src="{{ $studentAvatarUrl }}" alt="Foto de {{ $record->student->name }}">
-                                    @else
-                                        {{ $studentInitials }}
-                                    @endif
+                                <span class="student-avatar-wrap">
+                                    <span class="student-avatar">
+                                        @if ($studentAvatarUrl)
+                                            <img src="{{ $studentAvatarUrl }}" alt="Foto de {{ $record->student->name }}">
+                                        @else
+                                            {{ $studentInitials }}
+                                        @endif
+                                    </span>
+                                    <span class="online-dot" data-online-user-id="{{ $record->student->id }}"></span>
                                 </span>
                                 <span>{{ $record->student->name }} {{ $record->student->last_name }}</span>
                             </div>

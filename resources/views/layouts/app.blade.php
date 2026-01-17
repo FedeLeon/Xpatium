@@ -3,11 +3,13 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ $title ?? 'Xpatium' }}</title>
         <link rel="icon" href="{{ asset('logo2.png') }}" type="image/svg+xml">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         @stack('styles')
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        @vite('resources/js/app.js')
     </head>
     <body>
         @php
