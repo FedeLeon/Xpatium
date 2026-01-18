@@ -41,6 +41,10 @@
             <span class="course-action__icon">🧩</span>
             <span class="course-action__label">Modulos y lecciones</span>
         </a>
+        <a class="course-action" href="{{ route('courses.landing', $course) }}" target="_blank" rel="noopener">
+            <span class="course-action__icon">🌐</span>
+            <span class="course-action__label">Ver landing</span>
+        </a>
         <form method="POST" action="{{ route('teacher.courses.destroy', $course) }}" data-confirm="Se eliminara el curso y todo su contenido.">
             @csrf
             @method('DELETE')

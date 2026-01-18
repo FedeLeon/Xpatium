@@ -1,0 +1,123 @@
+.course-form {
+    display: grid;
+    gap: 18px;
+}
+
+.course-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .course-form__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.course-form .card {
+    padding: 20px;
+    gap: 8px;
+}
+
+.course-form__main h2,
+.course-form__side h2 {
+    margin: 0 0 12px;
+}
+
+.course-form__side h2 {
+    margin-bottom: 0;
+}
+
+.course-form__side {
+    gap: 12px;
+    align-content: start;
+    align-self: start;
+}
+
+.course-form__main {
+    align-self: start;
+}
+
+.course-form__side .form-grid {
+    margin-top: 0;
+}
+
+.course-form .form-grid {
+    max-width: none;
+    gap: 14px;
+}
+
+.course-form .form-grid > div {
+    min-width: 0;
+}
+
+.course-form .form-grid input,
+.course-form .form-grid textarea,
+.course-form .form-grid select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.course-form label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.info-tooltip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 1px solid #cbd5f5;
+    color: #4f46e5;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: help;
+    position: relative;
+    background: #eef2ff;
+}
+
+.info-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+    background: #111827;
+    color: #f9fafb;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 10;
+}
+
+.info-tooltip::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 2px);
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #111827 transparent transparent transparent;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+}
+
+.info-tooltip:hover::after,
+.info-tooltip:hover::before {
+    opacity: 1;
+}

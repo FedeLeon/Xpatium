@@ -37,6 +37,10 @@ class CourseController extends Controller
             'price_usd' => ['required', 'numeric', 'min:0'],
             'start_date' => ['nullable', 'date'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'payment_link' => ['nullable', 'url', 'max:2048'],
+            'landing_custom_text' => ['nullable', 'string', 'max:2000'],
+            'landing_custom_image' => ['nullable', 'image', 'max:2048'],
+            'landing_video_url' => ['nullable', 'url', 'max:2048'],
         ]);
 
         $imagePath = null;
@@ -44,6 +48,13 @@ class CourseController extends Controller
             $imagePath = $request->file('image')->store('courses', 'public');
             $converted = ImageService::convertToWebp('public', $imagePath, 'courses');
             $imagePath = $converted['path'];
+        }
+
+        $landingCustomImagePath = null;
+        if ($request->hasFile('landing_custom_image')) {
+            $landingCustomImagePath = $request->file('landing_custom_image')->store('courses/landing', 'public');
+            $converted = ImageService::convertToWebp('public', $landingCustomImagePath, 'courses/landing');
+            $landingCustomImagePath = $converted['path'];
         }
 
         $course = Course::create([
@@ -55,6 +66,10 @@ class CourseController extends Controller
             'price_usd' => $data['price_usd'],
             'start_date' => $data['start_date'],
             'image_path' => $imagePath,
+            'payment_link' => $data['payment_link'] ?? null,
+            'landing_custom_text' => $data['landing_custom_text'] ?? null,
+            'landing_custom_image_path' => $landingCustomImagePath,
+            'landing_video_url' => $data['landing_video_url'] ?? null,
         ]);
 
         return redirect()->route('teacher.courses.show', $course);
@@ -92,6 +107,10 @@ class CourseController extends Controller
             'price_usd' => ['required', 'numeric', 'min:0'],
             'start_date' => ['nullable', 'date'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'payment_link' => ['nullable', 'url', 'max:2048'],
+            'landing_custom_text' => ['nullable', 'string', 'max:2000'],
+            'landing_custom_image' => ['nullable', 'image', 'max:2048'],
+            'landing_video_url' => ['nullable', 'url', 'max:2048'],
         ]);
 
         if ($request->hasFile('image')) {
@@ -103,6 +122,15 @@ class CourseController extends Controller
             $course->image_path = $converted['path'];
         }
 
+        if ($request->hasFile('landing_custom_image')) {
+            if ($course->landing_custom_image_path) {
+                Storage::disk('public')->delete($course->landing_custom_image_path);
+            }
+            $landingImagePath = $request->file('landing_custom_image')->store('courses/landing', 'public');
+            $converted = ImageService::convertToWebp('public', $landingImagePath, 'courses/landing');
+            $course->landing_custom_image_path = $converted['path'];
+        }
+
         $course->fill([
             'name' => $data['name'],
             'subtitle' => $data['subtitle'],
@@ -110,6 +138,9 @@ class CourseController extends Controller
             'price_ars' => $data['price_ars'],
             'price_usd' => $data['price_usd'],
             'start_date' => $data['start_date'],
+            'payment_link' => $data['payment_link'] ?? null,
+            'landing_custom_text' => $data['landing_custom_text'] ?? null,
+            'landing_video_url' => $data['landing_video_url'] ?? null,
         ]);
         $course->save();
 
@@ -124,6 +155,9 @@ class CourseController extends Controller
 
         if ($course->image_path) {
             Storage::disk('public')->delete($course->image_path);
+        }
+        if ($course->landing_custom_image_path) {
+            Storage::disk('public')->delete($course->landing_custom_image_path);
         }
 
         $course->delete();

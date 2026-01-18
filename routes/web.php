@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CourseLandingController;
 use App\Http\Controllers\LessonCommentController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'landing')->name('home');
+Route::get('/cursos/{course}', [CourseLandingController::class, 'show'])->name('courses.landing');
+Route::view('/terminos', 'terms')->name('terms');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 
