@@ -60,7 +60,7 @@
                     <div class="card">
                         <h3>Video</h3>
                         @if (($preview['video'] ?? collect())->isEmpty())
-                            <p class="subtle">No hay video.</p>
+                            <img class="lesson-video-placeholder" src="{{ asset('default-video.png') }}" alt="Video disponible pronto">
                         @else
                             @foreach ($preview['video'] as $content)
                                 @if ($content->asset)
@@ -383,7 +383,7 @@
                                 @if ($asset->thumb_path)
                                     <img class="asset-thumb" src="{{ asset('storage/' . $asset->thumb_path) }}" alt="Miniatura de video">
                                 @else
-                                    <span class="asset-thumb asset-thumb--fallback">VIDEO</span>
+                                    <img class="asset-thumb" src="{{ asset('default-video.png') }}" alt="Miniatura de video">
                                 @endif
                                 <span class="asset-item__name">{{ $asset->original_name }}</span>
                             </label>

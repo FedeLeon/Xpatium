@@ -132,6 +132,16 @@ html[data-theme="dark"] .lesson-link.is-active {
     object-fit: cover;
 }
 
+.lesson-video-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    border-radius: 8px;
+    background: #0b1220;
+    object-fit: cover;
+    display: block;
+}
+
 .content-image-link {
     display: block;
 }

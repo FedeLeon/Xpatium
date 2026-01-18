@@ -42,85 +42,92 @@
             <a class="btn btn-secondary lesson-sidebar__back" href="{{ route('student.courses.show', $course) }}">Volver</a>
         </aside>
 
-        <div class="lesson-main">
+            <div class="lesson-main">
             <div class="lesson-stack">
-                <div class="card">
-                    <h3>Video</h3>
-                    @if (($contents['video'] ?? collect())->isEmpty())
-                        <p class="subtle">No hay video.</p>
-                    @else
-                        @foreach ($contents['video'] as $content)
+                @php
+                    $videoItems = $contents['video'] ?? collect();
+                    $imageItems = $contents['image'] ?? collect();
+                    $fileItems = $contents['file'] ?? collect();
+                    $hasContent = $videoItems->isNotEmpty() || $imageItems->isNotEmpty() || $fileItems->isNotEmpty();
+                @endphp
+
+                @if (! $hasContent)
+                    <div class="card">
+                        <p class="subtle">Esta leccion aun no tiene contenido cargado.</p>
+                    </div>
+                @endif
+
+                @if ($videoItems->isNotEmpty())
+                    <div class="card">
+                        <h3>Video</h3>
+                        @foreach ($videoItems as $content)
                             @if ($content->asset)
                                 <video class="lesson-video" controls>
                                     <source src="{{ asset('storage/' . $content->asset->path) }}" type="{{ $content->asset->mime }}">
                                 </video>
                             @endif
                         @endforeach
-                    @endif
-                </div>
-
-                <div class="card">
-                    <h3>Imagenes</h3>
-                    @if (($contents['image'] ?? collect())->isEmpty())
-                        <p class="subtle">No hay imagenes.</p>
-                    @else
-                    <div class="grid">
-                        @foreach ($contents['image'] as $content)
-                            @if ($content->asset)
-                                <a class="content-image-link" href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">
-                                    <img class="content-image" src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
-                                </a>
-                            @endif
-                        @endforeach
                     </div>
-                    @endif
-                </div>
+                @endif
 
-                <div class="card">
-                    <h3>Archivos</h3>
-                    @if (($contents['file'] ?? collect())->isEmpty())
-                        <p class="subtle">No hay archivos.</p>
-                    @else
-            <div class="asset-list preview-file-list">
-                @foreach ($contents['file'] as $content)
-                    @if ($content->asset)
-                        @php
-                            $ext = strtolower(pathinfo($content->asset->original_name, PATHINFO_EXTENSION));
-                            $extLabel = $ext ? strtoupper($ext) : 'FILE';
-                            $iconMap = [
-                                'pdf' => 'pdf',
-                                'doc' => 'word',
-                                'docx' => 'word',
-                                'xls' => 'table',
-                                'xlsx' => 'table',
-                                'csv' => 'table',
-                                'ppt' => 'powerpoint',
-                                'pptx' => 'powerpoint',
-                                'zip' => 'zip',
-                                'rar' => 'zip',
-                                '7z' => 'zip',
-                                'mp3' => 'audio',
-                                'wav' => 'audio',
-                                'ogg' => 'audio',
-                                'flac' => 'audio',
-                                'txt' => 'document',
-                                'md' => 'document',
-                                'rtf' => 'document',
-                            ];
-                            $iconName = $iconMap[$ext] ?? 'document';
-                        @endphp
-                        <div class="asset-item preview-file-item">
-                            <img class="file-icon-img preview-file-icon" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ $extLabel }}">
-                            <div class="preview-file-meta">
-                                <span class="preview-file-name">{{ $content->asset->original_name }}</span>
-                                <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
-                            </div>
+                @if ($imageItems->isNotEmpty())
+                    <div class="card">
+                        <h3>Imagenes</h3>
+                        <div class="grid">
+                            @foreach ($imageItems as $content)
+                                @if ($content->asset)
+                                    <a class="content-image-link" href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">
+                                        <img class="content-image" src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
+                                    </a>
+                                @endif
+                            @endforeach
                         </div>
-                    @endif
-                @endforeach
-            </div>
-                    @endif
-                </div>
+                    </div>
+                @endif
+
+                @if ($fileItems->isNotEmpty())
+                    <div class="card">
+                        <h3>Archivos</h3>
+                        <div class="asset-list preview-file-list">
+                            @foreach ($fileItems as $content)
+                                @if ($content->asset)
+                                    @php
+                                        $ext = strtolower(pathinfo($content->asset->original_name, PATHINFO_EXTENSION));
+                                        $extLabel = $ext ? strtoupper($ext) : 'FILE';
+                                        $iconMap = [
+                                            'pdf' => 'pdf',
+                                            'doc' => 'word',
+                                            'docx' => 'word',
+                                            'xls' => 'table',
+                                            'xlsx' => 'table',
+                                            'csv' => 'table',
+                                            'ppt' => 'powerpoint',
+                                            'pptx' => 'powerpoint',
+                                            'zip' => 'zip',
+                                            'rar' => 'zip',
+                                            '7z' => 'zip',
+                                            'mp3' => 'audio',
+                                            'wav' => 'audio',
+                                            'ogg' => 'audio',
+                                            'flac' => 'audio',
+                                            'txt' => 'document',
+                                            'md' => 'document',
+                                            'rtf' => 'document',
+                                        ];
+                                        $iconName = $iconMap[$ext] ?? 'document';
+                                    @endphp
+                                    <div class="asset-item preview-file-item">
+                                        <img class="file-icon-img preview-file-icon" src="{{ asset('icons/filetypes/' . $iconName . '.svg') }}" alt="{{ $extLabel }}">
+                                        <div class="preview-file-meta">
+                                            <span class="preview-file-name">{{ $content->asset->original_name }}</span>
+                                            <a href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">Ver archivo</a>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
 
                 <div class="card">
                     <h3>Textos</h3>

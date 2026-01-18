@@ -69,9 +69,7 @@
                                         loading="lazy">
                                     </iframe>
                                 @else
-                                    <div class="video-placeholder">
-                                        <span>Video disponible pronto</span>
-                                    </div>
+                                    <img class="video-placeholder" src="{{ asset('default-video.png') }}" alt="Video disponible pronto">
                                 @endif
                             </div>
                         </div>

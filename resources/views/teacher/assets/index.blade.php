@@ -147,6 +147,8 @@
                 @endphp
                 @if ($asset->thumb_path)
                     <img src="{{ asset('storage/' . $asset->thumb_path) }}" alt="Miniatura" class="asset-thumb">
+                @elseif ($asset->type === 'video')
+                    <img src="{{ asset('default-video.png') }}" alt="Miniatura de video" class="asset-thumb">
                 @elseif ($asset->type === 'image')
                     <img src="{{ asset('storage/' . $asset->path) }}" alt="Imagen" class="asset-thumb">
                 @else
