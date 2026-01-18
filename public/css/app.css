@@ -87,6 +87,14 @@ html[data-theme="dark"] header {
     cursor: pointer;
 }
 
+.icon-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: #0f172a;
+    stroke-width: 1.6;
+    fill: none;
+}
+
 .icon-btn--avatar {
     padding: 0;
     overflow: hidden;
@@ -114,6 +122,22 @@ html[data-theme="dark"] .icon-btn {
     background: #111827;
     border-color: #1f2937;
     color: #e5e7eb;
+}
+
+html[data-theme="dark"] .icon-btn svg {
+    stroke: #e5e7eb;
+}
+
+.theme-toggle .icon-sun {
+    display: none;
+}
+
+html[data-theme="light"] .theme-toggle .icon-sun {
+    display: block;
+}
+
+html[data-theme="light"] .theme-toggle .icon-moon {
+    display: none;
 }
 
 .icon-badge {
@@ -804,25 +828,77 @@ html[data-theme="dark"] .modal-footer {
     margin-top: 16px;
     display: grid;
     gap: 16px;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 240px));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
+    align-items: start;
     justify-content: start;
     margin-bottom: 20px;
 }
 
 .dashboard-card {
-    justify-items: center;
-    text-align: center;
+    align-self: start;
+    text-align: left;
+    justify-self: start;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.dashboard-card .section-head {
+.dashboard-card--courses {
+    gap: 14px;
+    max-width: 300px;
+}
+
+.dashboard-card--courses .stat-card {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.dashboard-card--courses .section-head {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    text-align: left;
 }
 
+.dashboard-card--courses .btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.dashboard-card--announcements {
+    gap: 14px;
+    max-width: 320px;
+}
+
+.dashboard-card--announcements .announcement-status {
+    justify-items: start;
+}
+
+.dashboard-card--announcements .btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.dashboard-card--next-meeting {
+    gap: 14px;
+    max-width: 340px;
+}
+
+.dashboard-card--next-meeting .stat-card {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.dashboard-card--next-meeting .btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.dashboard-card .btn,
 .dashboard-card .stat-card {
-    flex-direction: column;
-    align-items: center;
+    max-width: 100%;
+    box-sizing: border-box;
 }
+
+ 
 
 .dashboard-card--alert {
     border-color: #facc15;
@@ -882,13 +958,13 @@ html[data-theme="dark"] .announcement-count {
 
 @media (max-width: 1280px) {
     .dashboard-card-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 220px));
+        grid-template-columns: repeat(auto-fit, minmax(210px, 300px));
     }
 }
 
 @media (max-width: 900px) {
     .dashboard-card-grid {
-        grid-template-columns: repeat(auto-fit, minmax(190px, 210px));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 }
 

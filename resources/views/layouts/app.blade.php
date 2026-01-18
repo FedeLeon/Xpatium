@@ -50,7 +50,12 @@
                 <div class="header-actions">
                     @if ($role === \App\Models\User::ROLE_STUDENT || $role === \App\Models\User::ROLE_TEACHER)
                         <div class="menu-dropdown icon-badge">
-                            <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
+                            <button class="icon-btn" type="button" aria-label="Notificaciones">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M15.5 17h-7a1 1 0 0 1-1-1c0-3 1-5 1-6a3.5 3.5 0 1 1 7 0c0 1 1 3 1 6a1 1 0 0 1-1 1Z"></path>
+                                    <path d="M9.5 17a2.5 2.5 0 0 0 5 0"></path>
+                                </svg>
+                            </button>
                             @if (!empty($notificationUnreadCount))
                                 <span class="badge">{{ $notificationUnreadCount }}</span>
                             @endif
@@ -70,7 +75,12 @@
                         </div>
                     @else
                         <div class="menu-dropdown icon-badge">
-                            <button class="icon-btn" type="button" aria-label="Notificaciones">🔔</button>
+                            <button class="icon-btn" type="button" aria-label="Notificaciones">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M15.5 17h-7a1 1 0 0 1-1-1c0-3 1-5 1-6a3.5 3.5 0 1 1 7 0c0 1 1 3 1 6a1 1 0 0 1-1 1Z"></path>
+                                    <path d="M9.5 17a2.5 2.5 0 0 0 5 0"></path>
+                                </svg>
+                            </button>
                             @if (!empty($notificationUnreadCount))
                                 <span class="badge">{{ $notificationUnreadCount }}</span>
                             @endif
@@ -93,7 +103,15 @@
                             </div>
                         </div>
                     @endif
-                    <button class="icon-btn" type="button" id="theme-toggle" aria-label="Cambiar tema" aria-pressed="false">🌙</button>
+                    <button class="icon-btn theme-toggle" type="button" id="theme-toggle" aria-label="Cambiar tema" aria-pressed="false">
+                        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15.5 5.5a7 7 0 1 0 3 12.5 6.5 6.5 0 0 1-3-12.5Z"></path>
+                        </svg>
+                        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4.5"></circle>
+                            <path d="M12 3.5v2M12 18.5v2M4.5 12h2M17.5 12h2M6.4 6.4l1.4 1.4M16.2 16.2l1.4 1.4M17.6 6.4l-1.4 1.4M7.8 16.2l-1.4 1.4"></path>
+                        </svg>
+                    </button>
                     <div class="menu-dropdown">
                         <button class="icon-btn icon-btn--avatar" type="button" aria-label="Perfil">
                             @if ($avatarUrl)
@@ -312,7 +330,6 @@
                     return;
                 }
                 var setIcon = function (value) {
-                    toggle.textContent = value === 'dark' ? '🌙' : '☀️';
                     toggle.setAttribute('aria-pressed', value === 'dark' ? 'true' : 'false');
                 };
                 setIcon(theme);

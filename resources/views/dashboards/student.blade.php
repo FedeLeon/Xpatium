@@ -26,7 +26,7 @@
     @endphp
 
     <div class="dashboard-card-grid">
-        <div class="card dashboard-card">
+        <div class="card dashboard-card dashboard-card--courses">
             <div class="section-head">
                 <div>
                     <h3>Mis cursos</h3>
@@ -44,7 +44,7 @@
             <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Ver cursos</a>
         </div>
 
-        <div class="card dashboard-card {{ $hasUnreadAnnouncements ? 'dashboard-card--alert' : '' }}">
+        <div class="card dashboard-card dashboard-card--announcements {{ $hasUnreadAnnouncements ? 'dashboard-card--alert' : '' }}">
             <div>
                 <h3>Anuncios</h3>
                 <p class="subtle">Avisos publicados por tu profesor.</p>
@@ -66,7 +66,7 @@
             </button>
         </div>
 
-        <div class="card dashboard-card">
+        <div class="card dashboard-card dashboard-card--next-meeting">
             <div>
                 <h3>Proxima reunion</h3>
                 <p class="subtle">Acceso rapido a tu siguiente clase en vivo.</p>
