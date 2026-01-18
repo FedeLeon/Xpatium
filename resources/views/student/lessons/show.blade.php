@@ -7,31 +7,42 @@
 
     <div class="lesson-layout">
         <aside class="lesson-sidebar">
-            <div class="lesson-sidebar__header">
-                <span class="subtle">Modulo</span>
-                <h3>{{ $module?->title }}</h3>
+            <div class="lesson-sidebar__lesson">
+                <h1>{{ $lesson->title }}</h1>
+                <p class="subtle">{{ $course->name }}</p>
             </div>
-            <div class="lesson-sidebar__list">
-                @foreach ($moduleLessons as $moduleLesson)
-                    <a
-                        class="lesson-link {{ $moduleLesson->id === $lesson->id ? 'is-active' : '' }}"
-                        href="{{ route('student.lessons.show', $moduleLesson) }}"
-                    >
-                        <span>{{ $moduleLesson->title }}</span>
-                    </a>
-                @endforeach
+            <div class="lesson-sidebar__module">
+                <div class="lesson-sidebar__header">
+                    <span class="subtle">Modulo</span>
+                    <h3>{{ $module?->title }}</h3>
+                </div>
+                @if ($module)
+                    <div class="course-progress lesson-sidebar__progress">
+                        <div class="progress-meta" data-module-progress>
+                            <span>Progreso del modulo</span>
+                            <span>{{ $moduleProgress }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar__fill" style="width: {{ $moduleProgress }}%" data-module-progress-bar></div>
+                        </div>
+                        <span class="progress-count" data-module-progress-count>{{ $moduleCompleted }} / {{ $moduleTotal }} lecciones</span>
+                    </div>
+                @endif
+                <div class="lesson-sidebar__list">
+                    @foreach ($moduleLessons as $moduleLesson)
+                        <a
+                            class="lesson-link {{ $moduleLesson->id === $lesson->id ? 'is-active' : '' }}"
+                            href="{{ route('student.lessons.show', $moduleLesson) }}"
+                        >
+                            <span>{{ $moduleLesson->title }}</span>
+                        </a>
+                    @endforeach
+                </div>
             </div>
+            <a class="btn btn-secondary lesson-sidebar__back" href="{{ route('student.courses.show', $course) }}">Volver</a>
         </aside>
 
         <div class="lesson-main">
-            <div class="actions">
-                <div>
-                    <h1>{{ $lesson->title }}</h1>
-                    <p class="subtle">{{ $course->name }}</p>
-                </div>
-                <a class="btn btn-secondary" href="{{ route('student.courses.show', $course) }}">Volver</a>
-            </div>
-
             <div class="lesson-stack">
                 <div class="card">
                     <h3>Video</h3>
@@ -189,15 +200,14 @@
                 <div class="card lesson-completion-card">
                     <form method="POST" action="{{ route('student.lessons.toggleCompletion', $lesson) }}" class="lesson-completion">
                         @csrf
-                        <label class="completion-toggle">
+                        <label class="completion-toggle" data-completion-toggle>
                             <input
                                 type="checkbox"
                                 name="completed"
                                 {{ $isCompleted ? 'checked' : '' }}
-                                onchange="this.form.submit()"
                             >
                             <span class="completion-toggle__box"></span>
-                            <span class="completion-toggle__label">
+                            <span class="completion-toggle__label" data-completion-label>
                                 {{ $isCompleted ? 'Leccion completada' : 'Marcar como completada' }}
                             </span>
                         </label>
@@ -371,6 +381,83 @@
                         form.requestSubmit();
                     }
                 });
+            });
+        })();
+    </script>
+    <script>
+        (() => {
+            const toggle = document.querySelector('[data-completion-toggle]');
+            if (!toggle) {
+                return;
+            }
+            const checkbox = toggle.querySelector('input[type="checkbox"]');
+            if (!checkbox) {
+                return;
+            }
+            const form = toggle.closest('form');
+            const progressMeta = document.querySelector('[data-module-progress]');
+            const progressBar = document.querySelector('[data-module-progress-bar]');
+            const progressCount = document.querySelector('[data-module-progress-count]');
+            const label = toggle.querySelector('[data-completion-label]');
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            const setProgress = (progress) => {
+                if (progressMeta) {
+                    const value = progressMeta.querySelector('span:last-child');
+                    if (value) {
+                        value.textContent = `${progress}%`;
+                    }
+                }
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`;
+                }
+            };
+
+            checkbox.addEventListener('change', async () => {
+                if (!form) {
+                    return;
+                }
+                const previousState = !checkbox.checked;
+                toggle.classList.add('is-loading');
+                checkbox.disabled = true;
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrf || '',
+                            'Accept': 'application/json',
+                        },
+                    });
+                    if (!response.ok) {
+                        throw new Error('request_failed');
+                    }
+                    const result = await response.json();
+                    checkbox.checked = !!result.is_completed;
+                    if (label) {
+                        label.textContent = result.is_completed
+                            ? 'Leccion completada'
+                            : 'Marcar como completada';
+                    }
+                    if (typeof result.module_progress === 'number') {
+                        setProgress(result.module_progress);
+                    }
+                    if (progressCount) {
+                        progressCount.textContent = `${result.module_completed} / ${result.module_total} lecciones`;
+                    }
+                } catch (error) {
+                    checkbox.checked = previousState;
+                    if (window.Swal) {
+                        window.Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo actualizar',
+                            text: 'Intenta nuevamente en unos segundos.',
+                        });
+                    }
+                } finally {
+                    toggle.classList.remove('is-loading');
+                    checkbox.disabled = false;
+                }
             });
         })();
     </script>

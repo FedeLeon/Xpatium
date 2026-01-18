@@ -34,9 +34,35 @@ html[data-theme="dark"] .lesson-sidebar {
     border-color: #1f2937;
 }
 
+.lesson-sidebar__lesson h1 {
+    margin: 0 0 4px;
+    font-size: 18px;
+}
+
+.lesson-sidebar__lesson p {
+    margin: 0;
+}
+
+.lesson-sidebar__module {
+    display: grid;
+    gap: 12px;
+}
+
 .lesson-sidebar__header h3 {
     margin: 4px 0 0;
     font-size: 16px;
+}
+
+.lesson-sidebar__progress {
+    gap: 6px;
+}
+
+.lesson-sidebar__progress .progress-meta {
+    font-size: 12px;
+}
+
+.lesson-sidebar__progress .progress-count {
+    font-size: 11px;
 }
 
 .lesson-sidebar__list {
@@ -45,6 +71,10 @@ html[data-theme="dark"] .lesson-sidebar {
     align-items: start;
     align-content: start;
     grid-auto-rows: max-content;
+}
+
+.lesson-sidebar__back {
+    align-self: flex-start;
 }
 
 .lesson-link {
@@ -150,6 +180,19 @@ html[data-theme="dark"] .lesson-link.is-active {
     transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
+.completion-toggle__box::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #2563eb;
+    border-right-color: #2563eb;
+    opacity: 0;
+    transform: scale(0.6);
+    position: absolute;
+}
+
 .completion-toggle__box::after {
     content: '';
     width: 10px;
@@ -158,6 +201,21 @@ html[data-theme="dark"] .lesson-link.is-active {
     border-bottom: 3px solid #ffffff;
     transform: rotate(45deg) scale(0);
     transition: transform 0.2s ease;
+}
+
+.completion-toggle.is-loading .completion-toggle__box::before {
+    opacity: 1;
+    transform: scale(1);
+    animation: completion-spin 0.7s linear infinite;
+}
+
+.completion-toggle.is-loading .completion-toggle__box::after {
+    transform: rotate(45deg) scale(0);
+}
+
+.completion-toggle.is-loading .completion-toggle__box {
+    background: #ffffff;
+    border-color: #cbd5f5;
 }
 
 .completion-toggle input:checked + .completion-toggle__box {
@@ -197,6 +255,11 @@ html[data-theme="dark"] .completion-toggle__box {
     100% {
         transform: scale(1);
     }
+}
+
+@keyframes completion-spin {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1) rotate(360deg); }
 }
 
 .comment-thread {
@@ -420,7 +483,7 @@ html[data-theme="dark"] .comment-replies {
     gap: 8px;
     padding: 8px 10px;
     border-radius: 8px;
-    border: 1px solid transparent;
+    border: 1px solid #e5e7eb;
     background: transparent;
     color: inherit;
     text-align: left;
@@ -494,6 +557,10 @@ html[data-theme="dark"] .quiz-option.is-wrong {
 html[data-theme="dark"] .quiz-option.is-selected {
     border-color: #334155;
     background: #0b1220;
+}
+
+html[data-theme="dark"] .quiz-option {
+    border-color: #1f2937;
 }
 
 .preview-file-name {

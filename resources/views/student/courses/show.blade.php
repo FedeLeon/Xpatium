@@ -1,15 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="actions">
-        <div>
-            <h1>{{ $course->name }}</h1>
-            <p>{{ $course->subtitle }}</p>
+    <div class="course-hero">
+        <div class="course-hero__media">
+            @if ($course->image_path)
+                <img class="course-hero__image" src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del curso">
+            @else
+                <div class="course-hero__placeholder">Sin imagen</div>
+            @endif
         </div>
-        <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Volver</a>
+        <div class="course-hero__content">
+            <div>
+                <h1>{{ $course->name }}</h1>
+                @if ($course->subtitle)
+                    <p>{{ $course->subtitle }}</p>
+                @endif
+            </div>
+            <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Volver</a>
+        </div>
     </div>
 
-    <div class="card">
+    <div class="card course-progress-card">
         <div class="course-progress course-progress--header">
             <div class="progress-meta">
                 <span>Progreso del curso</span>
@@ -59,15 +70,14 @@
                                     @php
                                         $lessonDone = in_array($lesson->id, $completedLessonIdList, true);
                                     @endphp
-                                    <div class="asset-item">
+                                    <a class="asset-item lesson-link-row" href="{{ route('student.lessons.show', $lesson) }}">
                                         <div class="lesson-title">
                                             <span class="completion-bubble {{ $lessonDone ? 'is-complete' : '' }}">
                                                 <span>✓</span>
                                             </span>
                                             <span>{{ $lesson->title }}</span>
                                         </div>
-                                        <a class="btn btn-secondary" href="{{ route('student.lessons.show', $lesson) }}">Ver leccion</a>
-                                    </div>
+                                    </a>
                                 @endforeach
                             </div>
                         @endif
