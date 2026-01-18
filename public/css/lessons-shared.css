@@ -144,6 +144,17 @@ html[data-theme="dark"] .lesson-link.is-active {
 
 .content-image-link {
     display: block;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.content-image-link:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 4px;
 }
 
 .content-image {
@@ -151,6 +162,70 @@ html[data-theme="dark"] .lesson-link.is-active {
     height: auto;
     border-radius: 8px;
     display: block;
+}
+
+.image-carousel {
+    position: fixed;
+    inset: 0;
+    background: rgba(7, 10, 24, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+}
+
+.image-carousel[hidden] {
+    display: none;
+}
+
+.carousel-image {
+    max-width: min(90vw, 960px);
+    max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    background: #0b1220;
+    object-fit: contain;
+}
+
+.carousel-arrow,
+.carousel-close {
+    position: absolute;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #0f172a;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-arrow {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.carousel-arrow.is-prev {
+    left: 24px;
+}
+
+.carousel-arrow.is-next {
+    right: 24px;
+}
+
+.carousel-close {
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+}
+
+body.is-carousel-open {
+    overflow: hidden;
 }
 
 .lesson-completion-card {

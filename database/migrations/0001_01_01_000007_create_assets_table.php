@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('type');
             $table->string('path');
+            $table->string('thumb_path')->nullable();
             $table->string('original_name');
             $table->string('mime')->nullable();
             $table->unsignedBigInteger('size')->default(0);

@@ -73,14 +73,26 @@
                 @if ($imageItems->isNotEmpty())
                     <div class="card">
                         <h3>Imagenes</h3>
-                        <div class="grid">
+                        <div class="grid lesson-image-grid" data-carousel>
                             @foreach ($imageItems as $content)
                                 @if ($content->asset)
-                                    <a class="content-image-link" href="{{ asset('storage/' . $content->asset->path) }}" target="_blank" rel="noopener">
+                                    <button
+                                        class="content-image-link"
+                                        type="button"
+                                        data-carousel-item
+                                        data-carousel-src="{{ asset('storage/' . $content->asset->path) }}"
+                                        aria-label="Abrir imagen"
+                                    >
                                         <img class="content-image" src="{{ asset('storage/' . $content->asset->path) }}" alt="Imagen de leccion">
-                                    </a>
+                                    </button>
                                 @endif
                             @endforeach
+                        </div>
+                        <div class="image-carousel" data-carousel-modal hidden>
+                            <button class="carousel-close" type="button" data-carousel-close aria-label="Cerrar">✕</button>
+                            <button class="carousel-arrow is-prev" type="button" data-carousel-prev aria-label="Anterior">‹</button>
+                            <img class="carousel-image" data-carousel-image src="" alt="Imagen de leccion">
+                            <button class="carousel-arrow is-next" type="button" data-carousel-next aria-label="Siguiente">›</button>
                         </div>
                     </div>
                 @endif
@@ -267,6 +279,80 @@
         </div>
     </div>
 
+    <script>
+        (() => {
+            const grid = document.querySelector('[data-carousel]');
+            if (!grid) {
+                return;
+            }
+            const items = Array.from(grid.querySelectorAll('[data-carousel-item]'));
+            if (!items.length) {
+                return;
+            }
+            const modal = grid.closest('.card')?.querySelector('[data-carousel-modal]');
+            const image = modal?.querySelector('[data-carousel-image]');
+            const prev = modal?.querySelector('[data-carousel-prev]');
+            const next = modal?.querySelector('[data-carousel-next]');
+            const close = modal?.querySelector('[data-carousel-close]');
+            let currentIndex = 0;
+
+            const showAt = (index) => {
+                if (!image || !modal) {
+                    return;
+                }
+                const length = items.length;
+                currentIndex = ((index % length) + length) % length;
+                const src = items[currentIndex].getAttribute('data-carousel-src');
+                if (src) {
+                    image.src = src;
+                }
+                modal.removeAttribute('hidden');
+                document.body.classList.add('is-carousel-open');
+            };
+
+            const closeModal = () => {
+                if (!modal) {
+                    return;
+                }
+                modal.setAttribute('hidden', '');
+                document.body.classList.remove('is-carousel-open');
+            };
+
+            const step = (delta) => showAt(currentIndex + delta);
+
+            items.forEach((item, index) => {
+                item.addEventListener('click', () => showAt(index));
+            });
+
+            prev?.addEventListener('click', () => step(-1));
+            next?.addEventListener('click', () => step(1));
+            close?.addEventListener('click', closeModal);
+
+            modal?.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            if (items.length <= 1) {
+                prev?.setAttribute('hidden', '');
+                next?.setAttribute('hidden', '');
+            }
+
+            document.addEventListener('keydown', (event) => {
+                if (!modal || modal.hasAttribute('hidden')) {
+                    return;
+                }
+                if (event.key === 'Escape') {
+                    closeModal();
+                } else if (event.key === 'ArrowLeft') {
+                    step(-1);
+                } else if (event.key === 'ArrowRight') {
+                    step(1);
+                }
+            });
+        })();
+    </script>
     <script>
         (() => {
             const form = document.getElementById('quiz-form');
