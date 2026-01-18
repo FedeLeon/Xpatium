@@ -7,6 +7,7 @@ use App\Models\Lesson;
 use App\Models\LessonQuizAttempt;
 use App\Models\LessonQuizAnswer;
 use App\Models\StudentProfile;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class LessonQuizController extends Controller
 {
-    public function store(Request $request, Lesson $lesson): RedirectResponse
+    public function store(Request $request, Lesson $lesson): RedirectResponse|JsonResponse
     {
         $course = $lesson->module->course;
         $profile = StudentProfile::where('student_id', $request->user()->id)->first();
@@ -55,8 +56,17 @@ class LessonQuizController extends Controller
 
         $totalQuestions = $quiz->questions->count();
         $score = 0;
+        $feedback = [];
         foreach ($quiz->questions as $question) {
-            if ($selectedOptions[$question->id]->is_correct) {
+            $selected = $selectedOptions[$question->id];
+            $correctOption = $question->options->firstWhere('is_correct', true);
+            $feedback[$question->id] = [
+                'selected' => $selected->id,
+                'correct' => $correctOption?->id,
+                'is_correct' => $selected->is_correct,
+            ];
+
+            if ($selected->is_correct) {
                 $score++;
             }
         }
@@ -80,6 +90,20 @@ class LessonQuizController extends Controller
             }
         });
 
-        return redirect()->route('student.lessons.show', $lesson);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'score' => $score,
+                'total' => $totalQuestions,
+                'feedback' => $feedback,
+            ]);
+        }
+
+        return redirect()
+            ->route('student.lessons.show', $lesson)
+            ->with('quiz_result', [
+                'score' => $score,
+                'total' => $totalQuestions,
+                'feedback' => $feedback,
+            ]);
     }
 }

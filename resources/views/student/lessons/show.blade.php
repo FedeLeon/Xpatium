@@ -131,31 +131,57 @@
                     @elseif ($quiz->questions->isEmpty())
                         <p class="subtle">El cuestionario todavia no tiene preguntas.</p>
                     @else
+                        @php
+                            $quizResult = session('quiz_result');
+                            $quizFeedback = $quizResult['feedback'] ?? [];
+                        @endphp
                         <p class="subtle">{{ $quiz->title }}</p>
+                        @if ($quizResult)
+                            <div class="quiz-result-banner {{ $quizResult['score'] === $quizResult['total'] ? 'is-correct' : 'is-wrong' }}">
+                                Resultado: {{ $quizResult['score'] }} / {{ $quizResult['total'] }}
+                            </div>
+                        @endif
                         @if ($latestAttempt)
                             <p class="subtle">Ultimo intento: {{ $latestAttempt->score }} / {{ $latestAttempt->total_questions }}</p>
                         @endif
-                        <form method="POST" action="{{ route('student.lessons.quiz.store', $lesson) }}" class="form-grid">
+                        <form method="POST" action="{{ route('student.lessons.quiz.store', $lesson) }}" class="form-grid" id="quiz-form">
                             @csrf
                             @foreach ($quiz->questions as $question)
-                                <div class="card">
+                                @php
+                                    $feedback = $quizFeedback[$question->id] ?? null;
+                                    $cardState = $feedback
+                                        ? ($feedback['is_correct'] ? 'is-correct' : 'is-wrong')
+                                        : '';
+                                @endphp
+                                <div class="card quiz-feedback-card {{ $cardState }}" data-question-id="{{ $question->id }}">
                                     <strong>{{ $loop->iteration }}. {{ $question->prompt }}</strong>
+                                    <input type="hidden" name="answers[{{ $question->id }}]" value="{{ $feedback['selected'] ?? '' }}" data-answer-input="{{ $question->id }}">
                                     <div class="list">
                                         @foreach ($question->options as $option)
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name="answers[{{ $question->id }}]"
-                                                    value="{{ $option->id }}"
-                                                    {{ $loop->first ? 'required' : '' }}
-                                                >
+                                            @php
+                                                $isSelected = $feedback && $feedback['selected'] === $option->id;
+                                                $isCorrect = $feedback && $feedback['correct'] === $option->id;
+                                                $optionState = $isCorrect ? 'is-correct' : ($isSelected ? 'is-wrong' : '');
+                                            @endphp
+                                            <button
+                                                class="quiz-option {{ $optionState }} {{ $isSelected ? 'is-selected' : '' }}"
+                                                type="button"
+                                                data-option-id="{{ $option->id }}"
+                                                data-question-id="{{ $question->id }}"
+                                                {{ $quizResult ? 'disabled' : '' }}
+                                            >
                                                 <span>{{ $option->option_text }}</span>
-                                            </label>
+                                                @if ($isCorrect)
+                                                    <span class="quiz-option__badge">Correcta</span>
+                                                @elseif ($isSelected)
+                                                    <span class="quiz-option__badge">Incorrecta</span>
+                                                @endif
+                                            </button>
                                         @endforeach
                                     </div>
                                 </div>
                             @endforeach
-                            <button class="btn" type="submit">Enviar cuestionario</button>
+                            <button class="btn" type="submit" {{ $quizResult ? 'disabled' : '' }}>Enviar cuestionario</button>
                         </form>
                     @endif
                 </div>
@@ -192,27 +218,160 @@
                         @endif
                     </div>
 
-                    <h3>Comentarios</h3>
-                    <form method="POST" action="{{ route('lessons.comments.store', $lesson) }}" class="form-grid comment-form">
-                        @csrf
-                        <div>
-                            <label for="comment-body">Deja un comentario</label>
-                            <textarea id="comment-body" name="body" required></textarea>
-                        </div>
-                        <button class="btn" type="submit">Publicar</button>
-                    </form>
+                    <details class="comments-panel">
+                        <summary>
+                            <span>Comentarios</span>
+                            <span class="comments-meta">{{ $comments->count() }} mensajes</span>
+                            <span class="comments-arrow">▼</span>
+                        </summary>
+                        <div class="comments-body">
+                            <form method="POST" action="{{ route('lessons.comments.store', $lesson) }}" class="form-grid comment-form">
+                                @csrf
+                                <div>
+                                    <label for="comment-body">Deja un comentario</label>
+                                    <textarea id="comment-body" name="body" required></textarea>
+                                </div>
+                                <button class="btn" type="submit">Publicar</button>
+                            </form>
 
-                    @if ($comments->isEmpty())
-                        <p class="subtle">Sin comentarios.</p>
-                    @else
-                        <div class="list">
-                            @foreach ($comments as $comment)
-                                @include('lessons.comment', ['comment' => $comment, 'level' => 0])
-                            @endforeach
+                            @if ($comments->isEmpty())
+                                <p class="subtle">Sin comentarios.</p>
+                            @else
+                                <div class="list">
+                                    @foreach ($comments as $comment)
+                                        @include('lessons.comment', ['comment' => $comment, 'level' => 0])
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
-                    @endif
+                    </details>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        (() => {
+            const form = document.getElementById('quiz-form');
+            if (!form) {
+                return;
+            }
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const answerInputs = Array.from(form.querySelectorAll('[data-answer-input]'));
+
+            const applyFeedback = (feedback) => {
+                Object.entries(feedback).forEach(([questionId, data]) => {
+                    const card = form.querySelector(`[data-question-id="${questionId}"]`);
+                    if (!card) {
+                        return;
+                    }
+                    card.classList.add('quiz-feedback-card', data.is_correct ? 'is-correct' : 'is-wrong');
+                    const optionButtons = card.querySelectorAll('[data-option-id]');
+                    optionButtons.forEach((button) => {
+                        const optionId = Number(button.getAttribute('data-option-id'));
+                        button.classList.remove('is-correct', 'is-wrong', 'is-selected');
+                        const existingBadge = button.querySelector('.quiz-option__badge');
+                        if (existingBadge) {
+                            existingBadge.remove();
+                        }
+                        if (optionId === data.correct) {
+                            button.classList.add('is-correct');
+                            const badge = document.createElement('span');
+                            badge.className = 'quiz-option__badge';
+                            badge.textContent = 'Correcta';
+                            button.appendChild(badge);
+                        } else if (optionId === data.selected) {
+                            button.classList.add('is-wrong', 'is-selected');
+                            const badge = document.createElement('span');
+                            badge.className = 'quiz-option__badge';
+                            badge.textContent = 'Incorrecta';
+                            button.appendChild(badge);
+                        }
+                    });
+                });
+            };
+
+            const allAnswered = () => answerInputs.every((input) => input.value);
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                if (submitBtn?.disabled) {
+                    return;
+                }
+                if (!allAnswered()) {
+                    if (window.Swal) {
+                        window.Swal.fire({
+                            icon: 'info',
+                            title: 'Responde todas las preguntas',
+                            text: 'Selecciona una opcion en cada pregunta para enviar.',
+                        });
+                    }
+                    return;
+                }
+                const payload = new FormData(form);
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrf || '',
+                            'Accept': 'application/json',
+                        },
+                        body: payload,
+                    });
+                    if (!response.ok) {
+                        throw new Error('request_failed');
+                    }
+                    const result = await response.json();
+                    const score = result.score ?? 0;
+                    const total = result.total ?? 0;
+                    applyFeedback(result.feedback || {});
+                    form.querySelectorAll('.quiz-option').forEach((button) => {
+                        button.disabled = true;
+                    });
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                    }
+                    if (window.Swal) {
+                        window.Swal.fire({
+                            icon: score === total ? 'success' : 'error',
+                            title: 'Resultado del cuestionario',
+                            text: score === total
+                                ? `Obtuviste ${score} de ${total}.`
+                                : `Obtuviste ${score} de ${total}. La proxima vez lo haras mejor.`,
+                        });
+                    }
+                } catch (error) {
+                    if (window.Swal) {
+                        window.Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo enviar',
+                            text: 'Intenta nuevamente en unos segundos.',
+                        });
+                    }
+                }
+            });
+
+            form.querySelectorAll('.quiz-option').forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (button.disabled) {
+                        return;
+                    }
+                    const questionId = button.getAttribute('data-question-id');
+                    const optionId = button.getAttribute('data-option-id');
+                    const input = form.querySelector(`[data-answer-input="${questionId}"]`);
+                    if (input) {
+                        input.value = optionId;
+                    }
+                    const siblings = form.querySelectorAll(`.quiz-option[data-question-id="${questionId}"]`);
+                    siblings.forEach((sibling) => sibling.classList.remove('is-selected'));
+                    button.classList.add('is-selected');
+                    if (allAnswered()) {
+                        form.requestSubmit();
+                    }
+                });
+            });
+        })();
+    </script>
 @endsection
