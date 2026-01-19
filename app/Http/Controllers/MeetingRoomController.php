@@ -20,7 +20,7 @@ class MeetingRoomController extends Controller
             abort(404);
         }
 
-        if (! $meeting->daily_room_url) {
+        if (! $meeting->jitsi_room_url) {
             abort(404);
         }
 
@@ -31,6 +31,6 @@ class MeetingRoomController extends Controller
             }
         }
 
-        return redirect()->away($meeting->daily_room_url);
+        return redirect()->away($meeting->jitsi_room_url);
     }
 }

@@ -20,8 +20,8 @@ class Meeting extends Model
         'meeting_type',
         'scheduled_for',
         'duration_minutes',
-        'daily_room_name',
-        'daily_room_url',
+        'jitsi_room_name',
+        'jitsi_room_url',
     ];
 
     protected $casts = [

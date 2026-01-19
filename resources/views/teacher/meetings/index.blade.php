@@ -46,7 +46,7 @@
                         <div>{{ $meeting->meeting_type === 'individual' ? 'Individual' : 'Grupal' }}</div>
                         <div class="meeting-grid-attendees">{{ $attendeeNames ?: 'Sin alumnos' }}</div>
                         <div class="meeting-grid-actions">
-                            <a class="btn btn-secondary" href="{{ $meeting->daily_room_url }}" target="_blank" rel="noopener">
+                            <a class="btn btn-secondary" href="{{ $meeting->jitsi_room_url }}" target="_blank" rel="noopener">
                                 Abrir reunion
                             </a>
                             <form method="POST" action="{{ route('teacher.meetings.destroy', $meeting) }}"

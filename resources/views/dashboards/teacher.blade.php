@@ -156,7 +156,7 @@
                                     {{ $meeting->scheduled_for->format('d/m/Y H:i') }} · {{ $meeting->duration_minutes }} min
                                 </div>
                             </div>
-                            <a class="btn btn-secondary" href="{{ $meeting->daily_room_url }}" target="_blank" rel="noopener">
+                            <a class="btn btn-secondary" href="{{ $meeting->jitsi_room_url }}" target="_blank" rel="noopener">
                                 Abrir reunion
                             </a>
                         </div>

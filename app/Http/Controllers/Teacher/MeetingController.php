@@ -70,7 +70,8 @@ class MeetingController extends Controller
         if ($teacherSlug === '') {
             $teacherSlug = 'profesor-'.$teacher->id;
         }
-        $roomName = 'xpatium-'.$teacherSlug.'-'.Str::lower(Str::random(6));
+        $roomCode = Str::lower(Str::random(8));
+        $roomName = 'xpatium-'.$teacherSlug.'-'.$roomCode;
         $jitsiDomain = config('services.jitsi.domain', 'meet.jit.si');
         $jitsiDomain = preg_replace('#^https?://#', '', rtrim($jitsiDomain, '/'));
         $roomUrl = 'https://'.$jitsiDomain.'/'.$roomName;
@@ -82,8 +83,8 @@ class MeetingController extends Controller
             'meeting_type' => $data['meeting_type'],
             'scheduled_for' => $scheduledFor,
             'duration_minutes' => $data['duration_minutes'],
-            'daily_room_name' => $roomName,
-            'daily_room_url' => $roomUrl,
+            'jitsi_room_name' => $roomName,
+            'jitsi_room_url' => $roomUrl,
         ]);
 
         $meeting->attendees()->sync($allowedStudentIds);

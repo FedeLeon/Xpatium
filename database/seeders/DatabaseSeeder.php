@@ -525,9 +525,18 @@ class DatabaseSeeder extends Seeder
 
     private function seedUpcomingMeetings(User $teacher, Collection $students): void
     {
+        $jitsiDomain = config('services.jitsi.domain', 'meet.jit.si');
+        $jitsiDomain = preg_replace('#^https?://#', '', rtrim($jitsiDomain, '/'));
+
+        $teacherSlug = Str::slug(trim($teacher->name.' '.$teacher->last_name));
+        if ($teacherSlug === '') {
+            $teacherSlug = 'profesor-'.$teacher->id;
+        }
+
         foreach ($students as $student) {
             $scheduledFor = now()->addDays(rand(1, 7))->setTime(rand(9, 19), 0);
-            $roomName = 'demo-'.$teacher->id.'-'.$student->id.'-'.Str::random(8);
+            $roomCode = Str::lower(Str::random(8));
+            $roomName = 'xpatium-'.$teacherSlug.'-'.$roomCode;
 
             $meeting = Meeting::create([
                 'teacher_id' => $teacher->id,
@@ -536,8 +545,8 @@ class DatabaseSeeder extends Seeder
                 'meeting_type' => Meeting::TYPE_INDIVIDUAL,
                 'scheduled_for' => $scheduledFor,
                 'duration_minutes' => 45,
-                'daily_room_name' => $roomName,
-                'daily_room_url' => 'https://demo.daily.co/'.$roomName,
+                'jitsi_room_name' => $roomName,
+                'jitsi_room_url' => 'https://'.$jitsiDomain.'/'.$roomName,
             ]);
 
             $meeting->attendees()->sync([$student->id]);

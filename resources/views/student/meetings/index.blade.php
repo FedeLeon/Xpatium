@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <a class="btn btn-secondary meeting-join {{ $meeting->join_available ? '' : 'is-disabled' }}"
-                           href="{{ $meeting->daily_room_url }}"
+                           href="{{ $meeting->jitsi_room_url }}"
                            target="_blank"
                            rel="noopener"
                            data-meeting-join

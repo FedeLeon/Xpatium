@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('meeting_type');
             $table->dateTime('scheduled_for');
             $table->unsignedInteger('duration_minutes')->default(60);
-            $table->string('daily_room_name')->unique();
-            $table->string('daily_room_url');
+            $table->string('jitsi_room_name')->unique();
+            $table->string('jitsi_room_url');
             $table->timestamps();
         });
     }
