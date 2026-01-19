@@ -680,6 +680,8 @@ html[data-theme="dark"] .completion-bubble.is-complete {
     overflow: hidden;
     border: 1px solid #e5e7eb;
     background: #f9fafb;
+    width: 25%;
+    justify-self: start;
 }
 
 .course-hero__image {
@@ -836,8 +838,9 @@ html[data-theme="dark"] .modal-footer {
 
 .dashboard-card {
     align-self: start;
-    text-align: left;
-    justify-self: start;
+    text-align: center;
+    justify-self: center;
+    justify-items: center;
     width: 100%;
     box-sizing: border-box;
 }
@@ -849,13 +852,13 @@ html[data-theme="dark"] .modal-footer {
 
 .dashboard-card--courses .stat-card {
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .dashboard-card--courses .section-head {
     flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
 }
 
 .dashboard-card--courses .btn {
@@ -869,7 +872,8 @@ html[data-theme="dark"] .modal-footer {
 }
 
 .dashboard-card--announcements .announcement-status {
-    justify-items: start;
+    justify-items: center;
+    text-align: center;
 }
 
 .dashboard-card--announcements .btn {
@@ -884,7 +888,7 @@ html[data-theme="dark"] .modal-footer {
 
 .dashboard-card--next-meeting .stat-card {
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .dashboard-card--next-meeting .btn {
@@ -896,6 +900,21 @@ html[data-theme="dark"] .modal-footer {
 .dashboard-card .stat-card {
     max-width: 100%;
     box-sizing: border-box;
+}
+
+.dashboard-card .section-head {
+    justify-content: center;
+    text-align: center;
+}
+
+.dashboard-card .stat-card {
+    justify-content: center;
+    text-align: center;
+}
+
+.dashboard-card .stat-card > div {
+    width: 100%;
+    text-align: center;
 }
 
  
@@ -1566,6 +1585,7 @@ html[data-theme="dark"] .stat-value {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+
 .profile-grid label {
     display: block;
     margin-bottom: 6px;
@@ -1676,10 +1696,47 @@ html[data-theme="dark"] .alert.alert-success {
 }
 
 .profile-hero {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    gap: 12px;
     margin-bottom: 18px;
+}
+
+.profile-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.profile-menu__item {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f8fafc;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #0f172a;
+    cursor: pointer;
+}
+
+.profile-menu__item.is-active {
+    background: #0f172a;
+    border-color: #0f172a;
+    color: #ffffff;
+}
+
+.profile-section {
+    display: grid;
+    gap: 18px;
+}
+
+.profile-section[hidden] {
+    display: none;
 }
 
 .profile-form {
@@ -1687,6 +1744,11 @@ html[data-theme="dark"] .alert.alert-success {
     gap: 18px;
     width: min(70%, 960px);
     margin: 0 auto;
+}
+
+.profile-layout .profile-form {
+    width: 100%;
+    margin: 0;
 }
 
 .profile-card {
@@ -1715,6 +1777,18 @@ html[data-theme="dark"] .alert.alert-success {
     margin-top: 8px;
 }
 
+html[data-theme="dark"] .profile-menu__item {
+    background: #0b1220;
+    border-color: #1f2937;
+    color: #e5e7eb;
+}
+
+html[data-theme="dark"] .profile-menu__item.is-active {
+    background: #e5e7eb;
+    border-color: #e5e7eb;
+    color: #0b1220;
+}
+
 @media (max-width: 640px) {
     .profile-card {
         padding: 16px;
@@ -1731,6 +1805,13 @@ html[data-theme="dark"] .alert.alert-success {
 
     .profile-grid--two {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .profile-form {
+        width: 100%;
+        margin: 0;
     }
 }
 

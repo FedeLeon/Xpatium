@@ -91,7 +91,9 @@
                         <div class="image-carousel" data-carousel-modal hidden>
                             <button class="carousel-close" type="button" data-carousel-close aria-label="Cerrar">✕</button>
                             <button class="carousel-arrow is-prev" type="button" data-carousel-prev aria-label="Anterior">‹</button>
-                            <img class="carousel-image" data-carousel-image src="" alt="Imagen de leccion">
+                            <div class="carousel-frame">
+                                <img class="carousel-image" data-carousel-image src="" alt="Imagen de leccion">
+                            </div>
                             <button class="carousel-arrow is-next" type="button" data-carousel-next aria-label="Siguiente">›</button>
                         </div>
                     </div>
@@ -470,9 +472,6 @@
                     const siblings = form.querySelectorAll(`.quiz-option[data-question-id="${questionId}"]`);
                     siblings.forEach((sibling) => sibling.classList.remove('is-selected'));
                     button.classList.add('is-selected');
-                    if (allAnswered()) {
-                        form.requestSubmit();
-                    }
                 });
             });
         })();
