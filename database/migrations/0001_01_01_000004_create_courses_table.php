@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('price_usd', 10, 2)->default(0);
             $table->date('start_date')->nullable();
             $table->string('image_path')->nullable();
+            $table->string('duration')->nullable();
+            $table->string('level')->nullable();
             $table->string('payment_link')->nullable();
             $table->text('landing_custom_text')->nullable();
             $table->string('landing_custom_image_path')->nullable();

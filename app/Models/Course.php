@@ -20,6 +20,8 @@ class Course extends Model
         'price_usd',
         'start_date',
         'image_path',
+        'duration',
+        'level',
         'payment_link',
         'landing_custom_text',
         'landing_custom_image_path',

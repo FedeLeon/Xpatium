@@ -112,10 +112,20 @@ class DatabaseSeeder extends Seeder
             'Marketing digital para principiantes',
             'Bases de datos desde cero',
         ];
+        $courseDurations = [
+            '8 semanas',
+            '6 semanas',
+            '10 semanas',
+        ];
+        $courseLevels = [
+            'principiante',
+            'intermedio',
+            'avanzado',
+        ];
 
         $createdCourses = collect();
 
-        foreach ($courseNames as $name) {
+        foreach ($courseNames as $index => $name) {
             $course = Course::create([
                 'user_id' => $teacher->id,
                 'name' => $name,
@@ -125,6 +135,8 @@ class DatabaseSeeder extends Seeder
                 'price_usd' => 39,
                 'start_date' => now()->addDays(rand(7, 30)),
                 'image_path' => $nextCourseImage(),
+                'duration' => $courseDurations[$index] ?? null,
+                'level' => $courseLevels[$index] ?? null,
             ]);
             $createdCourses->push($course);
 

@@ -48,7 +48,11 @@
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Duracion</span>
-                                <span class="meta-value">Sin datos</span>
+                                <span class="meta-value">{{ $course->duration ?: 'Sin datos' }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Nivel</span>
+                                <span class="meta-value">{{ $course->level ? ucfirst($course->level) : 'Sin datos' }}</span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Inicio</span>

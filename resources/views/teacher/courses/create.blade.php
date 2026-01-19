@@ -39,7 +39,7 @@
                             Subtitulo
                             <span class="info-tooltip" data-tooltip="Frase corta para resumir el curso.">i</span>
                         </label>
-                        <input id="subtitle" name="subtitle" type="text" value="{{ old('subtitle') }}">
+                        <input id="subtitle" name="subtitle" type="text" value="{{ old('subtitle') }}" required>
                         @error('subtitle')
                             <div class="hint">{{ $message }}</div>
                         @enderror
@@ -69,7 +69,7 @@
                             Precio USD
                             <span class="info-tooltip" data-tooltip="Precio en dolares para alumnos internacionales.">i</span>
                         </label>
-                        <input id="price_usd" name="price_usd" type="number" step="0.01" min="0" value="{{ old('price_usd', '0.00') }}" required>
+                        <input id="price_usd" name="price_usd" type="number" step="0.01" min="0" value="{{ old('price_usd') }}">
                         @error('price_usd')
                             <div class="hint">{{ $message }}</div>
                         @enderror
@@ -81,6 +81,31 @@
                         </label>
                         <input id="start_date" name="start_date" type="date" value="{{ old('start_date') }}">
                         @error('start_date')
+                            <div class="hint">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="duration">
+                            Duracion del curso
+                            <span class="info-tooltip" data-tooltip="Ejemplo: 8 semanas, 20 horas, acceso permanente.">i</span>
+                        </label>
+                        <input id="duration" name="duration" type="text" value="{{ old('duration') }}">
+                        @error('duration')
+                            <div class="hint">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="level">
+                            Nivel
+                            <span class="info-tooltip" data-tooltip="Selecciona el nivel sugerido del curso.">i</span>
+                        </label>
+                        <select id="level" name="level">
+                            <option value="">Selecciona un nivel</option>
+                            <option value="principiante" @selected(old('level') === 'principiante')>Principiante</option>
+                            <option value="intermedio" @selected(old('level') === 'intermedio')>Intermedio</option>
+                            <option value="avanzado" @selected(old('level') === 'avanzado')>Avanzado</option>
+                        </select>
+                        @error('level')
                             <div class="hint">{{ $message }}</div>
                         @enderror
                     </div>
@@ -103,6 +128,7 @@
 
             <div class="card course-form__side">
                 <h2>Landing del curso</h2>
+                <p class="subtle">Estos campos son opcionales y pueden completarse despues de crear el curso.</p>
                 <div class="form-grid form-grid-full">
                     <div>
                         <label for="landing_custom_text">

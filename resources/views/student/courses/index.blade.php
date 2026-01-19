@@ -54,6 +54,14 @@
                                 <span class="meta-value">{{ $totalLessons }}</span>
                             </div>
                             <div class="meta-item">
+                                <span class="meta-label">Duracion</span>
+                                <span class="meta-value">{{ $course->duration ?: 'Sin datos' }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Nivel</span>
+                                <span class="meta-value">{{ $course->level ? ucfirst($course->level) : 'Sin datos' }}</span>
+                            </div>
+                            <div class="meta-item">
                                 <span class="meta-label">Progreso</span>
                                 <span class="meta-value">{{ $progress }}%</span>
                             </div>

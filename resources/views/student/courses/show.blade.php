@@ -15,6 +15,10 @@
                 @if ($course->subtitle)
                     <p>{{ $course->subtitle }}</p>
                 @endif
+                <p class="subtle">
+                    Duracion: {{ $course->duration ?: 'Sin datos' }} ·
+                    Nivel: {{ $course->level ? ucfirst($course->level) : 'Sin datos' }}
+                </p>
             </div>
             <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Volver</a>
         </div>

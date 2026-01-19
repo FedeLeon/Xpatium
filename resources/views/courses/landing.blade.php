@@ -37,6 +37,12 @@
                             <img class="logo-curso" src="{{ asset('landing/assets/img/logo.png') }}" alt="Xpatium">
                         </a>
                         <span class="tipo-curso">Inicio: {{ $course->start_date?->format('d/m/Y') ?? 'A confirmar' }}</span>
+                        <span class="tipo-curso">
+                            Duracion: {{ $course->duration ?: 'Acceso flexible' }}
+                        </span>
+                        <span class="tipo-curso">
+                            Nivel: {{ $course->level ? ucfirst($course->level) : 'Sin definir' }}
+                        </span>
                         <h1 class="titulo-curso">{{ $course->name }}</h1>
                         @if ($course->subtitle)
                             <p class="descripcion-curso">{{ $course->subtitle }}</p>
@@ -189,7 +195,8 @@
                         </ul>
                     </div>
                     <div class="cta-price">
-                        <h2 class="h4 fw-normal">Duracion: acceso flexible</h2>
+                        <h2 class="h4 fw-normal">Duracion: {{ $course->duration ?: 'acceso flexible' }}</h2>
+                        <p class="mb-3">Nivel: {{ $course->level ? ucfirst($course->level) : 'Sin definir' }}</p>
                         <span class="badge bg-light text-dark">INVERSION</span>
                         <h3 class="display-6 fw-bold">
                             <span class="precio-pill">ARS {{ number_format($course->price_ars, 2) }}</span>

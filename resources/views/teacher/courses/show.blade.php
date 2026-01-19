@@ -31,6 +31,14 @@
                     <h3>Fecha de inicio</h3>
                     <p>{{ $course->start_date?->format('d/m/Y') ?? 'Sin fecha' }}</p>
                 </div>
+                <div>
+                    <h3>Duracion</h3>
+                    <p>{{ $course->duration ?: 'Sin datos' }}</p>
+                </div>
+                <div>
+                    <h3>Nivel</h3>
+                    <p>{{ $course->level ? ucfirst($course->level) : 'Sin datos' }}</p>
+                </div>
             </div>
             <a class="btn btn-secondary course-dashboard__back" href="{{ route('teacher.courses.index') }}">Volver</a>
         </div>
