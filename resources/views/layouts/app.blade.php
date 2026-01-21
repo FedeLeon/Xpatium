@@ -23,6 +23,12 @@
                 \App\Models\User::ROLE_STUDENT => 'student.profile.edit',
                 default => 'home',
             };
+            $dashboardRoute = match ($role) {
+                \App\Models\User::ROLE_ADMIN => 'admin.dashboard',
+                \App\Models\User::ROLE_TEACHER => 'teacher.dashboard',
+                \App\Models\User::ROLE_STUDENT => 'student.dashboard',
+                default => 'home',
+            };
             $needsProfilePrompt = false;
             if ($currentUser && in_array($role, [\App\Models\User::ROLE_TEACHER, \App\Models\User::ROLE_STUDENT], true)) {
                 $requiredFields = ['name', 'last_name', 'birth_date', 'phone', 'address', 'country', 'state', 'city', 'postal_code'];
@@ -43,10 +49,10 @@
         @endphp
         <div class="app">
             <header>
-                <div class="logo">
+                <a class="logo" href="{{ route($dashboardRoute) }}" aria-label="Ir al inicio">
                     <img src="{{ asset('logo.png') }}" alt="Logo Xpatium" class="logo-mark logo-mark--inline">
                     <span class="logo-text">patium</span>
-                </div>
+                </a>
                 <div class="header-actions">
                     @if ($role === \App\Models\User::ROLE_STUDENT || $role === \App\Models\User::ROLE_TEACHER)
                         <div class="menu-dropdown icon-badge">
@@ -112,7 +118,14 @@
                             <path d="M12 3.5v2M12 18.5v2M4.5 12h2M17.5 12h2M6.4 6.4l1.4 1.4M16.2 16.2l1.4 1.4M17.6 6.4l-1.4 1.4M7.8 16.2l-1.4 1.4"></path>
                         </svg>
                     </button>
-                    <div class="menu-dropdown">
+                    <button class="icon-btn mobile-menu-toggle" type="button" id="mobile-menu-toggle" aria-label="Abrir menu" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 6h16"></path>
+                            <path d="M4 12h16"></path>
+                            <path d="M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div class="menu-dropdown menu-dropdown--profile">
                         <button class="icon-btn icon-btn--avatar" type="button" aria-label="Perfil">
                             @if ($avatarUrl)
                                 <img src="{{ $avatarUrl }}" alt="Foto de perfil">
@@ -131,18 +144,11 @@
                 </div>
             </header>
 
+            <div class="menu-overlay" id="menu-overlay" aria-hidden="true"></div>
             <div class="layout">
                 <aside>
                     <div class="menu-title">Menu</div>
                     <nav class="menu">
-                        @php
-                            $dashboardRoute = match ($role) {
-                                \App\Models\User::ROLE_ADMIN => 'admin.dashboard',
-                                \App\Models\User::ROLE_TEACHER => 'teacher.dashboard',
-                                \App\Models\User::ROLE_STUDENT => 'student.dashboard',
-                                default => 'home',
-                            };
-                        @endphp
                         <a href="{{ route($dashboardRoute) }}">
                             <span class="menu-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -340,6 +346,36 @@
                     setIcon(next);
                 });
             })();
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var toggle = document.getElementById('mobile-menu-toggle');
+                var overlay = document.getElementById('menu-overlay');
+                var body = document.body;
+                if (!toggle || !overlay) {
+                    return;
+                }
+                var closeMenu = function () {
+                    body.classList.remove('menu-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                };
+                var openMenu = function () {
+                    body.classList.add('menu-open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                };
+                toggle.addEventListener('click', function () {
+                    if (body.classList.contains('menu-open')) {
+                        closeMenu();
+                        return;
+                    }
+                    openMenu();
+                });
+                overlay.addEventListener('click', closeMenu);
+                var links = document.querySelectorAll('aside .menu a');
+                links.forEach(function (link) {
+                    link.addEventListener('click', closeMenu);
+                });
+            });
         </script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {

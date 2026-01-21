@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <div class="widget widget--clock">
+        <div class="widget widget--clock widget--compact">
             <div class="widget-header">
                 <h3>Fecha y hora</h3>
             </div>
@@ -98,7 +98,37 @@
             </div>
         </div>
 
-        <div class="widget widget-wide">
+        <div class="widget widget--calendar">
+            <div class="widget-header">
+                <h3>Calendario</h3>
+                <span class="subtle">Reuniones agendadas este mes.</span>
+            </div>
+            <div class="calendar">
+                <div class="calendar-header" id="calendar-title">Mes</div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+            @if ($upcomingMeetings->isEmpty())
+                <p class="subtle">No hay reuniones proximas.</p>
+            @else
+                <div class="list">
+                    @foreach ($upcomingMeetings as $meeting)
+                        <div class="card meeting-card">
+                            <div>
+                                <strong>{{ $meeting->title }}</strong>
+                                <div class="subtle">
+                                    {{ $meeting->scheduled_for->format('d/m/Y H:i') }} · {{ $meeting->duration_minutes }} min
+                                </div>
+                            </div>
+                            <a class="btn btn-secondary" href="{{ $meeting->jitsi_room_url }}" target="_blank" rel="noopener">
+                                Abrir reunion
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        <div class="widget widget--announcements widget--compact">
             <div class="widget-header">
                 <h3>Anuncios</h3>
                 <a class="btn btn-secondary" href="{{ route('teacher.announcements.index') }}">Gestionar</a>
@@ -129,36 +159,6 @@
                             @if ($announcement->image_path)
                                 <img class="announcement-image" src="{{ asset('storage/' . $announcement->image_path) }}" alt="Imagen del anuncio">
                             @endif
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
-
-        <div class="widget widget-wide">
-            <div class="widget-header">
-                <h3>Calendario</h3>
-                <span class="subtle">Reuniones agendadas este mes.</span>
-            </div>
-            <div class="calendar">
-                <div class="calendar-header" id="calendar-title">Mes</div>
-                <div class="calendar-grid" id="calendar-grid"></div>
-            </div>
-            @if ($upcomingMeetings->isEmpty())
-                <p class="subtle">No hay reuniones proximas.</p>
-            @else
-                <div class="list">
-                    @foreach ($upcomingMeetings as $meeting)
-                        <div class="card meeting-card">
-                            <div>
-                                <strong>{{ $meeting->title }}</strong>
-                                <div class="subtle">
-                                    {{ $meeting->scheduled_for->format('d/m/Y H:i') }} · {{ $meeting->duration_minutes }} min
-                                </div>
-                            </div>
-                            <a class="btn btn-secondary" href="{{ $meeting->jitsi_room_url }}" target="_blank" rel="noopener">
-                                Abrir reunion
-                            </a>
                         </div>
                     @endforeach
                 </div>
