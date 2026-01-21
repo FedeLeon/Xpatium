@@ -52,23 +52,7 @@ class ContentController extends Controller
         $assets = $query->paginate(24)->appends($request->all());
 
         $user = $request->user();
-        $storageUsedBytes = (int) Asset::where('user_id', $user->id)->sum('size');
-        $missingSizeAssets = Asset::where('user_id', $user->id)
-            ->where(function ($query) {
-                $query->whereNull('size')->orWhere('size', 0);
-            })
-            ->get(['id', 'path', 'thumb_path']);
-
-        if ($missingSizeAssets->isNotEmpty()) {
-            foreach ($missingSizeAssets as $asset) {
-                if ($asset->path && Storage::disk('public')->exists($asset->path)) {
-                    $storageUsedBytes += (int) Storage::disk('public')->size($asset->path);
-                }
-                if ($asset->thumb_path && Storage::disk('public')->exists($asset->thumb_path)) {
-                    $storageUsedBytes += (int) Storage::disk('public')->size($asset->thumb_path);
-                }
-            }
-        }
+        $storageUsedBytes = $user->storageUsedBytes();
         $storageLimitBytes = $user->storageLimitBytes();
         $storagePercent = $storageLimitBytes > 0
             ? min(100, round(($storageUsedBytes / $storageLimitBytes) * 100, 2))
@@ -152,6 +136,16 @@ class ContentController extends Controller
             $file = $save->getFile();
             $user = $request->user();
             $type = $this->detectType($file);
+
+            $storageLimitBytes = $user->storageLimitBytes();
+            if ($storageLimitBytes > 0) {
+                $storageUsedBytes = $user->storageUsedBytes();
+                $incomingSize = (int) $file->getSize();
+                if ($storageUsedBytes + $incomingSize > $storageLimitBytes) {
+                    @unlink($file->getPathname());
+                    return response()->json(['error' => 'Limite de almacenamiento alcanzado.'], 422);
+                }
+            }
 
             $path = $file->store('assets/'.$user->id.'/'.$type, 'public');
             $mime = $file->getClientMimeType();

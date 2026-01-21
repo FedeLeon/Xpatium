@@ -34,7 +34,15 @@
         $usedLabel = $formatBytes($storageUsedBytes);
         $limitLabel = $formatBytes($storageLimitBytes);
         $remainingLabel = $formatBytes(max(0, $storageLimitBytes - $storageUsedBytes));
+        $isStorageFull = $storageLimitBytes > 0 && $storageUsedBytes >= $storageLimitBytes;
+        $isStorageWarning = $storageLimitBytes > 0 && $storagePercent >= 95;
     @endphp
+
+    @if ($isStorageWarning && ! $isStorageFull)
+        <div class="alert">
+            Estas usando el {{ number_format($storagePercent, 2) }}% del almacenamiento. Considera borrar archivos o subir tu plan.
+        </div>
+    @endif
 
     <div class="assets-top">
         <div class="upload-card">
@@ -62,6 +70,9 @@
                 <span>⬆️</span>
                 <span>Subir</span>
             </button>
+            @if ($isStorageFull)
+                <p class="subtle">Alcanzaste el limite del plan. Borra archivos o cambia el plan para seguir subiendo.</p>
+            @endif
         </div>
 
         <div class="storage-card card">
@@ -223,50 +234,60 @@
         var bar = document.getElementById('uploadProgress');
         var etaEl = document.getElementById('uploadEta');
         var uploadBtn = document.getElementById('uploadFilesBtn');
+        var selectBtn = document.getElementById('selectFilesBtn');
+        var storageFull = @json($isStorageFull);
 
-        var dz = new Dropzone('#dropzoneForm', {
-            url: "{{ route('teacher.assets.chunk') }}",
-            autoProcessQueue: false,
-            chunking: true,
-            forceChunking: true,
-            chunkSize: 5 * 1024 * 1024,
-            timeout: 0,
-            parallelChunkUploads: false,
-            parallelUploads: 1,
-            retryChunks: true,
-            retryChunksLimit: 3,
-            maxFilesize: 1024,
-            clickable: '#selectFilesBtn',
-            previewsContainer: null
-        });
+        if (storageFull) {
+            uploadBtn.disabled = true;
+            selectBtn.disabled = true;
+            bar.style.width = '100%';
+            bar.textContent = 'Limite alcanzado';
+            etaEl.textContent = 'Libera espacio para subir mas archivos.';
+        } else {
+            var dz = new Dropzone('#dropzoneForm', {
+                url: "{{ route('teacher.assets.chunk') }}",
+                autoProcessQueue: false,
+                chunking: true,
+                forceChunking: true,
+                chunkSize: 5 * 1024 * 1024,
+                timeout: 0,
+                parallelChunkUploads: false,
+                parallelUploads: 1,
+                retryChunks: true,
+                retryChunksLimit: 3,
+                maxFilesize: 1024,
+                clickable: '#selectFilesBtn',
+                previewsContainer: null
+            });
 
-        dz.on('addedfile', function (file) {
-            file.upload.startedAt = Date.now();
-        });
+            dz.on('addedfile', function (file) {
+                file.upload.startedAt = Date.now();
+            });
 
-        uploadBtn.addEventListener('click', function () {
-            dz.processQueue();
-        });
-
-        dz.on('uploadprogress', function (file, pct, bytesSent) {
-            bar.style.width = pct + '%';
-            bar.textContent = Math.round(pct) + '%';
-            var elapsed = (Date.now() - file.upload.startedAt) / 1000;
-            var speed = bytesSent / elapsed || 1;
-            var remaining = (file.upload.total - bytesSent) / speed;
-            etaEl.textContent = '≈ ' + human(remaining);
-        });
-
-        dz.on('queuecomplete', function () {
-            etaEl.textContent = '';
-            window.location.reload();
-        });
-
-        dz.on('complete', function () {
-            if (dz.getQueuedFiles().length > 0 && dz.getUploadingFiles().length === 0) {
+            uploadBtn.addEventListener('click', function () {
                 dz.processQueue();
-            }
-        });
+            });
+
+            dz.on('uploadprogress', function (file, pct, bytesSent) {
+                bar.style.width = pct + '%';
+                bar.textContent = Math.round(pct) + '%';
+                var elapsed = (Date.now() - file.upload.startedAt) / 1000;
+                var speed = bytesSent / elapsed || 1;
+                var remaining = (file.upload.total - bytesSent) / speed;
+                etaEl.textContent = '≈ ' + human(remaining);
+            });
+
+            dz.on('queuecomplete', function () {
+                etaEl.textContent = '';
+                window.location.reload();
+            });
+
+            dz.on('complete', function () {
+                if (dz.getQueuedFiles().length > 0 && dz.getUploadingFiles().length === 0) {
+                    dz.processQueue();
+                }
+            });
+        }
 
         function human(sec) {
             if (sec <= 0 || !isFinite(sec)) return '0 s';

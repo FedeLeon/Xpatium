@@ -36,12 +36,13 @@
             @foreach ($notifications as $notification)
                 @php
                     $isUnread = is_null($notification->read_at);
+                    $customUrl = $notification->data['url'] ?? null;
                     $courseId = $notification->data['course_id'] ?? null;
                     $lessonId = $notification->data['lesson_id'] ?? null;
                     $commentId = $notification->data['parent_id'] ?? $notification->data['comment_id'] ?? null;
-                    $notificationUrl = $lessonId
+                    $notificationUrl = $customUrl ?: ($lessonId
                         ? route('teacher.lessons.show', $lessonId).($commentId ? '#comment-'.$commentId : '')
-                        : ($courseId ? route('teacher.courses.show', $courseId) : route('teacher.notifications.index'));
+                        : ($courseId ? route('teacher.courses.show', $courseId) : route('teacher.notifications.index')));
                 @endphp
                 <div class="notification-item {{ $isUnread ? 'notification-item--unread' : '' }}">
                     <a class="notification-link" href="{{ $notificationUrl }}">

@@ -13,6 +13,7 @@ use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Lesson;
 use App\Models\Meeting;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -148,5 +149,28 @@ class User extends Authenticatable
     {
         $plan = self::storagePlans()[$this->storagePlanKey()];
         return (int) ($plan['limit_gb'] * 1024 * 1024 * 1024);
+    }
+
+    public function storageUsedBytes(): int
+    {
+        $storageUsedBytes = (int) Asset::where('user_id', $this->id)->sum('size');
+        $missingSizeAssets = Asset::where('user_id', $this->id)
+            ->where(function ($query) {
+                $query->whereNull('size')->orWhere('size', 0);
+            })
+            ->get(['id', 'path', 'thumb_path']);
+
+        if ($missingSizeAssets->isNotEmpty()) {
+            foreach ($missingSizeAssets as $asset) {
+                if ($asset->path && Storage::disk('public')->exists($asset->path)) {
+                    $storageUsedBytes += (int) Storage::disk('public')->size($asset->path);
+                }
+                if ($asset->thumb_path && Storage::disk('public')->exists($asset->thumb_path)) {
+                    $storageUsedBytes += (int) Storage::disk('public')->size($asset->thumb_path);
+                }
+            }
+        }
+
+        return $storageUsedBytes;
     }
 }
