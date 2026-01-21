@@ -133,4 +133,9 @@ class StudentController extends Controller
 
         return redirect()->route('teacher.students.index');
     }
+
+    public function commission(): View
+    {
+        return view('teacher.students.commission');
+    }
 }

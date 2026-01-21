@@ -48,6 +48,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::put('/cuestionario/preguntas/{question}', [LessonQuizController::class, 'updateQuestion'])->name('lessons.quiz.questions.update');
     Route::delete('/cuestionario/preguntas/{question}', [LessonQuizController::class, 'destroyQuestion'])->name('lessons.quiz.questions.destroy');
     Route::get('/alumnos', [StudentController::class, 'index'])->name('students.index');
+    Route::get('/alumnos/comision', [StudentController::class, 'commission'])->name('students.commission');
     Route::post('/alumnos', [StudentController::class, 'store'])->name('students.store');
     Route::put('/alumnos/{studentProfile}/estado', [StudentController::class, 'updateStatus'])->name('students.status');
     Route::put('/alumnos/{studentProfile}/cursos', [StudentController::class, 'updateCourseAccess'])->name('students.courses.access');
