@@ -188,6 +188,29 @@
                                 </span>
                                 <span class="menu-label">Gestor de contenidos</span>
                             </a>
+                            <details class="menu-group" {{ request()->routeIs('teacher.tasks.*') ? 'open' : '' }}>
+                                <summary class="menu-group__label">
+                                    <span class="menu-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <path d="M14 2v6h6"></path>
+                                            <path d="M16 13H8"></path>
+                                            <path d="M16 17H8"></path>
+                                            <path d="M10 9H8"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="menu-label">Tareas</span>
+                                    <span class="menu-chevron" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M6 9l6 6 6-6"></path>
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="menu-submenu">
+                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.tasks.create') ? 'is-active' : '' }}" href="{{ route('teacher.tasks.create') }}">Crear tarea</a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.tasks.index') ? 'is-active' : '' }}" href="{{ route('teacher.tasks.index') }}">Ver tareas</a>
+                                </div>
+                            </details>
                             <details class="menu-group" {{ request()->routeIs('teacher.students.*') ? 'open' : '' }}>
                                 <summary class="menu-group__label">
                                     <span class="menu-icon" aria-hidden="true">

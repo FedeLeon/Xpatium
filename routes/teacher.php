@@ -13,7 +13,13 @@ use App\Http\Controllers\Teacher\LessonController;
 use App\Http\Controllers\Teacher\LessonQuizController;
 use App\Http\Controllers\Teacher\MeetingController as TeacherMeetingController;
 use App\Http\Controllers\Teacher\StudentController;
+use App\Http\Controllers\Teacher\TaskController;
 use Illuminate\Support\Facades\Route;
+
+Route::middleware(['auth', 'role:teacher'])->group(function () {
+    Route::get('/teacher/tasks/{task}/builder', [TaskController::class, 'builder'])->name('teacher.tasks.builder');
+    Route::post('/teacher/tasks/{task}/builder', [TaskController::class, 'storeContent'])->name('teacher.tasks.builder.store');
+});
 
 Route::get('/profesor', [DashboardController::class, 'index'])
     ->middleware(['auth', 'role:teacher'])
@@ -38,6 +44,9 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::post('/gestor-contenidos/chunk', [ContentController::class, 'uploadChunk'])->name('assets.chunk');
     Route::delete('/gestor-contenidos/{asset}', [ContentController::class, 'destroy'])->name('assets.destroy');
     Route::delete('/gestor-contenidos', [ContentController::class, 'bulkDestroy'])->name('assets.bulkDestroy');
+    Route::get('/tareas', [TaskController::class, 'index'])->name('tasks.index');
+    Route::get('/tareas/crear', [TaskController::class, 'create'])->name('tasks.create');
+    Route::post('/tareas', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('/lecciones/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::post('/lecciones/{lesson}/contenido', [LessonController::class, 'storeContent'])->name('lessons.content.store');
     Route::delete('/lecciones/contenido/{content}', [LessonController::class, 'destroyContent'])->name('lessons.content.destroy');
