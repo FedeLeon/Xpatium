@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Task;
 
 class Commission extends Model
 {
@@ -24,5 +25,10 @@ class Commission extends Model
     {
         return $this->belongsToMany(User::class, 'commission_student', 'commission_id', 'student_id')
             ->withTimestamps();
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }

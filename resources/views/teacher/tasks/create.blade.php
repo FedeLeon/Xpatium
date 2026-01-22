@@ -65,14 +65,14 @@
                 @endif
             </div>
             <div id="commissions-select" hidden>
-                <label>Selecciona comisiones</label>
+                <label>Selecciona comision</label>
                 @if ($commissions->isEmpty())
                     <p class="subtle">No tienes comisiones creadas.</p>
                 @else
                     <div class="checkbox-grid">
                         @foreach ($commissions as $commission)
                             <label class="checkbox">
-                                <input type="checkbox" name="commission_ids[]" value="{{ $commission->id }}" disabled>
+                                <input type="radio" name="commission_id" value="{{ $commission->id }}" disabled>
                                 {{ $commission->name }} ({{ $commission->students_count }})
                             </label>
                         @endforeach
@@ -118,7 +118,7 @@
                 studentsPanel.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
                     input.disabled = !isStudents;
                 });
-                commissionsPanel.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+                commissionsPanel.querySelectorAll('input[type="radio"]').forEach(function (input) {
                     input.disabled = isStudents;
                 });
             };
@@ -142,7 +142,7 @@
                     togglePanels('commissions');
                 } else {
                     commissionsPanel.hidden = true;
-                    commissionsPanel.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+                    commissionsPanel.querySelectorAll('input[type="radio"]').forEach(function (input) {
                         input.disabled = true;
                         input.checked = false;
                     });

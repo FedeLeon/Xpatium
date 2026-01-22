@@ -47,6 +47,9 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::get('/tareas', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/tareas/crear', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/tareas', [TaskController::class, 'store'])->name('tasks.store');
+    Route::get('/tareas/{task}', [TaskController::class, 'show'])->name('tasks.show');
+    Route::get('/tareas/{task}/corregir', [TaskController::class, 'correct'])->name('tasks.correct');
+    Route::delete('/tareas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::get('/lecciones/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::post('/lecciones/{lesson}/contenido', [LessonController::class, 'storeContent'])->name('lessons.content.store');
     Route::delete('/lecciones/contenido/{content}', [LessonController::class, 'destroyContent'])->name('lessons.content.destroy');

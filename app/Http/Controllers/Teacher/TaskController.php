@@ -8,12 +8,18 @@ use App\Models\StudentProfile;
 use App\Models\Task;
 use App\Models\TaskItem;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        return view('teacher.tasks.index');
+        $tasks = Task::with(['commission', 'students'])
+            ->withCount('students')
+            ->latest()
+            ->get();
+
+        return view('teacher.tasks.index', compact('tasks'));
     }
 
     public function create(Request $request)
@@ -35,17 +41,35 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
+        $teacher = $request->user();
+        $allowedStudentIds = StudentProfile::where('teacher_id', $teacher->id)
+            ->pluck('student_id')
+            ->all();
+        $allowedCommissionIds = Commission::where('teacher_id', $teacher->id)
+            ->pluck('id')
+            ->all();
+
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'task_type' => ['required', 'in:open_question,multiple_choice,file_delivery,mixed,review'],
             'description' => ['nullable', 'string', 'max:5000'],
             'due_date' => ['nullable', 'date'],
+            'commission_id' => ['nullable', 'integer', Rule::in($allowedCommissionIds)],
+            'student_ids' => ['nullable', 'array'],
+            'student_ids.*' => ['integer', Rule::in($allowedStudentIds)],
         ]);
 
         $task = Task::create([
             'title' => $data['title'],
+            'description' => $data['description'] ?? null,
             'task_type' => $data['task_type'],
+            'due_date' => $data['due_date'] ?? null,
+            'commission_id' => $data['commission_id'] ?? null,
         ]);
+
+        if (!empty($data['student_ids'])) {
+            $task->students()->sync($data['student_ids']);
+        }
 
         return redirect()->route('teacher.tasks.builder', $task);
     }
@@ -74,10 +98,19 @@ class TaskController extends Controller
 
         if ($taskType === 'open_question') {
             $data = $request->validate([
-                'question' => ['required', 'string', 'max:5000'],
+                'questions' => ['required', 'array', 'min:1'],
+                'questions.*.question' => ['required', 'string', 'max:5000'],
             ]);
+
+            $items = [];
+            foreach ($data['questions'] as $questionData) {
+                $items[] = [
+                    'question' => $questionData['question'],
+                ];
+            }
+
             $content = [
-                'question' => $data['question'],
+                'items' => $items,
             ];
         } elseif ($taskType === 'multiple_choice') {
             $data = $request->validate([
@@ -179,7 +212,28 @@ class TaskController extends Controller
         ]);
 
         return redirect()
-            ->route('teacher.tasks.builder', $task)
+            ->route('teacher.tasks.index')
             ->with('success', 'Contenido guardado.');
+    }
+
+    public function show(Task $task)
+    {
+        $task->load('items');
+
+        return view('teacher.tasks.show', compact('task'));
+    }
+
+    public function correct(Task $task)
+    {
+        return view('teacher.tasks.correct', compact('task'));
+    }
+
+    public function destroy(Task $task)
+    {
+        $task->delete();
+
+        return redirect()
+            ->route('teacher.tasks.index')
+            ->with('success', 'Tarea eliminada.');
     }
 }
