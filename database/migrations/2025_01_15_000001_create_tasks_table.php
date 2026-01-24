@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('task_type');
             $table->date('due_date')->nullable();
             $table->foreignId('commission_id')->nullable()->constrained('commissions')->nullOnDelete();
+            $table->string('grading_mode')->default('feedback');
             $table->timestamps();
         });
     }

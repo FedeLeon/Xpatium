@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\TaskSubmission;
 
 class Task extends Model
 {
@@ -16,6 +17,7 @@ class Task extends Model
         'task_type',
         'due_date',
         'commission_id',
+        'grading_mode',
     ];
 
     protected $casts = [
@@ -35,5 +37,10 @@ class Task extends Model
     public function students()
     {
         return $this->belongsToMany(User::class, 'task_student', 'task_id', 'student_id');
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(TaskSubmission::class);
     }
 }

@@ -13,6 +13,7 @@ use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Lesson;
 use App\Models\Meeting;
+use App\Models\Commission;
 use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
@@ -120,6 +121,12 @@ class User extends Authenticatable
     public function meetings()
     {
         return $this->belongsToMany(Meeting::class, 'meeting_user')
+            ->withTimestamps();
+    }
+
+    public function commissions()
+    {
+        return $this->belongsToMany(Commission::class, 'commission_student', 'student_id', 'commission_id')
             ->withTimestamps();
     }
 

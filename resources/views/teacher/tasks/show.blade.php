@@ -80,11 +80,10 @@
         @else
             @php
                 $typeLabels = [
-                    'open_question' => 'Pregunta abierta',
-                    'multiple_choice' => 'Multiple choice',
                     'file_delivery' => 'Entrega de archivo',
                     'mixed' => 'Mixta',
-                    'review' => 'Revision',
+                    'open_question' => 'Pregunta abierta',
+                    'multiple_choice' => 'Multiple choice',
                 ];
             @endphp
             <div class="task-detail-list">
@@ -96,65 +95,9 @@
                     <div class="card">
                         <div class="actions actions-tight">
                             <strong>{{ $typeLabel }}</strong>
-                            <span class="badge">{{ $item->type }}</span>
                         </div>
 
-                        @if ($item->type === 'open_question')
-                            @php
-                                $questions = $content['items'] ?? [];
-                            @endphp
-                            @forelse ($questions as $index => $question)
-                                <details class="task-question">
-                                    <summary class="actions actions-tight">
-                                        <strong>Pregunta {{ $index + 1 }}</strong>
-                                        <span class="subtle">Pregunta abierta</span>
-                                        <span class="menu-chevron" aria-hidden="true">
-                                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                                <path d="M6 9l6 6 6-6"></path>
-                                            </svg>
-                                        </span>
-                                    </summary>
-                                    <p>{{ $question['question'] ?? '—' }}</p>
-                                </details>
-                            @empty
-                                <p class="subtle">No hay preguntas cargadas.</p>
-                            @endforelse
-                        @elseif ($item->type === 'multiple_choice')
-                            @php
-                                $questions = $content['items'] ?? [];
-                            @endphp
-                            @forelse ($questions as $index => $question)
-                                @php
-                                    $correctIndex = (int) ($question['correct_option'] ?? -1);
-                                    $options = $question['options'] ?? [];
-                                @endphp
-                                <details class="task-question">
-                                    <summary class="actions actions-tight">
-                                        <strong>Pregunta {{ $index + 1 }}</strong>
-                                        <span class="subtle">Multiple choice</span>
-                                        <span class="menu-chevron" aria-hidden="true">
-                                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                                <path d="M6 9l6 6 6-6"></path>
-                                            </svg>
-                                        </span>
-                                    </summary>
-                                    <p>{{ $question['question'] ?? '—' }}</p>
-                                    <div class="option-list">
-                                        @foreach ($options as $optionIndex => $option)
-                                            <div class="option-row {{ $optionIndex === $correctIndex ? 'is-correct' : '' }}">
-                                                <span class="option-letter">{{ chr(65 + $optionIndex) }}</span>
-                                                <span>{{ $option }}</span>
-                                                @if ($optionIndex === $correctIndex)
-                                                    <span class="badge">Correcta</span>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </details>
-                            @empty
-                                <p class="subtle">No hay preguntas cargadas.</p>
-                            @endforelse
-                        @elseif ($item->type === 'file_delivery')
+                        @if ($item->type === 'file_delivery')
                             <div class="task-question">
                                 <strong>Instrucciones</strong>
                                 <p>{{ $content['instructions'] ?? '—' }}</p>
@@ -202,12 +145,9 @@
                                 <p class="subtle">No hay items cargados.</p>
                             @endforelse
                         @elseif ($item->type === 'review')
-                            <div class="task-question">
-                                <p class="subtle">El alumno debe revisar el contenido.</p>
-                                @if (!empty($content['requires_completion']))
-                                    <span class="badge">Requiere marcado</span>
-                                @endif
-                            </div>
+                            <p class="subtle">Este tipo ya no se encuentra disponible.</p>
+                        @else
+                            <p class="subtle">Este tipo ya no se encuentra disponible.</p>
                         @endif
                     </div>
                 @endforeach

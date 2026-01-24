@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $isEdit = isset($task);
+    @endphp
     <div class="actions">
         <div>
             <h1 class="view-title">
@@ -11,9 +14,9 @@
                     <path d="M16 17H8"></path>
                     <path d="M10 9H8"></path>
                 </svg>
-                Crear tarea
+                {{ $isEdit ? 'Editar tarea' : 'Crear tarea' }}
             </h1>
-            <p>Prepara una nueva tarea para tus alumnos.</p>
+            <p>{{ $isEdit ? 'Ajusta la estructura antes de cargar el contenido.' : 'Prepara una nueva tarea para tus alumnos.' }}</p>
         </div>
         <a class="btn btn-secondary" href="{{ route('teacher.tasks.index') }}">Lista de tareas</a>
     </div>
@@ -22,15 +25,20 @@
         <div class="widget-header">
             <h3>Detalle de la tarea</h3>
         </div>
-        <form class="form-grid form-grid-full" id="task-form" method="POST" action="{{ route('teacher.tasks.store') }}">
+        <form class="form-grid form-grid-full" id="task-form" method="POST"
+              action="{{ $isEdit ? route('teacher.tasks.update', $task) : route('teacher.tasks.store') }}">
             @csrf
+            @if ($isEdit)
+                @method('PUT')
+            @endif
             <div>
                 <label for="task-title">Titulo de la tarea</label>
-                <input id="task-title" name="title" type="text" placeholder="Ej: Ejercicios de clase 3" required>
+                <input id="task-title" name="title" type="text" placeholder="Ej: Ejercicios de clase 3"
+                       value="{{ old('title', $task->title ?? '') }}" required>
             </div>
             <div>
                 <label for="task-description">Descripcion</label>
-                <textarea id="task-description" name="description" rows="4" placeholder="Indicaciones para la tarea"></textarea>
+                <textarea id="task-description" name="description" rows="4" placeholder="Indicaciones para la tarea">{{ old('description', $task->description ?? '') }}</textarea>
             </div>
             <div>
                 <label>Asignar a</label>
@@ -55,9 +63,11 @@
                             @php
                                 $studentUser = $record->student;
                                 $fullName = trim(($studentUser->name ?? '').' '.($studentUser->last_name ?? ''));
+                                $isAssigned = isset($task) && $task->students->contains('id', $record->student_id);
                             @endphp
                             <label class="checkbox">
-                                <input type="checkbox" name="student_ids[]" value="{{ $record->student_id }}" disabled>
+                                <input type="checkbox" name="student_ids[]" value="{{ $record->student_id }}"
+                                       {{ $isAssigned ? 'checked' : '' }} disabled>
                                 {{ $fullName ?: 'Alumno sin nombre' }}
                             </label>
                         @endforeach
@@ -72,7 +82,8 @@
                     <div class="checkbox-grid">
                         @foreach ($commissions as $commission)
                             <label class="checkbox">
-                                <input type="radio" name="commission_id" value="{{ $commission->id }}" disabled>
+                                <input type="radio" name="commission_id" value="{{ $commission->id }}"
+                                       {{ (isset($task) && $task->commission_id === $commission->id) ? 'checked' : '' }} disabled>
                                 {{ $commission->name }} ({{ $commission->students_count }})
                             </label>
                         @endforeach
@@ -81,21 +92,26 @@
             </div>
             <div>
                 <label for="task-due">Fecha limite</label>
-                <input id="task-due" name="due_date" type="date">
+                <input id="task-due" name="due_date" type="date" value="{{ old('due_date', optional($task->due_date ?? null)->format('Y-m-d')) }}">
             </div>
             <div>
                 <label for="task-type">Tipo de tarea</label>
                 <select id="task-type" name="task_type" required>
                     <option value="">Selecciona un tipo</option>
-                    <option value="multiple_choice">Multiple choice</option>
-                    <option value="open_question">Pregunta abierta</option>
-                    <option value="file_delivery">Entrega de archivo</option>
-                    <option value="mixed">Mixta</option>
-                    <option value="review">Revision</option>
+                    <option value="file_delivery" @selected(old('task_type', $task->task_type ?? '') === 'file_delivery')>Entrega de archivo</option>
+                    <option value="mixed" @selected(old('task_type', $task->task_type ?? '') === 'mixed')>Mixta</option>
+                </select>
+            </div>
+            <div>
+                <label for="grading-mode">Modo de calificacion</label>
+                <select id="grading-mode" name="grading_mode" required>
+                    <option value="feedback" @selected(old('grading_mode', $task->grading_mode ?? 'feedback') === 'feedback')>Solo feedback</option>
+                    <option value="score" @selected(old('grading_mode', $task->grading_mode ?? 'feedback') === 'score')>Calificacion numerica</option>
+                    <option value="both" @selected(old('grading_mode', $task->grading_mode ?? 'feedback') === 'both')>Feedback + calificacion</option>
                 </select>
             </div>
             <div class="form-actions">
-                <button class="btn btn-primary" type="submit">Crear tarea</button>
+                <button class="btn btn-primary" type="submit">{{ $isEdit ? 'Guardar y continuar' : 'Crear tarea' }}</button>
             </div>
         </form>
     </div>
@@ -148,6 +164,16 @@
                     });
                 }
             });
+
+            var hasStudentsSelected = studentsPanel.querySelector('input[type="checkbox"]:checked');
+            var hasCommissionSelected = commissionsPanel.querySelector('input[type="radio"]:checked');
+            if (hasCommissionSelected) {
+                commissionsToggle.checked = true;
+                togglePanels('commissions');
+            } else if (hasStudentsSelected) {
+                studentsToggle.checked = true;
+                togglePanels('students');
+            }
         })();
     </script>
 @endsection

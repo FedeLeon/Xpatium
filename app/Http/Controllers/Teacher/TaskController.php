@@ -7,6 +7,8 @@ use App\Models\Commission;
 use App\Models\StudentProfile;
 use App\Models\Task;
 use App\Models\TaskItem;
+use App\Models\TaskSubmission;
+use App\Notifications\TaskAssignedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -16,6 +18,7 @@ class TaskController extends Controller
     {
         $tasks = Task::with(['commission', 'students'])
             ->withCount('students')
+            ->whereHas('items')
             ->latest()
             ->get();
 
@@ -51,7 +54,8 @@ class TaskController extends Controller
 
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'task_type' => ['required', 'in:open_question,multiple_choice,file_delivery,mixed,review'],
+            'task_type' => ['required', 'in:file_delivery,mixed'],
+            'grading_mode' => ['required', 'in:feedback,score,both'],
             'description' => ['nullable', 'string', 'max:5000'],
             'due_date' => ['nullable', 'date'],
             'commission_id' => ['nullable', 'integer', Rule::in($allowedCommissionIds)],
@@ -65,11 +69,73 @@ class TaskController extends Controller
             'task_type' => $data['task_type'],
             'due_date' => $data['due_date'] ?? null,
             'commission_id' => $data['commission_id'] ?? null,
+            'grading_mode' => $data['grading_mode'],
         ]);
 
         if (!empty($data['student_ids'])) {
             $task->students()->sync($data['student_ids']);
         }
+
+        $task->load('students', 'commission.students');
+        $commissionStudents = $task->commission?->students ?? collect();
+        $recipients = $task->students->merge($commissionStudents)->unique('id');
+        foreach ($recipients as $student) {
+            $student->notify(new TaskAssignedNotification($task));
+        }
+
+        return redirect()->route('teacher.tasks.builder', $task);
+    }
+
+    public function edit(Request $request, Task $task)
+    {
+        $teacher = $request->user();
+
+        $students = StudentProfile::with('student')
+            ->where('teacher_id', $teacher->id)
+            ->latest()
+            ->get();
+
+        $commissions = Commission::withCount('students')
+            ->where('teacher_id', $teacher->id)
+            ->latest()
+            ->get();
+
+        $task->load('students');
+
+        return view('teacher.tasks.create', compact('students', 'commissions', 'task'));
+    }
+
+    public function update(Request $request, Task $task)
+    {
+        $teacher = $request->user();
+        $allowedStudentIds = StudentProfile::where('teacher_id', $teacher->id)
+            ->pluck('student_id')
+            ->all();
+        $allowedCommissionIds = Commission::where('teacher_id', $teacher->id)
+            ->pluck('id')
+            ->all();
+
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'task_type' => ['required', 'in:file_delivery,mixed'],
+            'grading_mode' => ['required', 'in:feedback,score,both'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'due_date' => ['nullable', 'date'],
+            'commission_id' => ['nullable', 'integer', Rule::in($allowedCommissionIds)],
+            'student_ids' => ['nullable', 'array'],
+            'student_ids.*' => ['integer', Rule::in($allowedStudentIds)],
+        ]);
+
+        $task->update([
+            'title' => $data['title'],
+            'description' => $data['description'] ?? null,
+            'task_type' => $data['task_type'],
+            'due_date' => $data['due_date'] ?? null,
+            'commission_id' => $data['commission_id'] ?? null,
+            'grading_mode' => $data['grading_mode'],
+        ]);
+
+        $task->students()->sync($data['student_ids'] ?? []);
 
         return redirect()->route('teacher.tasks.builder', $task);
     }
@@ -77,11 +143,8 @@ class TaskController extends Controller
     public function builder(Task $task)
     {
         $typeLabels = [
-            'open_question' => 'Pregunta abierta',
-            'multiple_choice' => 'Multiple choice',
             'file_delivery' => 'Entrega de archivo',
             'mixed' => 'Mixta',
-            'review' => 'Revision',
         ];
 
         return view('teacher.tasks.builder', [
@@ -96,55 +159,7 @@ class TaskController extends Controller
         $content = [];
         $itemType = $taskType;
 
-        if ($taskType === 'open_question') {
-            $data = $request->validate([
-                'questions' => ['required', 'array', 'min:1'],
-                'questions.*.question' => ['required', 'string', 'max:5000'],
-            ]);
-
-            $items = [];
-            foreach ($data['questions'] as $questionData) {
-                $items[] = [
-                    'question' => $questionData['question'],
-                ];
-            }
-
-            $content = [
-                'items' => $items,
-            ];
-        } elseif ($taskType === 'multiple_choice') {
-            $data = $request->validate([
-                'questions' => ['required', 'array', 'min:1'],
-                'questions.*.question' => ['required', 'string', 'max:5000'],
-                'questions.*.options' => ['required', 'array', 'min:2'],
-                'questions.*.options.*' => ['required', 'string', 'max:5000'],
-                'questions.*.correct_option' => ['required', 'integer', 'min:0'],
-            ]);
-
-            $items = [];
-
-            foreach ($data['questions'] as $questionData) {
-                $options = array_values(array_filter($questionData['options'], fn ($option) => trim($option) !== ''));
-
-                if (count($options) < 2) {
-                    return back()->withErrors(['questions' => 'Cada pregunta debe tener al menos 2 opciones.']);
-                }
-
-                if (!array_key_exists($questionData['correct_option'], $options)) {
-                    return back()->withErrors(['questions' => 'Selecciona una opcion correcta valida en cada pregunta.']);
-                }
-
-                $items[] = [
-                    'question' => $questionData['question'],
-                    'options' => $options,
-                    'correct_option' => $questionData['correct_option'],
-                ];
-            }
-
-            $content = [
-                'items' => $items,
-            ];
-        } elseif ($taskType === 'file_delivery') {
+        if ($taskType === 'file_delivery') {
             $data = $request->validate([
                 'instructions' => ['required', 'string', 'max:5000'],
             ]);
@@ -193,14 +208,6 @@ class TaskController extends Controller
             $content = [
                 'items' => $items,
             ];
-        } elseif ($taskType === 'review') {
-            $data = $request->validate([
-                'requires_completion' => ['nullable', 'boolean'],
-            ]);
-
-            $content = [
-                'requires_completion' => (bool) ($data['requires_completion'] ?? false),
-            ];
         } else {
             abort(404);
         }
@@ -225,7 +232,46 @@ class TaskController extends Controller
 
     public function correct(Task $task)
     {
-        return view('teacher.tasks.correct', compact('task'));
+        $task->load(['items', 'commission.students', 'students']);
+
+        $students = $task->students;
+        if ($students->isEmpty() && $task->commission) {
+            $students = $task->commission->students;
+        }
+
+        $submissions = TaskSubmission::where('task_id', $task->id)
+            ->get()
+            ->keyBy('student_id');
+
+        if ($task->task_type === 'mixed') {
+            $taskContentItem = $task->items->firstWhere('type', 'mixed');
+            $taskItems = $taskContentItem?->content['items'] ?? [];
+
+            $submissions->each(function (TaskSubmission $submission) use ($taskItems) {
+                $submittedItems = $submission->content['items'] ?? [];
+                $normalized = [];
+
+                foreach ($taskItems as $index => $taskItem) {
+                    $type = $taskItem['type'] ?? 'open_question';
+                    $submitted = $submittedItems[$index] ?? [];
+                    if ($type === 'multiple_choice') {
+                        $normalized[] = [
+                            'type' => $type,
+                            'selected_option' => $submitted['selected_option'] ?? null,
+                        ];
+                    } else {
+                        $normalized[] = [
+                            'type' => $type,
+                            'answer' => $submitted['answer'] ?? null,
+                        ];
+                    }
+                }
+
+                $submission->content = ['items' => $normalized];
+            });
+        }
+
+        return view('teacher.tasks.correct', compact('task', 'students', 'submissions'));
     }
 
     public function destroy(Task $task)
@@ -235,5 +281,39 @@ class TaskController extends Controller
         return redirect()
             ->route('teacher.tasks.index')
             ->with('success', 'Tarea eliminada.');
+    }
+
+    public function storeCorrection(Request $request, Task $task, TaskSubmission $submission)
+    {
+        if ($submission->task_id !== $task->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'feedback' => ['nullable', 'string', 'max:5000'],
+            'score' => ['nullable', 'numeric'],
+        ]);
+
+        $gradingMode = $task->grading_mode;
+        $feedback = null;
+        $score = null;
+
+        if ($gradingMode === 'feedback' || $gradingMode === 'both') {
+            $feedback = $data['feedback'] ?? null;
+        }
+
+        if ($gradingMode === 'score' || $gradingMode === 'both') {
+            $score = $data['score'] ?? null;
+        }
+
+        $submission->update([
+            'feedback' => $feedback,
+            'score' => $score,
+            'corrected_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('teacher.tasks.correct', $task)
+            ->with('success', 'Correccion guardada.');
     }
 }

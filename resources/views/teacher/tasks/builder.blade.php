@@ -35,7 +35,7 @@
             </h1>
             <p>Tipo seleccionado: {{ $typeLabel }}</p>
         </div>
-        <a class="btn btn-secondary" href="{{ route('teacher.tasks.index') }}">Volver</a>
+        <a class="btn btn-secondary" href="{{ route('teacher.tasks.edit', $task) }}">Volver</a>
     </div>
 
     <div class="widget widget-wide">
@@ -47,99 +47,23 @@
         <form method="POST" action="{{ route('teacher.tasks.builder.store', $task) }}" class="form-grid form-grid-full" id="task-builder-form">
             @csrf
 
-            @if ($task->task_type === 'open_question')
-                <div>
-                    <label>Preguntas</label>
-                    <div id="open-questions"></div>
-                    <button class="btn btn-secondary" id="open-add-question" type="button">Agregar pregunta</button>
-                </div>
-                <template id="open-question-template">
-                    <details class="card open-question" data-index="__INDEX__">
-                        <summary class="actions actions-tight">
-                            <strong class="open-question-title">Pregunta __NUM__</strong>
-                            <span class="subtle">Click para editar</span>
-                            <span class="menu-chevron" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M6 9l6 6 6-6"></path>
-                                </svg>
-                            </span>
-                        </summary>
-                        <div class="actions actions-tight">
-                            <button class="btn btn-danger btn-icon open-remove-question" type="button">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M3 6h18"></path>
-                                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
-                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                                    <path d="M10 11v6"></path>
-                                    <path d="M14 11v6"></path>
-                                </svg>
-                                Eliminar pregunta
-                            </button>
-                        </div>
-                        <div class="form-grid form-grid-full">
-                            <div>
-                                <label for="open-question-__INDEX__">Pregunta</label>
-                                <textarea id="open-question-__INDEX__" name="questions[__INDEX__][question]" rows="4" required></textarea>
-                            </div>
-                        </div>
-                    </details>
-                </template>
-            @elseif ($task->task_type === 'multiple_choice')
-                <div>
-                    <label>Preguntas</label>
-                    <div id="mc-questions"></div>
-                    <button class="btn btn-secondary" id="mc-add-question" type="button">Agregar pregunta</button>
-                </div>
-                <template id="mc-question-template">
-                    <details class="card mc-question" data-index="__INDEX__">
-                        <summary class="actions actions-tight">
-                            <strong class="mc-question-title">Pregunta __NUM__</strong>
-                            <span class="subtle">Click para editar</span>
-                            <span class="menu-chevron" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M6 9l6 6 6-6"></path>
-                                </svg>
-                            </span>
-                        </summary>
-                        <div class="actions actions-tight">
-                            <button class="btn btn-danger btn-icon mc-remove-question" type="button">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M3 6h18"></path>
-                                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
-                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                                    <path d="M10 11v6"></path>
-                                    <path d="M14 11v6"></path>
-                                </svg>
-                                Eliminar pregunta
-                            </button>
-                        </div>
-                        <div class="form-grid form-grid-full">
-                            <div>
-                                <label for="mc-question-__INDEX__">Pregunta</label>
-                                <textarea id="mc-question-__INDEX__" name="questions[__INDEX__][question]" rows="4" required></textarea>
-                            </div>
-                            <div>
-                                <label>Opciones</label>
-                                <div class="mc-options"></div>
-                                <button class="btn btn-secondary mc-add-option" type="button">Agregar opcion</button>
-                            </div>
-                        </div>
-                    </details>
-                </template>
-            @elseif ($task->task_type === 'file_delivery')
-                <div>
-                    <label for="file-instructions">Instrucciones</label>
-                    <textarea id="file-instructions" name="instructions" rows="5" required>{{ old('instructions') }}</textarea>
-                </div>
-                <p class="subtle">El alumno subira un archivo como entrega.</p>
-            @elseif ($task->task_type === 'mixed')
+            @if ($task->task_type === 'mixed')
                 <div>
                     <label>Items</label>
                     <div id="mixed-items"></div>
                     <button class="btn btn-secondary" id="mixed-add-item" type="button">Agregar item</button>
                 </div>
                 <template id="mixed-item-template">
-                    <div class="card mixed-item" data-index="__INDEX__">
+                    <details class="card mixed-item" data-index="__INDEX__">
+                        <summary class="actions actions-tight">
+                            <strong class="mixed-item-title">Item __NUM__</strong>
+                            <span class="subtle">Click para editar</span>
+                            <span class="menu-chevron" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M6 9l6 6 6-6"></path>
+                                </svg>
+                            </span>
+                        </summary>
                         <div class="form-grid form-grid-full">
                             <div>
                                 <label for="mixed-type-__INDEX__">Tipo de item</label>
@@ -158,14 +82,16 @@
                                 <button class="btn btn-secondary mixed-add-option" type="button">Agregar opcion</button>
                             </div>
                         </div>
-                    </div>
+                    </details>
                 </template>
-            @elseif ($task->task_type === 'review')
-                <p class="subtle">El alumno debera revisar el material antes de continuar.</p>
-                <label class="checkbox">
-                    <input type="checkbox" name="requires_completion" value="1">
-                    El alumno debe marcar como completado
-                </label>
+            @elseif ($task->task_type === 'file_delivery')
+                <div>
+                    <label for="file-instructions">Instrucciones</label>
+                    <textarea id="file-instructions" name="instructions" rows="5" required>{{ old('instructions') }}</textarea>
+                </div>
+                <p class="subtle">El alumno subira un archivo como entrega.</p>
+            @else
+                <p class="subtle">Este tipo de tarea ya no se encuentra disponible.</p>
             @endif
 
             <div class="form-actions">
@@ -176,189 +102,6 @@
 
     <script>
         (function () {
-            var builderForm = document.getElementById('task-builder-form');
-            var openAddQuestion = document.getElementById('open-add-question');
-            var openQuestionTemplate = document.getElementById('open-question-template');
-            var openQuestions = document.getElementById('open-questions');
-
-            if (openAddQuestion && openQuestionTemplate && openQuestions) {
-                var updateOpenTitles = function () {
-                    var questions = openQuestions.querySelectorAll('.open-question');
-                    questions.forEach(function (questionEl, position) {
-                        var titleEl = questionEl.querySelector('.open-question-title');
-                        var questionInput = questionEl.querySelector('textarea');
-                        var base = 'Pregunta ' + (position + 1);
-                        if (titleEl && questionInput) {
-                            var text = questionInput.value.trim();
-                            if (text.length) {
-                                var snippet = text.length > 40 ? text.slice(0, 40) + '...' : text;
-                                titleEl.textContent = base + ': ' + snippet;
-                            } else {
-                                titleEl.textContent = base;
-                            }
-                        }
-                    });
-                };
-
-                var updateOpenIndices = function () {
-                    var questions = openQuestions.querySelectorAll('.open-question');
-                    questions.forEach(function (questionEl, position) {
-                        questionEl.setAttribute('data-index', String(position));
-                        var textarea = questionEl.querySelector('textarea');
-                        if (textarea) {
-                            textarea.name = 'questions[' + position + '][question]';
-                        }
-                        var removeBtn = questionEl.querySelector('.open-remove-question');
-                        if (removeBtn) {
-                            removeBtn.disabled = questions.length <= 1;
-                        }
-                    });
-                    updateOpenTitles();
-                };
-
-                var addOpenQuestion = function () {
-                    var index = openQuestions.querySelectorAll('.open-question').length;
-                    var html = openQuestionTemplate.innerHTML
-                        .replace(/__INDEX__/g, String(index))
-                        .replace(/__NUM__/g, String(index + 1));
-                    var wrapper = document.createElement('div');
-                    wrapper.innerHTML = html.trim();
-                    var questionEl = wrapper.firstElementChild;
-                    openQuestions.appendChild(questionEl);
-
-                    var questionInput = questionEl.querySelector('textarea');
-                    var removeBtn = questionEl.querySelector('.open-remove-question');
-
-                    questionInput.addEventListener('input', updateOpenTitles);
-                    if (removeBtn) {
-                        removeBtn.addEventListener('click', function () {
-                            questionEl.remove();
-                            updateOpenIndices();
-                        });
-                    }
-
-                    updateOpenIndices();
-                };
-
-                openAddQuestion.addEventListener('click', addOpenQuestion);
-                addOpenQuestion();
-            }
-
-            if (builderForm && openQuestions) {
-                builderForm.addEventListener('submit', function (event) {
-                    var questionBlocks = openQuestions.querySelectorAll('.open-question');
-                    questionBlocks.forEach(function (block) {
-                        var textarea = block.querySelector('textarea');
-                        if (textarea && !textarea.value.trim()) {
-                            block.remove();
-                        }
-                    });
-                    var remaining = openQuestions.querySelectorAll('.open-question').length;
-                    if (!remaining) {
-                        event.preventDefault();
-                        alert('Agrega al menos una pregunta.');
-                        addOpenQuestion();
-                    } else {
-                        updateOpenIndices();
-                    }
-                });
-            }
-
-            var mcAddQuestion = document.getElementById('mc-add-question');
-            var mcQuestionTemplate = document.getElementById('mc-question-template');
-            var mcQuestions = document.getElementById('mc-questions');
-
-            if (mcAddQuestion && mcQuestionTemplate && mcQuestions) {
-                var addMcOption = function (questionEl) {
-                    var index = questionEl.getAttribute('data-index');
-                    var optionsWrap = questionEl.querySelector('.mc-options');
-                    var optionIndex = optionsWrap.querySelectorAll('.mc-option').length;
-                    var option = document.createElement('label');
-                    option.className = 'checkbox mc-option';
-                    option.innerHTML = ''
-                        + '<input type="radio" name="questions[' + index + '][correct_option]" value="' + optionIndex + '">'
-                        + '<input type="text" name="questions[' + index + '][options][]" placeholder="Opcion ' + (optionIndex + 1) + '" required>';
-                    optionsWrap.appendChild(option);
-                };
-
-                var updateMcTitles = function () {
-                    var questions = mcQuestions.querySelectorAll('.mc-question');
-                    questions.forEach(function (questionEl, position) {
-                        var titleEl = questionEl.querySelector('.mc-question-title');
-                        var questionInput = questionEl.querySelector('textarea');
-                        var base = 'Pregunta ' + (position + 1);
-                        if (titleEl && questionInput) {
-                            var text = questionInput.value.trim();
-                            if (text.length) {
-                                var snippet = text.length > 40 ? text.slice(0, 40) + '...' : text;
-                                titleEl.textContent = base + ': ' + snippet;
-                            } else {
-                                titleEl.textContent = base;
-                            }
-                        }
-                    });
-                };
-
-                var updateMcIndices = function () {
-                    var questions = mcQuestions.querySelectorAll('.mc-question');
-                    questions.forEach(function (questionEl, position) {
-                        questionEl.setAttribute('data-index', String(position));
-                        var textarea = questionEl.querySelector('textarea');
-                        if (textarea) {
-                            textarea.name = 'questions[' + position + '][question]';
-                        }
-                        var optionInputs = questionEl.querySelectorAll('.mc-options input[type="text"]');
-                        optionInputs.forEach(function (input) {
-                            input.name = 'questions[' + position + '][options][]';
-                        });
-                        var radioInputs = questionEl.querySelectorAll('.mc-options input[type="radio"]');
-                        radioInputs.forEach(function (input, optionIndex) {
-                            input.name = 'questions[' + position + '][correct_option]';
-                            input.value = String(optionIndex);
-                        });
-                        var removeBtn = questionEl.querySelector('.mc-remove-question');
-                        if (removeBtn) {
-                            removeBtn.disabled = questions.length <= 1;
-                        }
-                    });
-                    updateMcTitles();
-                };
-
-                var addMcQuestion = function () {
-                    var index = mcQuestions.querySelectorAll('.mc-question').length;
-                    var html = mcQuestionTemplate.innerHTML
-                        .replace(/__INDEX__/g, String(index))
-                        .replace(/__NUM__/g, String(index + 1));
-                    var wrapper = document.createElement('div');
-                    wrapper.innerHTML = html.trim();
-                    var questionEl = wrapper.firstElementChild;
-                    mcQuestions.appendChild(questionEl);
-
-                    var addOptionBtn = questionEl.querySelector('.mc-add-option');
-                    var questionInput = questionEl.querySelector('textarea');
-                    var removeBtn = questionEl.querySelector('.mc-remove-question');
-
-                    addOptionBtn.addEventListener('click', function () {
-                        addMcOption(questionEl);
-                    });
-
-                    questionInput.addEventListener('input', updateMcTitles);
-                    if (removeBtn) {
-                        removeBtn.addEventListener('click', function () {
-                            questionEl.remove();
-                            updateMcIndices();
-                        });
-                    }
-
-                    addMcOption(questionEl);
-                    addMcOption(questionEl);
-                    updateMcIndices();
-                };
-
-                mcAddQuestion.addEventListener('click', addMcQuestion);
-                addMcQuestion();
-            }
-
             var mixedItems = document.getElementById('mixed-items');
             var mixedAdd = document.getElementById('mixed-add-item');
             var mixedTemplate = document.getElementById('mixed-item-template');
@@ -396,9 +139,54 @@
                     }
                 };
 
+                var updateMixedTitles = function () {
+                    var items = mixedItems.querySelectorAll('.mixed-item');
+                    items.forEach(function (itemEl, position) {
+                        var titleEl = itemEl.querySelector('.mixed-item-title');
+                        var questionInput = itemEl.querySelector('textarea');
+                        var base = 'Item ' + (position + 1);
+                        if (titleEl && questionInput) {
+                            var text = questionInput.value.trim();
+                            if (text.length) {
+                                var snippet = text.length > 40 ? text.slice(0, 40) + '...' : text;
+                                titleEl.textContent = base + ': ' + snippet;
+                            } else {
+                                titleEl.textContent = base;
+                            }
+                        }
+                    });
+                };
+
+                var updateMixedIndices = function () {
+                    var items = mixedItems.querySelectorAll('.mixed-item');
+                    items.forEach(function (itemEl, position) {
+                        itemEl.setAttribute('data-index', String(position));
+                        var typeSelect = itemEl.querySelector('.mixed-type');
+                        if (typeSelect) {
+                            typeSelect.name = 'items[' + position + '][type]';
+                        }
+                        var questionInput = itemEl.querySelector('textarea');
+                        if (questionInput) {
+                            questionInput.name = 'items[' + position + '][question]';
+                        }
+                        var optionInputs = itemEl.querySelectorAll('.mixed-options input[type="text"]');
+                        optionInputs.forEach(function (input) {
+                            input.name = 'items[' + position + '][options][]';
+                        });
+                        var radioInputs = itemEl.querySelectorAll('.mixed-options input[type="radio"]');
+                        radioInputs.forEach(function (input, optionIndex) {
+                            input.name = 'items[' + position + '][correct_option]';
+                            input.value = String(optionIndex);
+                        });
+                    });
+                    updateMixedTitles();
+                };
+
                 var addMixedItem = function () {
                     var index = mixedItems.querySelectorAll('.mixed-item').length;
-                    var html = mixedTemplate.innerHTML.replace(/__INDEX__/g, String(index));
+                    var html = mixedTemplate.innerHTML
+                        .replace(/__INDEX__/g, String(index))
+                        .replace(/__NUM__/g, String(index + 1));
                     var wrapper = document.createElement('div');
                     wrapper.innerHTML = html.trim();
                     var itemEl = wrapper.firstElementChild;
@@ -406,6 +194,7 @@
 
                     var typeSelect = itemEl.querySelector('.mixed-type');
                     var addOptionBtn = itemEl.querySelector('.mixed-add-option');
+                    var questionInput = itemEl.querySelector('textarea');
 
                     addOptionBtn.addEventListener('click', function () {
                         addMixedOption(itemEl);
@@ -415,7 +204,12 @@
                         toggleMixedType(itemEl, typeSelect.value);
                     });
 
+                    if (questionInput) {
+                        questionInput.addEventListener('input', updateMixedTitles);
+                    }
+
                     toggleMixedType(itemEl, typeSelect.value);
+                    updateMixedIndices();
                 };
 
                 mixedAdd.addEventListener('click', addMixedItem);

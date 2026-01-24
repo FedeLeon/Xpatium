@@ -9,6 +9,7 @@ use App\Http\Controllers\Student\LessonController as StudentLessonController;
 use App\Http\Controllers\Student\LessonQuizController as StudentLessonQuizController;
 use App\Http\Controllers\Student\MeetingController as StudentMeetingController;
 use App\Http\Controllers\Student\ProfileController as StudentProfileController;
+use App\Http\Controllers\Student\TaskController as StudentTaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/alumno', [DashboardController::class, 'index'])
@@ -25,6 +26,8 @@ Route::middleware(['auth', 'role:student'])->prefix('alumno')->name('student.')-
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
     Route::delete('/notificaciones/{notificationId}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notificaciones', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
+    Route::get('/tareas/pendientes', [StudentTaskController::class, 'pending'])->name('tasks.pending');
+    Route::get('/tareas', [StudentTaskController::class, 'index'])->name('tasks.index');
     Route::get('/perfil', [StudentProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/perfil', [StudentProfileController::class, 'update'])->name('profile.update');
     Route::get('/reuniones', [StudentMeetingController::class, 'index'])->name('meetings.index');

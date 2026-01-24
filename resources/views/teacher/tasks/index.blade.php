@@ -44,11 +44,8 @@
                     @foreach ($tasks as $task)
                         @php
                             $typeLabel = match ($task->task_type) {
-                                'open_question' => 'Pregunta abierta',
-                                'multiple_choice' => 'Multiple choice',
                                 'file_delivery' => 'Entrega de archivo',
                                 'mixed' => 'Mixta',
-                                'review' => 'Revision',
                                 default => $task->task_type,
                             };
                         @endphp
