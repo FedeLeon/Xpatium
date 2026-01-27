@@ -49,6 +49,12 @@
                         </td>
                         <td>
                             <div class="commission-actions">
+                                <button class="btn btn-secondary btn-icon-only" type="button" aria-label="Editar comision" onclick="document.getElementById('commissionInfoModal-{{ $commission->id }}').showModal()">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 20h9"></path>
+                                        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                                    </svg>
+                                </button>
                                 <button class="btn btn-secondary btn-icon-only" type="button" aria-label="Editar alumnos" onclick="document.getElementById('commissionEditModal-{{ $commission->id }}').showModal()">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M17 21v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1"></path>
@@ -151,6 +157,31 @@
                     </div>
                 @endif
             </div>
+        </dialog>
+
+        <dialog id="commissionInfoModal-{{ $commission->id }}">
+            <div class="modal-header">
+                <strong>Editar comision</strong>
+                <button class="btn btn-secondary" type="button" onclick="document.getElementById('commissionInfoModal-{{ $commission->id }}').close()">Cerrar</button>
+            </div>
+            <form method="POST" action="{{ route('teacher.students.commission.update', $commission) }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-body form-grid">
+                    <div>
+                        <label for="commission-name-{{ $commission->id }}">Nombre</label>
+                        <input id="commission-name-{{ $commission->id }}" name="name" type="text" value="{{ $commission->name }}" required>
+                    </div>
+                    <div>
+                        <label for="commission-description-{{ $commission->id }}">Descripcion</label>
+                        <textarea id="commission-description-{{ $commission->id }}" name="description" rows="4">{{ $commission->description }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('commissionInfoModal-{{ $commission->id }}').close()">Cancelar</button>
+                    <button class="btn" type="submit">Guardar</button>
+                </div>
+            </form>
         </dialog>
 
         <dialog id="commissionEditModal-{{ $commission->id }}">

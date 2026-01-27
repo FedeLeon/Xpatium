@@ -67,6 +67,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('profesor')->name('teacher.'
     Route::get('/alumnos/comision', [CommissionController::class, 'index'])->name('students.commission');
     Route::post('/alumnos/comision', [CommissionController::class, 'store'])->name('students.commission.store');
     Route::put('/alumnos/comision/{commission}/alumnos', [CommissionController::class, 'updateStudents'])->name('students.commission.students.update');
+    Route::put('/alumnos/comision/{commission}', [CommissionController::class, 'update'])->name('students.commission.update');
     Route::delete('/alumnos/comision/{commission}', [CommissionController::class, 'destroy'])->name('students.commission.destroy');
     Route::post('/alumnos', [StudentController::class, 'store'])->name('students.store');
     Route::put('/alumnos/{studentProfile}/estado', [StudentController::class, 'updateStatus'])->name('students.status');

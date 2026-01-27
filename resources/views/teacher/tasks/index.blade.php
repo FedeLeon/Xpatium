@@ -70,7 +70,7 @@
                                         Ver detalle
                                     </a>
                                     <a class="btn btn-secondary btn-icon" href="{{ route('teacher.tasks.correct', $task) }}">
-                                        Corregir
+                                        Estado
                                     </a>
                                     <form method="POST" action="{{ route('teacher.tasks.destroy', $task) }}"
                                           data-confirm="Se eliminara la tarea y su contenido.">

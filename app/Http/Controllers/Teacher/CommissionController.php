@@ -75,6 +75,25 @@ class CommissionController extends Controller
         return redirect()->route('teacher.students.commission');
     }
 
+    public function update(Request $request, Commission $commission): RedirectResponse
+    {
+        if ($commission->teacher_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $commission->update([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+        ]);
+
+        return redirect()->route('teacher.students.commission');
+    }
+
     public function destroy(Request $request, Commission $commission): RedirectResponse
     {
         if ($commission->teacher_id !== $request->user()->id) {
