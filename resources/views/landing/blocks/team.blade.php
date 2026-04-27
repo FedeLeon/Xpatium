@@ -9,8 +9,8 @@
   <div class="wrap">
     <div class="head">
       <span class="stamp">Nuestro equipo</span>
-      <h2>Desarrolladores & Diseñadores</h2>
-      <p class="muted">Gente real construyendo cosas de verdad 💜</p>
+      <h2>Equipo de producto</h2>
+      <p class="muted">Personas construyendo una herramienta util para las iglesias.</p>
     </div>
 
     <div class="team">

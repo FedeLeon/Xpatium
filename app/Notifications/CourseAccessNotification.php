@@ -25,7 +25,7 @@ class CourseAccessNotification extends Notification
         $teacherName = trim($this->teacher->name.' '.$this->teacher->last_name);
 
         return [
-            'message' => 'El profesor '.$teacherName.' te dio acceso al curso '.$this->course->name.'.',
+            'message' => 'El lider '.$teacherName.' te dio acceso al contenido de ayuda '.$this->course->name.'.',
             'teacher_id' => $this->teacher->id,
             'course_id' => $this->course->id,
         ];

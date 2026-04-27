@@ -11,7 +11,7 @@
                 </svg>
                 Anuncios
             </h1>
-            <p>Publica avisos para tus alumnos.</p>
+            <p>Publica avisos para tus usuarios.</p>
         </div>
         <button class="btn btn-action" type="button" onclick="document.getElementById('announcementModal').showModal()">Nuevo anuncio</button>
     </div>

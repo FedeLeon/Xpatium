@@ -1,7 +1,7 @@
 <footer class="footer sec sec--violet">
   <div class="wrap center footer__row">
-    <img src="{{ asset('landing/assets/img/brand/xpatium-mark.png') }}" alt="X" class="footer__mark">
-    <span>© {{ date('Y') }} Xpatium — Todos los derechos reservados</span>
+    <img src="{{ asset('landing/assets/img/brand/xpatium-mark.png') }}" alt="CristoApp" class="footer__mark">
+    <span>© {{ date('Y') }} CristoApp — Todos los derechos reservados</span>
   </div>
 </footer>
 
@@ -9,7 +9,7 @@
 <div id="easterEggModal" class="egg-modal">
   <div class="egg-content">
     <span class="egg-close">&times;</span>
-    <h2>¡Descubriste el secreto de XPATIUM 🎉!</h2>
+    <h2>Descubriste el secreto de CRISTOAPP</h2>
 
     <!-- Video del gatito bailando -->
     <video controls autoplay loop muted playsinline>
@@ -20,7 +20,7 @@
 </div>
 
 <script>
-  const secretWord = "xpatium";
+  const secretWord = "cristoapp";
   let buffer = "";
 
   document.addEventListener("keydown", function(e) {

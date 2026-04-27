@@ -1,8 +1,8 @@
 <header class="nav nav--violet">
   <div class="wrap nav__row">
     <a class="brand" href="{{ url('/') }}">
-      <img src="{{ asset('landing/assets/img/logo.png') }}" alt="Xpatium">
-      <strong>patium</strong>
+      <img src="{{ asset('landing/assets/img/logo.png') }}" alt="CristoApp">
+      <strong>CristoApp</strong>
     </a>
 
     <div class="nav__actions">

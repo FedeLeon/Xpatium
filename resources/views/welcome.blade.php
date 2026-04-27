@@ -3,13 +3,13 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Xpatium</title>
+        <title>CristoApp</title>
         <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     </head>
     <body>
         <main>
-            <h1>Bienvenido a Xpatium</h1>
-            <p>Tu academia online para cursos y clases en vivo.</p>
+            <h1>Bienvenido a CristoApp</h1>
+            <p>Tu plataforma para contenidos de ayuda, encuentros y acompanamiento en comunidad.</p>
             @auth
                 @php
                     $role = auth()->user()?->role;

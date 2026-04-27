@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ $course->name }} | Xpatium</title>
+        <title>{{ $course->name }} | CristoApp</title>
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('landing/assets/img/favicon.png') }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('landing/assets/img/favicon.png') }}">
         <link rel="shortcut icon" href="{{ asset('landing/assets/img/favicon.png') }}">
@@ -34,7 +34,7 @@
                 <div class="curso-hero__row">
                     <div class="hero-copy">
                         <a href="{{ route('home') }}">
-                            <img class="logo-curso" src="{{ asset('landing/assets/img/logo.png') }}" alt="Xpatium">
+                            <img class="logo-curso" src="{{ asset('landing/assets/img/logo.png') }}" alt="CristoApp">
                         </a>
                         <span class="tipo-curso">Inicio: {{ $course->start_date?->format('d/m/Y') ?? 'A confirmar' }}</span>
                         <span class="tipo-curso">
@@ -91,7 +91,7 @@
                                 <img class="avatar-instructor" src="{{ $teacherAvatar }}" alt="{{ $teacherName }}">
                                 <div>
                                     <h5 class="mb-1">{{ $teacherName }}</h5>
-                                    <p class="mb-0 small">Instructor del curso</p>
+                                    <p class="mb-0 small">Instructor del contenido de ayuda</p>
                                 </div>
                             </div>
                         </div>
@@ -131,24 +131,24 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-center">Este curso aun no tiene modulos publicados.</p>
+                    <p class="text-center">Este contenido de ayuda aun no tiene modulos publicados.</p>
                 @endforelse
             </div>
         </section>
 
         <section class="curso-mensaje">
             <div class="container">
-                <h2 class="text-center mb-4">Mensaje del profesor</h2>
+                <h2 class="text-center mb-4">Mensaje del lider</h2>
                 <div class="mensaje-card">
                     <div>
                         @if ($course->landing_custom_text)
                             <p>{{ $course->landing_custom_text }}</p>
                         @else
-                            <p>El profesor sumara aqui su mensaje personalizado.</p>
+                            <p>El lider sumara aqui su mensaje personalizado.</p>
                         @endif
                     </div>
                     @if ($course->landing_custom_image_path)
-                        <img src="{{ asset('storage/' . $course->landing_custom_image_path) }}" alt="Imagen del profesor">
+                        <img src="{{ asset('storage/' . $course->landing_custom_image_path) }}" alt="Imagen del lider">
                     @endif
                 </div>
             </div>
@@ -159,12 +159,12 @@
                 <div class="row g-5">
                     <div class="col-lg-5">
                         <h2 class="titulo-faq mb-3">Preguntas frecuentes</h2>
-                        <p class="texto-faq mb-4">Resolvemos las dudas mas comunes sobre el curso y el acceso.</p>
+                        <p class="texto-faq mb-4">Resolvemos las dudas mas comunes sobre el contenido de ayuda y el acceso.</p>
                     </div>
                     <div class="col-lg-7">
                         <div class="faq-box">
-                            <h4>¿Como accedo a las clases una vez que compro el curso?</h4>
-                            <p>Recibiras un correo con el acceso al campus virtual para empezar de inmediato.</p>
+                            <h4>¿Como accedo a las clases una vez que compro el contenido de ayuda?</h4>
+                            <p>Recibiras un correo con el acceso a la plataforma para empezar de inmediato.</p>
                         </div>
                         <div class="faq-box">
                             <h4>¿Puedo ver las lecciones desde mi celular?</h4>
@@ -172,7 +172,7 @@
                         </div>
                         <div class="faq-box">
                             <h4>¿Tendre soporte si tengo preguntas?</h4>
-                            <p>Podras comunicarte con el profesor desde la plataforma para resolver dudas.</p>
+                            <p>Podras comunicarte con el lider desde la plataforma para resolver dudas.</p>
                         </div>
                     </div>
                 </div>
@@ -225,7 +225,7 @@
 
         <footer class="footer">
             <div class="container">
-                <span>© {{ date('Y') }} Xpatium — Todos los derechos reservados</span>
+                <span>© {{ date('Y') }} CristoApp — Todos los derechos reservados</span>
             </div>
         </footer>
     </body>

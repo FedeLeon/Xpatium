@@ -89,7 +89,7 @@
                     <label for="file-instructions">Instrucciones</label>
                     <textarea id="file-instructions" name="instructions" rows="5" required>{{ old('instructions') }}</textarea>
                 </div>
-                <p class="subtle">El alumno subira un archivo como entrega.</p>
+                <p class="subtle">El usuario subira un archivo como entrega.</p>
             @else
                 <p class="subtle">Este tipo de tarea ya no se encuentra disponible.</p>
             @endif

@@ -8,22 +8,22 @@
                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                 </svg>
-                Cursos
+                Contenidos de ayuda
             </h1>
-            <p>Gestiona tus cursos publicados.</p>
+            <p>Gestiona tus contenidos de ayuda publicados.</p>
         </div>
-        <a class="btn btn-action" href="{{ route('teacher.courses.create') }}">Crear curso</a>
+        <a class="btn btn-action" href="{{ route('teacher.courses.create') }}">Crear contenido de ayuda</a>
     </div>
 
     @if ($courses->isEmpty())
-        <p>No tenes cursos todavia. Crea el primero.</p>
+        <p>No tenes contenidos de ayuda todavia. Crea el primero.</p>
     @else
         <div class="courses-grid">
             @foreach ($courses as $course)
                 <article class="course-card">
                     <div class="course-card__media">
                         @if ($course->image_path)
-                            <img class="course-card__image" src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del curso">
+                            <img class="course-card__image" src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del contenido de ayuda">
                         @else
                             <div class="course-card__placeholder">Sin imagen</div>
                         @endif

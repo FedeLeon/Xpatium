@@ -15,7 +15,7 @@
         <div class="course-dashboard__details">
             <div class="card">
                 @if ($course->image_path)
-                    <img src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del curso">
+                    <img src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del contenido de ayuda">
                 @else
                     <div class="placeholder">Sin imagen</div>
                 @endif
@@ -53,7 +53,7 @@
                             <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
                         </svg>
                     </span>
-                    <span class="course-action__label">Editar curso</span>
+                    <span class="course-action__label">Editar contenido de ayuda</span>
                 </a>
                 <a class="course-action" href="{{ route('teacher.courses.modules.index', $course) }}">
                     <span class="course-action__icon" aria-hidden="true">
@@ -76,7 +76,7 @@
                     </span>
                     <span class="course-action__label">Ver landing</span>
                 </a>
-                <form method="POST" action="{{ route('teacher.courses.destroy', $course) }}" data-confirm="Se eliminara el curso y todo su contenido.">
+                <form method="POST" action="{{ route('teacher.courses.destroy', $course) }}" data-confirm="Se eliminara el contenido de ayuda y todo su contenido.">
                     @csrf
                     @method('DELETE')
                     <button class="course-action course-action--danger" type="submit">

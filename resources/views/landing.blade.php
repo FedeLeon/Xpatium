@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Xpatium — Enseñá y vende online</title>
+  <title>CristoApp — Plataforma para comunidades de fe</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('landing/assets/img/favicon.png') }}">

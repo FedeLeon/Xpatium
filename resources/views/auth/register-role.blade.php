@@ -19,7 +19,7 @@
                 <div class="auth__card">
                     <div class="auth__header">
                         <h1>Tipo de cuenta</h1>
-                        <p class="auth__subtitle">Antes de registrarte, contanos si vas a dar clases o estudiar.</p>
+                        <p class="auth__subtitle">Antes de registrarte, contanos si vas a liderar o participar en la comunidad.</p>
                     </div>
 
                     @if ($errors->any())
@@ -33,15 +33,15 @@
                         <label class="auth__option">
                             <input type="radio" name="role" value="teacher" required>
                             <span>
-                                <strong>Profesor</strong>
-                                Crea cursos, dicta clases y gestiona alumnos.
+                                <strong>Lider</strong>
+                                Crea contenidos de ayuda, organiza encuentros y gestiona usuarios.
                             </span>
                         </label>
                         <label class="auth__option">
                             <input type="radio" name="role" value="student" required>
                             <span>
-                                <strong>Alumno</strong>
-                                Accede a cursos, clases en vivo y materiales.
+                                <strong>Usuario</strong>
+                                Accede a contenidos de ayuda, encuentros en vivo y materiales.
                             </span>
                         </label>
                         <div class="auth__actions">

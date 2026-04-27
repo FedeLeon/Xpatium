@@ -22,7 +22,7 @@
                         <p class="auth__subtitle">Completa tus datos para empezar.</p>
                         <p class="auth__meta">
                             Tipo de cuenta:
-                            <strong>{{ session('register_role') === 'teacher' ? 'Profesor' : 'Alumno' }}</strong>
+                            <strong>{{ session('register_role') === 'teacher' ? 'Lider' : 'Usuario' }}</strong>
                         </p>
                     </div>
 
@@ -42,7 +42,7 @@
                         <div class="auth__field">
                             <label for="name">Nombre</label>
                             <input id="name" name="name" type="text" value="{{ old('name') }}" required>
-                            <div class="hint">Como queres que te vean tus alumnos.</div>
+                            <div class="hint">Como queres que te vean tus usuarios.</div>
                             @error('name')
                                 <div class="field-error">{{ $message }}</div>
                             @enderror

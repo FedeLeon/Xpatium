@@ -102,7 +102,7 @@ class StudentController extends Controller
 
         $course = $request->user()->courses()->where('id', $data['course_id'])->first();
         if (! $course) {
-            return back()->withErrors(['course_id' => 'Curso invalido.']);
+            return back()->withErrors(['course_id' => 'Contenido de ayuda invalido.']);
         }
 
         if ($data['action'] === 'grant') {

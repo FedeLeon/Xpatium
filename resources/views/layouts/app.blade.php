@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ $title ?? 'Xpatium' }}</title>
+        <title>{{ $title ?? 'CristoApp' }}</title>
         <link rel="icon" href="{{ asset('logo2.png') }}" type="image/svg+xml">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         @stack('styles')
@@ -50,8 +50,8 @@
         <div class="app">
             <header>
                 <a class="logo" href="{{ route($dashboardRoute) }}" aria-label="Ir al inicio">
-                    <img src="{{ asset('logo.png') }}" alt="Logo Xpatium" class="logo-mark logo-mark--inline">
-                    <span class="logo-text">patium</span>
+                    <img src="{{ asset('logo.png') }}" alt="Logo CristoApp" class="logo-mark logo-mark--inline">
+                    <span class="logo-text">CristoApp</span>
                 </a>
                 <div class="header-actions">
                     @if ($role === \App\Models\User::ROLE_STUDENT || $role === \App\Models\User::ROLE_TEACHER)
@@ -166,7 +166,7 @@
                                         <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"></path>
                                     </svg>
                                 </span>
-                                <span class="menu-label">Cursos</span>
+                                <span class="menu-label">Contenidos de ayuda</span>
                             </a>
                             <a class="{{ request()->routeIs('teacher.meetings.*') ? 'is-active' : '' }}" href="{{ route('teacher.meetings.index') }}">
                                 <span class="menu-icon" aria-hidden="true">
@@ -221,7 +221,7 @@
                                             <path d="M16 3.13a4 4 0 010 7.75"></path>
                                         </svg>
                                     </span>
-                                    <span class="menu-label">Alumnos</span>
+                                    <span class="menu-label">Usuarios</span>
                                     <span class="menu-chevron" aria-hidden="true">
                                         <svg viewBox="0 0 24 24" aria-hidden="true">
                                             <path d="M6 9l6 6 6-6"></path>
@@ -229,7 +229,7 @@
                                     </span>
                                 </summary>
                                 <div class="menu-submenu">
-                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.students.index') ? 'is-active' : '' }}" href="{{ route('teacher.students.index') }}">Listado de alumnos</a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.students.index') ? 'is-active' : '' }}" href="{{ route('teacher.students.index') }}">Listado de usuarios</a>
                                     <a class="menu-submenu__link {{ request()->routeIs('teacher.students.commission') ? 'is-active' : '' }}" href="{{ route('teacher.students.commission') }}">Comision</a>
                                 </div>
                             </details>
@@ -273,7 +273,7 @@
                                         <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"></path>
                                     </svg>
                                 </span>
-                                <span class="menu-label">Cursos</span>
+                                <span class="menu-label">Contenidos de ayuda</span>
                             </a>
                             <a class="{{ request()->routeIs('student.meetings.*') ? 'is-active' : '' }}" href="{{ route('student.meetings.index') }}">
                                 <span class="menu-icon" aria-hidden="true">

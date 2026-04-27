@@ -1,9 +1,9 @@
 :root {
-    --auth-text: #2c1a60;
-    --auth-muted: #54408e;
-    --auth-border: #5b2eff;
-    --auth-error: #b32069;
-    --auth-error-bg: #ffe7f3;
+    --auth-text: #412517;
+    --auth-muted: #6a4a34;
+    --auth-border: #7a5b24;
+    --auth-error: #8b1f3f;
+    --auth-error-bg: #f7e7eb;
 }
 
 .auth {

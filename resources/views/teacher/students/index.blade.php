@@ -14,17 +14,17 @@
                     <path d="M23 21v-1a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
-                Alumnos
+                Usuarios
             </h1>
-            <p>Gestiona los alumnos registrados en tu academia.</p>
+            <p>Gestiona los usuarios registrados en tu comunidad.</p>
             <button class="btn btn-action" type="button" onclick="document.getElementById('studentModal').showModal()">
-                Agregar alumno
+                Agregar usuario
             </button>
         </div>
     </div>
 
     @if ($students->isEmpty())
-        <p>No hay alumnos registrados.</p>
+        <p>No hay usuarios registrados.</p>
     @else
         <table>
             <thead>
@@ -89,9 +89,9 @@
                                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                 </svg>
-                                Cursos
+                                Contenidos de ayuda
                             </button>
-                            <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el alumno y su acceso.">
+                            <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el usuario y su acceso.">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-icon" type="submit">
@@ -116,7 +116,7 @@
     @foreach ($students as $record)
         <dialog id="coursesModal-{{ $record->id }}">
             <div class="modal-header">
-                <strong>Acceso a cursos</strong>
+                <strong>Acceso a contenidos de ayuda</strong>
                 <button class="btn btn-secondary" type="button" onclick="document.getElementById('coursesModal-{{ $record->id }}').close()">Cerrar</button>
             </div>
             <div class="modal-body">
@@ -144,7 +144,7 @@
                                         class="switch-input"
                                         type="checkbox"
                                         {{ $hasAccess ? 'checked' : '' }}
-                                        aria-label="Acceso al curso {{ $course->name }}"
+                                        aria-label="Acceso al contenido de ayuda {{ $course->name }}"
                                         data-course="{{ $course->name }}"
                                         data-student="{{ $record->student->name }} {{ $record->student->last_name }}"
                                     >
@@ -153,7 +153,7 @@
                             </form>
                         </div>
                     @empty
-                        <p class="subtle">No hay cursos creados.</p>
+                        <p class="subtle">No hay contenidos de ayuda creados.</p>
                     @endforelse
                 </div>
             </div>
@@ -162,7 +162,7 @@
 
     <dialog id="studentModal">
         <div class="modal-header">
-            <strong>Agregar alumno</strong>
+            <strong>Agregar usuario</strong>
             <button class="btn btn-secondary" type="button" onclick="document.getElementById('studentModal').close()">Cerrar</button>
         </div>
         <form method="POST" action="{{ route('teacher.students.store') }}">
@@ -218,8 +218,8 @@
                 if (!response.ok) {
                     throw new Error('request_failed');
                 }
-                var courseName = input.getAttribute('data-course') || 'Curso';
-                var studentName = input.getAttribute('data-student') || 'Alumno';
+                var courseName = input.getAttribute('data-course') || 'Contenido de ayuda';
+                var studentName = input.getAttribute('data-student') || 'Usuario';
                 var title = checkedState ? 'Acceso habilitado' : 'Acceso revocado';
                 var type = checkedState ? 'success' : 'error';
                 showToast({
@@ -232,8 +232,8 @@
                 if (actionField) {
                     actionField.value = input.checked ? 'grant' : 'revoke';
                 }
-                var courseName = input.getAttribute('data-course') || 'Curso';
-                var studentName = input.getAttribute('data-student') || 'Alumno';
+                var courseName = input.getAttribute('data-course') || 'Contenido de ayuda';
+                var studentName = input.getAttribute('data-student') || 'Usuario';
                 showToast({
                     title: 'Error al actualizar',
                     subtitle: courseName + ' para ' + studentName,

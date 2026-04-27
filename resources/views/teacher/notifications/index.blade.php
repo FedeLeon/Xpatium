@@ -10,7 +10,7 @@
                 </svg>
                 Notificaciones
             </h1>
-            <p>Mensajes recientes de tus alumnos.</p>
+            <p>Mensajes recientes de tus usuarios.</p>
         </div>
         <div class="section-actions">
             @if (!empty($notificationUnreadCount))

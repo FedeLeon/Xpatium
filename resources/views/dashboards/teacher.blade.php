@@ -8,9 +8,9 @@
                     <path d="M3 9l9-7 9 7"></path>
                     <path d="M9 22V12h6v10"></path>
                 </svg>
-                Panel de profesor
+                Panel de lider
             </h1>
-            <p>Resumen general de tu academia.</p>
+            <p>Resumen general de tu comunidad.</p>
         </div>
     </div>
 
@@ -28,7 +28,7 @@
                         </svg>
                     </div>
                     <div class="metric-body">
-                        <span class="metric-label">Cursos</span>
+                        <span class="metric-label">Contenidos de ayuda</span>
                         <strong class="metric-value">{{ $courseCount }}</strong>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                         </svg>
                     </div>
                     <div class="metric-body">
-                        <span class="metric-label">Alumnos</span>
+                        <span class="metric-label">Usuarios</span>
                         <strong class="metric-value">{{ $studentCount }}</strong>
                     </div>
                 </div>

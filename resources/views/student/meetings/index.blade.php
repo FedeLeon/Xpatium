@@ -12,7 +12,7 @@
                 </svg>
                 Reuniones
             </h1>
-            <p>Proximas reuniones programadas por tu profesor.</p>
+            <p>Proximas reuniones programadas por tu lider.</p>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
                                 {{ $startAt->format('d/m/Y H:i') }} · {{ $meeting->duration_minutes }} min
                             </div>
                             <div class="subtle">
-                                Profesor: {{ $meeting->teacher?->name }} {{ $meeting->teacher?->last_name }}
+                                Lider: {{ $meeting->teacher?->name }} {{ $meeting->teacher?->last_name }}
                             </div>
                             <div class="subtle">
                                 Disponible desde {{ $joinAt->format('d/m/Y H:i') }}

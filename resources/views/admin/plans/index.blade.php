@@ -8,20 +8,20 @@
     <div class="actions">
         <div>
             <h1>Gestion de planes</h1>
-            <p>Asigna planes y pruebas gratis a profesores.</p>
+            <p>Asigna planes y pruebas gratis a lideres.</p>
         </div>
         <a class="btn btn-secondary" href="{{ route('admin.dashboard') }}">Volver</a>
     </div>
 
     <div class="card">
         @if ($teachers->isEmpty())
-            <p class="subtle">No hay profesores registrados.</p>
+            <p class="subtle">No hay lideres registrados.</p>
         @else
             <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
-                            <th>Profesor</th>
+                            <th>Lider</th>
                             <th>Plan actual</th>
                             <th>Uso</th>
                             <th>Asignar plan</th>

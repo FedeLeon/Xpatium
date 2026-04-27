@@ -15,7 +15,7 @@
     </div>
 
     <div class="info-bubble">
-        Organiza tu curso en modulos y agrega lecciones debajo. Los alumnos veran el contenido en este orden.
+        Organiza tu contenido de ayuda en modulos y agrega lecciones debajo. Los usuarios veran el contenido en este orden.
     </div>
 
     @if ($course->modules->isEmpty())

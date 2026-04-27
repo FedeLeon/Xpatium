@@ -8,7 +8,7 @@
     <div class="actions">
         <div>
             <h1>Panel de admin</h1>
-            <p>Gestiona profesores, alumnos y cursos desde aqui.</p>
+            <p>Gestiona lideres, usuarios y contenidos de ayuda desde aqui.</p>
         </div>
     </div>
 
@@ -20,15 +20,15 @@
             <div class="admin-actions">
                 <button class="admin-action">
                     <span class="admin-action__icon">📚</span>
-                    <span class="admin-action__label">Cursos</span>
+                    <span class="admin-action__label">Contenidos de ayuda</span>
                 </button>
                 <button class="admin-action">
                     <span class="admin-action__icon">👩‍🏫</span>
-                    <span class="admin-action__label">Profesores</span>
+                    <span class="admin-action__label">Lideres</span>
                 </button>
                 <button class="admin-action">
                     <span class="admin-action__icon">🎓</span>
-                    <span class="admin-action__label">Alumnos</span>
+                    <span class="admin-action__label">Usuarios</span>
                 </button>
                 <button class="admin-action">
                     <span class="admin-action__icon">🧾</span>
@@ -43,15 +43,15 @@
             </div>
             <div class="metric-grid">
                 <div class="metric">
-                    <span class="metric-label">Cursos activos</span>
+                    <span class="metric-label">Contenidos de ayuda activos</span>
                     <strong class="metric-value">--</strong>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Profesores</span>
+                    <span class="metric-label">Lideres</span>
                     <strong class="metric-value">--</strong>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Alumnos</span>
+                    <span class="metric-label">Usuarios</span>
                     <strong class="metric-value">--</strong>
                 </div>
                 <div class="metric">
@@ -63,16 +63,16 @@
 
         <div class="widget widget-wide">
             <div class="widget-header">
-                <h3>Cursos destacados</h3>
+                <h3>Contenidos de ayuda destacados</h3>
                 <span class="info-bubble">Proximamente listado real.</span>
             </div>
             <div class="admin-course">
                 <div>
-                    <h3>Curso de ejemplo</h3>
-                    <p class="subtle">Esta seccion mostrara informacion del curso seleccionado.</p>
+                    <h3>Contenido de ayuda de ejemplo</h3>
+                    <p class="subtle">Esta seccion mostrara informacion del contenido de ayuda seleccionado.</p>
                 </div>
                 <div class="admin-course__actions">
-                    <button class="btn btn-secondary">Ver curso</button>
+                    <button class="btn btn-secondary">Ver contenido de ayuda</button>
                     <button class="btn">Gestionar</button>
                 </div>
             </div>

@@ -18,7 +18,7 @@
                     </svg>
                     Chat
                 </h1>
-                <p>Conversaciones con alumnos y grupos.</p>
+                <p>Conversaciones con usuarios y grupos.</p>
                 @if (auth()->user()->role === \App\Models\User::ROLE_TEACHER)
                     <div class="chat-sidebar__actions">
                         <button class="btn btn-action" type="button" onclick="document.getElementById('directModal').showModal()">Nuevo chat</button>
@@ -247,16 +247,16 @@
     @if (auth()->user()->role === \App\Models\User::ROLE_TEACHER)
         <dialog id="directModal">
             <div class="modal-header">
-                <strong>Nuevo chat con alumno</strong>
+                <strong>Nuevo chat con usuario</strong>
                 <button class="btn btn-secondary" type="button" onclick="document.getElementById('directModal').close()">Cerrar</button>
             </div>
             <form method="POST" action="{{ route('chat.direct.store') }}">
                 @csrf
                 <div class="modal-body form-grid">
                     <div>
-                        <label for="student_id">Alumno</label>
+                        <label for="student_id">Usuario</label>
                         <select id="student_id" name="student_id" required>
-                            <option value="">Selecciona un alumno</option>
+                            <option value="">Selecciona un usuario</option>
                             @foreach ($students as $student)
                                 <option value="{{ $student->id }}">{{ $student->name }} {{ $student->last_name }}</option>
                             @endforeach
@@ -283,7 +283,7 @@
                         <input id="title" name="title" type="text" required>
                     </div>
                     <div>
-                        <label>Alumnos</label>
+                        <label>Usuarios</label>
                         <div class="asset-list">
                             @foreach ($students as $student)
                                 <label class="asset-item">

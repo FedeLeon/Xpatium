@@ -16,7 +16,7 @@
                 </svg>
                 Comision
             </h1>
-            <p>Administra las comisiones de alumnos.</p>
+            <p>Administra las comisiones de usuarios.</p>
             <button class="btn btn-action" type="button" onclick="document.getElementById('commissionModal').showModal()">
                 Crear comision
             </button>
@@ -31,7 +31,7 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Descripcion</th>
-                    <th>Alumnos</th>
+                    <th>Usuarios</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -55,7 +55,7 @@
                                         <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
                                     </svg>
                                 </button>
-                                <button class="btn btn-secondary btn-icon-only" type="button" aria-label="Editar alumnos" onclick="document.getElementById('commissionEditModal-{{ $commission->id }}').showModal()">
+                                <button class="btn btn-secondary btn-icon-only" type="button" aria-label="Editar usuarios" onclick="document.getElementById('commissionEditModal-{{ $commission->id }}').showModal()">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M17 21v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1"></path>
                                         <circle cx="9" cy="7" r="4"></circle>
@@ -107,9 +107,9 @@
                     @enderror
                 </div>
                 <div class="commission-students">
-                    <label>Alumnos</label>
+                    <label>Usuarios</label>
                     @if ($students->isEmpty())
-                        <p class="subtle">No hay alumnos disponibles para asignar.</p>
+                        <p class="subtle">No hay usuarios disponibles para asignar.</p>
                     @else
                         <div class="commission-students__list {{ $errors->has('students') || $errors->has('students.*') ? 'input-error' : '' }}">
                             @foreach ($students as $record)
@@ -141,12 +141,12 @@
     @foreach ($commissions as $commission)
         <dialog id="commissionStudentsModal-{{ $commission->id }}">
             <div class="modal-header">
-                <strong>Alumnos en {{ $commission->name }}</strong>
+                <strong>Usuarios en {{ $commission->name }}</strong>
                 <button class="btn btn-secondary" type="button" onclick="document.getElementById('commissionStudentsModal-{{ $commission->id }}').close()">Cerrar</button>
             </div>
             <div class="modal-body">
                 @if ($commission->students->isEmpty())
-                    <p class="subtle">No hay alumnos en esta comision.</p>
+                    <p class="subtle">No hay usuarios en esta comision.</p>
                 @else
                     <div class="commission-students__list">
                         @foreach ($commission->students as $student)
@@ -186,7 +186,7 @@
 
         <dialog id="commissionEditModal-{{ $commission->id }}">
             <div class="modal-header">
-                <strong>Editar alumnos</strong>
+                <strong>Editar usuarios</strong>
                 <button class="btn btn-secondary" type="button" onclick="document.getElementById('commissionEditModal-{{ $commission->id }}').close()">Cerrar</button>
             </div>
             <form method="POST" action="{{ route('teacher.students.commission.students.update', $commission) }}">
@@ -194,9 +194,9 @@
                 @method('PUT')
                 <div class="modal-body">
                     <div class="commission-students">
-                        <label>Alumnos</label>
+                        <label>Usuarios</label>
                         @if ($students->isEmpty())
-                            <p class="subtle">No hay alumnos disponibles para asignar.</p>
+                            <p class="subtle">No hay usuarios disponibles para asignar.</p>
                         @else
                             <div class="commission-students__list">
                                 @foreach ($students as $record)

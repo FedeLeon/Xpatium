@@ -15,7 +15,7 @@
         </span>
         Bienvenido, {{ auth()->user()->name }} {{ auth()->user()->last_name }}
     </h1>
-    <p>Este es tu espacio de aprendizaje. Continua con tus cursos activos.</p>
+    <p>Este es tu espacio de aprendizaje. Continua con tus contenidos de ayuda activos.</p>
 
     @php
         $hasUnreadAnnouncements = $unreadAnnouncementsCount > 0;
@@ -29,25 +29,25 @@
         <div class="card dashboard-card dashboard-card--courses">
             <div class="section-head">
                 <div>
-                    <h3>Mis cursos</h3>
-                    <p class="subtle">Total de cursos habilitados.</p>
+                    <h3>Mis contenidos de ayuda</h3>
+                    <p class="subtle">Total de contenidos de ayuda habilitados.</p>
                 </div>
             </div>
 
             <div class="stat-card">
                 <div>
-                    <span class="stat-label">Cursos activos</span>
+                    <span class="stat-label">Contenidos de ayuda activos</span>
                     <span class="stat-value">{{ $courses->count() }}</span>
                 </div>
             </div>
 
-            <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Ver cursos</a>
+            <a class="btn btn-secondary" href="{{ route('student.courses.index') }}">Ver contenidos de ayuda</a>
         </div>
 
         <div class="card dashboard-card dashboard-card--announcements {{ $hasUnreadAnnouncements ? 'dashboard-card--alert' : '' }}">
             <div>
                 <h3>Anuncios</h3>
-                <p class="subtle">Avisos publicados por tu profesor.</p>
+                <p class="subtle">Avisos publicados por tu lider.</p>
             </div>
 
             <div class="announcement-status">
@@ -154,7 +154,7 @@
                                 <div>
                                     <h3>{{ $announcement->title }}</h3>
                                     <p class="subtle">
-                                        {{ $announcement->teacher->name ?? 'Profesor' }}
+                                        {{ $announcement->teacher->name ?? 'Lider' }}
                                         @if ($announcement->starts_at || $announcement->ends_at)
                                             ·
                                             @if ($announcement->starts_at)
@@ -290,7 +290,7 @@
                 }
 
                 if (startAt && now >= startAt) {
-                    countdown.textContent = 'Reunion en curso';
+                    countdown.textContent = 'Reunion en contenido de ayuda';
                 } else if (startAt) {
                     countdown.textContent = formatRemaining(startAt - now);
                 }

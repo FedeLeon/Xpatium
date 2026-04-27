@@ -138,7 +138,7 @@ class ChatController extends Controller
             ->first();
 
         if (! $student) {
-            return back()->withErrors(['student_id' => 'Alumno invalido.']);
+            return back()->withErrors(['student_id' => 'Usuario invalido.']);
         }
 
         $existing = Conversation::where('type', Conversation::TYPE_DIRECT)
@@ -184,7 +184,7 @@ class ChatController extends Controller
             ->all();
 
         if (count($validStudentIds) < 2) {
-            return back()->withErrors(['students' => 'Selecciona al menos 2 alumnos validos.']);
+            return back()->withErrors(['students' => 'Selecciona al menos 2 usuarios validos.']);
         }
 
         $conversation = Conversation::create([

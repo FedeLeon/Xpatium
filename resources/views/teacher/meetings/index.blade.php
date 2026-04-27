@@ -12,7 +12,7 @@
                 </svg>
                 Reuniones
             </h1>
-            <p>Agenda reuniones individuales o grupales con tus alumnos.</p>
+            <p>Agenda reuniones individuales o grupales con tus usuarios.</p>
             <button class="btn btn-action meeting-new-btn" type="button" onclick="document.getElementById('meetingModal').showModal()">
                 Nueva reunion
             </button>
@@ -31,7 +31,7 @@
                     <div>Titulo</div>
                     <div>Fecha</div>
                     <div>Tipo</div>
-                    <div>Alumnos</div>
+                    <div>Usuarios</div>
                     <div>Acciones</div>
                 </div>
                 @foreach ($meetings as $meeting)
@@ -44,7 +44,7 @@
                         <div class="meeting-grid-title">{{ $meeting->title }}</div>
                         <div>{{ $meeting->scheduled_for->format('d/m/Y H:i') }}</div>
                         <div>{{ $meeting->meeting_type === 'individual' ? 'Individual' : 'Grupal' }}</div>
-                        <div class="meeting-grid-attendees">{{ $attendeeNames ?: 'Sin alumnos' }}</div>
+                        <div class="meeting-grid-attendees">{{ $attendeeNames ?: 'Sin usuarios' }}</div>
                         <div class="meeting-grid-actions">
                             <a class="btn btn-secondary" href="{{ $meeting->jitsi_room_url }}" target="_blank" rel="noopener">
                                 Abrir reunion
@@ -113,15 +113,15 @@
                     <input id="meeting-duration" name="duration_minutes" type="number" min="15" max="480" value="{{ old('duration_minutes', 60) }}" required>
                 </div>
                 <div class="form-field form-field--wide">
-                    <label>Alumnos</label>
+                    <label>Usuarios</label>
                     @if (! $hasStudents)
-                        <p class="subtle">No hay alumnos activos para asignar.</p>
+                        <p class="subtle">No hay usuarios activos para asignar.</p>
                     @else
                         <div class="meeting-student-actions">
                             <button class="btn btn-secondary btn-icon" type="button"
                                     onclick="document.getElementById('studentPickerModal').showModal()">
                                 <span aria-hidden="true">+</span>
-                                Elegir alumnos
+                                Elegir usuarios
                             </button>
                             <span id="student-selection-count" class="subtle">0 seleccionados</span>
                         </div>
@@ -137,12 +137,12 @@
 
     <dialog id="studentPickerModal">
         <div class="modal-header">
-            <strong>Seleccionar alumnos</strong>
+            <strong>Seleccionar usuarios</strong>
             <button class="btn btn-secondary" type="button" onclick="document.getElementById('studentPickerModal').close()">Cerrar</button>
         </div>
         <div class="modal-body">
             @if (! $hasStudents)
-                <p class="subtle">No hay alumnos activos para asignar.</p>
+                <p class="subtle">No hay usuarios activos para asignar.</p>
             @else
                 <div class="meeting-students">
                     @foreach ($students as $student)

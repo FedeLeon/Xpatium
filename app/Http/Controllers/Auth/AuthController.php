@@ -44,7 +44,7 @@ class AuthController extends Controller
         if ($user->status === 'bloqueado') {
             Auth::logout();
             return back()->withErrors([
-                'email' => 'Cuenta bloqueada. Contacta al profesor.',
+                'email' => 'Cuenta bloqueada. Contacta al lider.',
             ])->onlyInput('email');
         }
 

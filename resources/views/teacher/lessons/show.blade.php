@@ -53,7 +53,7 @@
             <div class="card preview-card">
                 <div class="preview-header">
                     <h3>Vista previa de la leccion</h3>
-                    <span class="badge">Asi lo ve el alumno</span>
+                    <span class="badge">Asi lo ve el usuario</span>
                 </div>
 
                 <div class="list">

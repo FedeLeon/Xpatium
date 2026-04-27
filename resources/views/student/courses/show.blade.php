@@ -4,7 +4,7 @@
     <div class="course-hero">
         <div class="course-hero__media">
             @if ($course->image_path)
-                <img class="course-hero__image" src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del curso">
+                <img class="course-hero__image" src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del contenido de ayuda">
             @else
                 <div class="course-hero__placeholder">Sin imagen</div>
             @endif
@@ -27,7 +27,7 @@
     <div class="card course-progress-card">
         <div class="course-progress course-progress--header">
             <div class="progress-meta">
-                <span>Progreso del curso</span>
+                <span>Progreso del contenido de ayuda</span>
                 <span>{{ $courseProgress }}%</span>
             </div>
             <div class="progress-bar">

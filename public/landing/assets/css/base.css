@@ -1,13 +1,15 @@
 :root{
-    --pink:   #db5ea5;
-    --violet: #5b2eff;
-    --white:  #ffffff;
+    /* Paleta inspirada en iconografia liturgica: vino, dorado y marfil */
+    --pink:   #8a6b2f;
+    --violet: #5a1f2e;
+    --white:  #fff8ec;
+    --ink:    #2f1d16;
   }
   
   *{ box-sizing:border-box }
   html,body{ margin:0 }
   body.theme-two{
-    background: var(--violet);
+    background: radial-gradient(circle at top, #6e2a3c 0%, #4a1824 42%, #321019 100%);
     color: var(--white);
     font-family: "Baloo 2", ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     line-height: 1.4;

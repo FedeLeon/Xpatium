@@ -17,7 +17,7 @@
                 </svg>
                 Tareas
             </h1>
-            <p>Gestiona las tareas asignadas a tus alumnos.</p>
+            <p>Gestiona las tareas asignadas a tus usuarios.</p>
         </div>
         <a class="btn btn-action" href="{{ route('teacher.tasks.create') }}">Crear tarea</a>
     </div>
@@ -35,7 +35,7 @@
                         <th>Titulo</th>
                         <th>Tipo</th>
                         <th>Descripcion</th>
-                        <th>Alumnos</th>
+                        <th>Usuarios</th>
                         <th>Comision</th>
                         <th>Acciones</th>
                     </tr>
@@ -90,13 +90,13 @@
     @foreach ($tasks as $task)
         <dialog id="taskStudentsModal-{{ $task->id }}">
             <div class="modal-header">
-                <strong>Alumnos de {{ $task->title }}</strong>
+                <strong>Usuarios de {{ $task->title }}</strong>
                 <button class="btn btn-secondary" type="button"
                         onclick="document.getElementById('taskStudentsModal-{{ $task->id }}').close()">Cerrar</button>
             </div>
             <div class="modal-body">
                 @if ($task->students->isEmpty())
-                    <p class="subtle">No hay alumnos asignados.</p>
+                    <p class="subtle">No hay usuarios asignados.</p>
                 @else
                     <div class="commission-students__list">
                         @foreach ($task->students as $student)

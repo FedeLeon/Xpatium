@@ -8,14 +8,14 @@
                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                 </svg>
-                Mis cursos
+                Mis contenidos de ayuda
             </h1>
-            <p>Cursos disponibles con tu profesor.</p>
+            <p>Contenidos de ayuda disponibles con tu lider.</p>
         </div>
     </div>
 
     @if ($courses->isEmpty())
-        <p>No hay cursos disponibles.</p>
+        <p>No hay contenidos de ayuda disponibles.</p>
     @else
         <div class="courses-grid">
             @foreach ($courses as $course)
@@ -25,7 +25,7 @@
                 <article class="course-card">
                     <div class="course-card__media">
                         @if ($course->image_path)
-                            <img class="course-card__image" src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del curso">
+                            <img class="course-card__image" src="{{ asset('storage/' . $course->image_path) }}" alt="Imagen del contenido de ayuda">
                         @else
                             <div class="course-card__placeholder">Sin imagen</div>
                         @endif
@@ -83,7 +83,7 @@
                     </div>
                     <div class="course-card__actions">
                         @if ($hasAccess)
-                            <a class="btn btn-secondary" href="{{ route('student.courses.show', $course) }}">Ver curso</a>
+                            <a class="btn btn-secondary" href="{{ route('student.courses.show', $course) }}">Ver contenido de ayuda</a>
                         @else
                             <span class="badge">Sin acceso</span>
                         @endif

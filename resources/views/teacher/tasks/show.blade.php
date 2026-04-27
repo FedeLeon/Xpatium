@@ -101,7 +101,7 @@
                             <div class="task-question">
                                 <strong>Instrucciones</strong>
                                 <p>{{ $content['instructions'] ?? '—' }}</p>
-                                <p class="subtle">El alumno sube un archivo como entrega.</p>
+                                <p class="subtle">El usuario sube un archivo como entrega.</p>
                             </div>
                         @elseif ($item->type === 'mixed')
                             @php

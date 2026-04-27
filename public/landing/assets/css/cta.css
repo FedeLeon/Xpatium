@@ -75,7 +75,7 @@
   .cta-form input:focus,
   .cta-form textarea:focus {
     border-color: var(--pink);
-    box-shadow: 0 0 0 4px rgba(219,94,165,0.3);
+    box-shadow: 0 0 0 4px rgba(138, 107, 47, 0.3);
   }
   .cta-form button {
     margin-top: 10px;

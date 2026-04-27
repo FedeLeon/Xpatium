@@ -75,10 +75,10 @@
 
     <div class="widget widget-wide">
         <div class="widget-header">
-            <h3>Alumnos asignados</h3>
+            <h3>Usuarios asignados</h3>
         </div>
         @if ($students->isEmpty())
-            <p class="subtle">No hay alumnos asignados.</p>
+            <p class="subtle">No hay usuarios asignados.</p>
         @else
             <div class="task-corrections-grid">
                 @foreach ($students as $student)
@@ -166,7 +166,7 @@
                         @endif
                     </div>
                     <div class="correction-section">
-                        <strong>Entrega del alumno</strong>
+                        <strong>Entrega del usuario</strong>
                         @if ($task->task_type === 'file_delivery')
                             @if ($submission->file_path)
                                 <a class="btn btn-secondary" href="{{ asset('storage/' . $submission->file_path) }}" target="_blank" rel="noopener">Ver archivo</a>

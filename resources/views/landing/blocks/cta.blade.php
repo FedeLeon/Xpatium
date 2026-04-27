@@ -7,11 +7,11 @@
   </div>
 
   <div class="wrap center">
-    <!-- Bloque "¿Sos profe?" con formulario -->
+    <!-- Bloque de contacto para lideres -->
     <div class="cta-box">
-      <img src="{{ asset('landing/assets/img/logo.png') }}" alt="Logo Xpatium" class="cta-logo">
-      <h3>¿Sos profe? Arrancá hoy</h3>
-      <p>Dejanos tu contacto y te ayudamos a empezar en minutos.</p>
+      <img src="{{ asset('landing/assets/img/logo.png') }}" alt="Logo CristoApp" class="cta-logo">
+      <h3>¿Sos lider o lideresa? Empeza hoy</h3>
+      <p>Dejanos tu contacto y te ayudamos a implementar CristoApp en tu iglesia.</p>
 
       <form class="cta-form">
         <input type="text" name="name" placeholder="Tu nombre" required>
@@ -22,8 +22,8 @@
     </div>
 
     <!-- CTA final -->
-    <h2 class="h2">Xpatium — simple, potente y divertido</h2>
-    <p class="muted">Empeza a enseñar ya mismo.</p>
+    <h2 class="h2">CristoApp — organizacion y formacion para tu iglesia</h2>
+    <p class="muted">Empeza hoy a liderar y acompanar a tu comunidad.</p>
     <div class="row-gap center">
       <a class="btn btn--solid-violet" href="{{ route('register') }}">Probar gratis</a>
       <a class="btn btn--ghost" href="{{ route('login') }}">Ingresar</a>

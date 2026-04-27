@@ -16,7 +16,7 @@
                 </svg>
                 {{ $isEdit ? 'Editar tarea' : 'Crear tarea' }}
             </h1>
-            <p>{{ $isEdit ? 'Ajusta la estructura antes de cargar el contenido.' : 'Prepara una nueva tarea para tus alumnos.' }}</p>
+            <p>{{ $isEdit ? 'Ajusta la estructura antes de cargar el contenido.' : 'Prepara una nueva tarea para tus usuarios.' }}</p>
         </div>
         <a class="btn btn-secondary" href="{{ route('teacher.tasks.index') }}">Lista de tareas</a>
     </div>
@@ -45,7 +45,7 @@
                 <div class="checkbox-grid" id="task-scope-toggle">
                     <label class="checkbox">
                         <input type="checkbox" id="assign-students" name="assign_scope" value="students">
-                        Alumnos
+                        Usuarios
                     </label>
                     <label class="checkbox">
                         <input type="checkbox" id="assign-commissions" name="assign_scope" value="commissions">
@@ -54,9 +54,9 @@
                 </div>
             </div>
             <div id="students-select" hidden>
-                <label>Selecciona alumnos</label>
+                <label>Selecciona usuarios</label>
                 @if ($students->isEmpty())
-                    <p class="subtle">No tienes alumnos registrados.</p>
+                    <p class="subtle">No tienes usuarios registrados.</p>
                 @else
                     <div class="checkbox-grid">
                         @foreach ($students as $record)
@@ -68,7 +68,7 @@
                             <label class="checkbox">
                                 <input type="checkbox" name="student_ids[]" value="{{ $record->student_id }}"
                                        {{ $isAssigned ? 'checked' : '' }} disabled>
-                                {{ $fullName ?: 'Alumno sin nombre' }}
+                                {{ $fullName ?: 'Usuario sin nombre' }}
                             </label>
                         @endforeach
                     </div>

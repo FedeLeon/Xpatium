@@ -48,7 +48,7 @@ class MeetingController extends Controller
         $studentIds = array_map('intval', $data['student_ids']);
 
         if ($data['meeting_type'] === Meeting::TYPE_INDIVIDUAL && count($studentIds) > 1) {
-            return back()->withErrors(['student_ids' => 'La reunion individual solo puede tener un alumno.'])->withInput();
+            return back()->withErrors(['student_ids' => 'La reunion individual solo puede tener un usuario.'])->withInput();
         }
 
         $allowedStudentIds = StudentProfile::where('teacher_id', $teacher->id)
@@ -57,7 +57,7 @@ class MeetingController extends Controller
             ->all();
 
         if (count($allowedStudentIds) !== count($studentIds)) {
-            return back()->withErrors(['student_ids' => 'Uno o mas alumnos no son validos.'])->withInput();
+            return back()->withErrors(['student_ids' => 'Uno o mas usuarios no son validos.'])->withInput();
         }
 
         $scheduledFor = Carbon::createFromFormat(
@@ -68,10 +68,10 @@ class MeetingController extends Controller
 
         $teacherSlug = Str::slug(trim($teacher->name.' '.$teacher->last_name));
         if ($teacherSlug === '') {
-            $teacherSlug = 'profesor-'.$teacher->id;
+            $teacherSlug = 'lider-'.$teacher->id;
         }
         $roomCode = Str::lower(Str::random(8));
-        $roomName = 'xpatium-'.$teacherSlug.'-'.$roomCode;
+        $roomName = 'cristoapp-'.$teacherSlug.'-'.$roomCode;
         $jitsiDomain = config('services.jitsi.domain', 'meet.jit.si');
         $jitsiDomain = preg_replace('#^https?://#', '', rtrim($jitsiDomain, '/'));
         $roomUrl = 'https://'.$jitsiDomain.'/'.$roomName;
