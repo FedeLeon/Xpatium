@@ -1,4 +1,4 @@
-%PDF-1.4
+%PDF-1.1
 1 0 obj
 << /Type /Catalog /Pages 2 0 R >>
 endobj
@@ -9,9 +9,22 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
 endobj
 4 0 obj
-<< /Length 128 >>
+<< /Length 268 >>
 stream
-BT /F1 18 Tf 72 720 Td (Guia de clase demo\n\n- Objetivos de la leccion\n- Actividad practica\n- Preguntas para debatir\n) Tj ET
+BT
+/F1 16 Tf
+72 730 Td
+(Guia breve de acompanamiento espiritual) Tj
+0 -28 Td
+/F1 12 Tf
+(1. Escuchar con atencion y sin juzgar.) Tj
+0 -20 Td
+(2. Registrar necesidades familiares y emocionales.) Tj
+0 -20 Td
+(3. Orar con la persona y acordar seguimiento semanal.) Tj
+0 -20 Td
+(4. Compartir un salmo y una palabra de esperanza.) Tj
+ET
 endstream
 endobj
 5 0 obj
@@ -20,13 +33,13 @@ endobj
 xref
 0 6
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000420 00000 n 
+0000000010 00000 n 
+0000000063 00000 n 
+0000000122 00000 n 
+0000000248 00000 n 
+0000000567 00000 n 
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-490
+637
 %%EOF

@@ -58,62 +58,72 @@
                             </div>
                         </td>
                         <td>{{ $record->student->email }}</td>
-                        <td>{{ $record->student->status }}</td>
+                        <td>
+                            @php
+                                $statusValue = strtolower((string) $record->student->status);
+                                $isActive = $statusValue === 'activo';
+                            @endphp
+                            <span class="status-pill {{ $isActive ? 'status-pill--active' : 'status-pill--inactive' }}">
+                                {{ $isActive ? 'ACTIVO' : 'INACTIVO' }}
+                            </span>
+                        </td>
                         <td>
                             <div class="student-actions">
-                                <form method="POST" action="{{ route('teacher.students.status', $record) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    @if ($record->student->status === 'activo')
-                                        <input type="hidden" name="status" value="bloqueado">
-                                    <button class="btn btn-secondary btn-icon" type="submit">
-                                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                                            <rect x="3" y="11" width="18" height="11" rx="2"></rect>
-                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                        </svg>
-                                        Bloquear
-                                    </button>
-                                @else
-                                    <input type="hidden" name="status" value="activo">
-                                    <button class="btn btn-secondary btn-icon" type="submit">
-                                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                                            <circle cx="12" cy="12" r="9"></circle>
-                                            <path d="M9 12l2 2 4-4"></path>
-                                        </svg>
-                                        Activar
-                                    </button>
-                                @endif
-                            </form>
-                            <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('coursesModal-{{ $record->id }}').showModal()">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                </svg>
-                                Contenidos de ayuda
-                            </button>
-                            <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('pastoralModal-{{ $record->id }}').showModal()">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M12 21s-6-4.35-6-9a4 4 0 0 1 7-2.65A4 4 0 0 1 20 12c0 4.65-6 9-6 9z"></path>
-                                </svg>
-                                Ficha
-                            </button>
-                            <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el usuario y su acceso.">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger btn-icon" type="submit">
+                                <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('coursesModal-{{ $record->id }}').showModal()">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M3 6h18"></path>
-                                        <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
-                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                                        <path d="M10 11v6"></path>
-                                        <path d="M14 11v6"></path>
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg>
-                                    Eliminar
+                                    Contenidos de ayuda
                                 </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
+                                <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('pastoralModal-{{ $record->id }}').showModal()">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 21s-6-4.35-6-9a4 4 0 0 1 7-2.65A4 4 0 0 1 20 12c0 4.65-6 9-6 9z"></path>
+                                    </svg>
+                                    Ficha
+                                </button>
+                                <div class="student-actions__final">
+                                    <form method="POST" action="{{ route('teacher.students.status', $record) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        @if ($record->student->status === 'activo')
+                                            <input type="hidden" name="status" value="bloqueado">
+                                            <button class="btn btn-secondary btn-icon" type="submit">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                                </svg>
+                                                Bloquear
+                                            </button>
+                                        @else
+                                            <input type="hidden" name="status" value="activo">
+                                            <button class="btn btn-secondary btn-icon" type="submit">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <circle cx="12" cy="12" r="9"></circle>
+                                                    <path d="M9 12l2 2 4-4"></path>
+                                                </svg>
+                                                Activar
+                                            </button>
+                                        @endif
+                                    </form>
+                                    <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el usuario y su acceso.">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-icon" type="submit">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M3 6h18"></path>
+                                                <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+                                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                                                <path d="M10 11v6"></path>
+                                                <path d="M14 11v6"></path>
+                                            </svg>
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
             @endforeach
             </tbody>
         </table>

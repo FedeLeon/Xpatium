@@ -2242,6 +2242,13 @@ html[data-theme="dark"] .asset-item {
     flex-wrap: wrap;
 }
 
+.student-actions__final {
+    margin-left: auto;
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 
 .online-dot {
     position: absolute;
@@ -2490,9 +2497,45 @@ html[data-theme="dark"] .alert {
     color: #92400e;
 }
 
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 84px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+
+.status-pill--active {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
+}
+
+.status-pill--inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+}
+
 html[data-theme="dark"] .badge-warn {
     background: #78350f;
     color: #fef3c7;
+}
+
+html[data-theme="dark"] .status-pill--active {
+    background: #14532d;
+    color: #bbf7d0;
+    border-color: #166534;
+}
+
+html[data-theme="dark"] .status-pill--inactive {
+    background: #7f1d1d;
+    color: #fecaca;
+    border-color: #991b1b;
 }
 
 .list {

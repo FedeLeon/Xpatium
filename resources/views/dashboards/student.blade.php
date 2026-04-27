@@ -108,10 +108,14 @@
     <div class="widget widget-wide">
         <div class="widget-header">
             <h3>Calendario</h3>
-            <span class="subtle">Tus proximas reuniones.</span>
+            <span class="subtle">Navega meses y consulta reuniones por dia.</span>
         </div>
-        <div class="calendar">
-            <div class="calendar-header" id="student-calendar-title">Mes</div>
+        <div class="calendar teacher-calendar">
+            <div class="calendar-controls">
+                <button class="calendar-nav-btn" id="student-calendar-prev" type="button" aria-label="Mes anterior">‹</button>
+                <div class="calendar-header" id="student-calendar-title">Mes</div>
+                <button class="calendar-nav-btn" id="student-calendar-next" type="button" aria-label="Mes siguiente">›</button>
+            </div>
             <div class="calendar-grid" id="student-calendar-grid"></div>
         </div>
         @if ($upcomingMeetings->isEmpty())
@@ -193,65 +197,174 @@
         </div>
     </dialog>
 
+    <dialog id="studentCalendarMeetingModal">
+        <div class="modal-header">
+            <strong id="student-calendar-modal-title">Reuniones</strong>
+            <button class="btn btn-secondary" type="button" onclick="document.getElementById('studentCalendarMeetingModal').close()">Cerrar</button>
+        </div>
+        <div class="modal-body" id="student-calendar-modal-body">
+            <p class="subtle">Sin reuniones para este dia.</p>
+        </div>
+    </dialog>
+
+    @php
+        $calendarMeetingsForJs = $calendarMeetings->map(function ($meeting) {
+            return [
+                'date' => $meeting->scheduled_for->toDateString(),
+                'date_time' => $meeting->scheduled_for->format('d/m/Y H:i'),
+                'title' => $meeting->title,
+                'meeting_type' => $meeting->meeting_type === 'individual' ? 'Individual' : 'Grupal',
+                'duration_minutes' => $meeting->duration_minutes,
+                'jitsi_room_url' => $meeting->jitsi_room_url,
+                'teacher_name' => trim(($meeting->teacher->name ?? '') . ' ' . ($meeting->teacher->last_name ?? '')),
+            ];
+        })->values();
+    @endphp
+
     <script>
         (function () {
             var calendarTitle = document.getElementById('student-calendar-title');
             var calendarGrid = document.getElementById('student-calendar-grid');
-            if (!calendarTitle || !calendarGrid) {
+            var prevButton = document.getElementById('student-calendar-prev');
+            var nextButton = document.getElementById('student-calendar-next');
+            var modal = document.getElementById('studentCalendarMeetingModal');
+            var modalTitle = document.getElementById('student-calendar-modal-title');
+            var modalBody = document.getElementById('student-calendar-modal-body');
+            if (!calendarTitle || !calendarGrid || !prevButton || !nextButton || !modal || !modalTitle || !modalBody) {
                 return;
             }
 
-            var now = new Date();
-            var year = now.getFullYear();
-            var month = now.getMonth();
-            var firstDay = new Date(year, month, 1);
-            var lastDay = new Date(year, month + 1, 0);
-            var startWeekday = firstDay.getDay();
-            var totalDays = lastDay.getDate();
-            calendarTitle.textContent = now.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
-
-            var meetingDays = @json($calendarMeetings->map(function ($meeting) {
-                return [
-                    'date' => $meeting->scheduled_for->toDateString(),
-                    'title' => $meeting->title,
-                ];
-            })->values());
-            var meetingMap = {};
-            meetingDays.forEach(function (meeting) {
-                if (!meetingMap[meeting.date]) {
-                    meetingMap[meeting.date] = [];
+            var meetings = @json($calendarMeetingsForJs);
+            var meetingsByDate = {};
+            meetings.forEach(function (meeting) {
+                if (!meetingsByDate[meeting.date]) {
+                    meetingsByDate[meeting.date] = [];
                 }
-                meetingMap[meeting.date].push(meeting.title);
+                meetingsByDate[meeting.date].push(meeting);
             });
 
+            var today = new Date();
+            var viewYear = today.getFullYear();
+            var viewMonth = today.getMonth();
             var weekdays = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
-            weekdays.forEach(function (day) {
-                var cell = document.createElement('div');
-                cell.className = 'calendar-day calendar-day--header';
-                cell.textContent = day;
-                calendarGrid.appendChild(cell);
+
+            var formatDateKey = function (year, month, day) {
+                var monthValue = String(month + 1).padStart(2, '0');
+                var dayValue = String(day).padStart(2, '0');
+                return year + '-' + monthValue + '-' + dayValue;
+            };
+
+            var openMeetingModal = function (dateKey, dayMeetings) {
+                var parts = dateKey.split('-');
+                var displayDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+                modalTitle.textContent = 'Reuniones del ' + displayDate;
+                modalBody.innerHTML = '';
+
+                dayMeetings.forEach(function (meeting) {
+                    var card = document.createElement('div');
+                    card.className = 'card';
+
+                    var title = document.createElement('strong');
+                    title.textContent = meeting.title;
+                    card.appendChild(title);
+
+                    var meta = document.createElement('p');
+                    meta.className = 'subtle';
+                    meta.textContent = meeting.date_time + ' · ' + meeting.duration_minutes + ' min · ' + meeting.meeting_type;
+                    card.appendChild(meta);
+
+                    var teacher = document.createElement('p');
+                    teacher.className = 'subtle';
+                    teacher.textContent = 'Lider: ' + (meeting.teacher_name || 'Sin asignar');
+                    card.appendChild(teacher);
+
+                    var button = document.createElement('a');
+                    button.className = 'btn btn-secondary meeting-open-btn';
+                    button.href = meeting.jitsi_room_url;
+                    button.target = '_blank';
+                    button.rel = 'noopener';
+                    button.textContent = 'Abrir reunion';
+                    card.appendChild(button);
+
+                    modalBody.appendChild(card);
+                });
+
+                modal.showModal();
+            };
+
+            var renderCalendar = function () {
+                calendarGrid.innerHTML = '';
+                var firstDay = new Date(viewYear, viewMonth, 1);
+                var lastDay = new Date(viewYear, viewMonth + 1, 0);
+                var startWeekday = firstDay.getDay();
+                var totalDays = lastDay.getDate();
+                calendarTitle.textContent = firstDay.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+
+                weekdays.forEach(function (day) {
+                    var headerCell = document.createElement('div');
+                    headerCell.className = 'calendar-day calendar-day--header';
+                    headerCell.textContent = day;
+                    calendarGrid.appendChild(headerCell);
+                });
+
+                for (var i = 0; i < startWeekday; i++) {
+                    var empty = document.createElement('div');
+                    empty.className = 'calendar-day calendar-day--empty';
+                    calendarGrid.appendChild(empty);
+                }
+
+                for (var d = 1; d <= totalDays; d++) {
+                    var cell = document.createElement('button');
+                    cell.type = 'button';
+                    cell.className = 'calendar-day';
+                    cell.textContent = d;
+
+                    var isToday = d === today.getDate()
+                        && viewMonth === today.getMonth()
+                        && viewYear === today.getFullYear();
+                    if (isToday) {
+                        cell.classList.add('calendar-day--today');
+                    }
+
+                    var dateKey = formatDateKey(viewYear, viewMonth, d);
+                    var dayMeetings = meetingsByDate[dateKey] || [];
+                    if (dayMeetings.length) {
+                        cell.classList.add('calendar-day--event', 'calendar-day--clickable');
+                        cell.title = dayMeetings.map(function (meeting) {
+                            return meeting.title;
+                        }).join(', ');
+                        (function (currentDateKey, currentDayMeetings) {
+                            cell.addEventListener('click', function () {
+                                openMeetingModal(currentDateKey, currentDayMeetings);
+                            });
+                        })(dateKey, dayMeetings);
+                    } else {
+                        cell.classList.add('calendar-day--plain');
+                    }
+
+                    calendarGrid.appendChild(cell);
+                }
+            };
+
+            prevButton.addEventListener('click', function () {
+                viewMonth -= 1;
+                if (viewMonth < 0) {
+                    viewMonth = 11;
+                    viewYear -= 1;
+                }
+                renderCalendar();
             });
 
-            for (var i = 0; i < startWeekday; i++) {
-                var empty = document.createElement('div');
-                empty.className = 'calendar-day calendar-day--empty';
-                calendarGrid.appendChild(empty);
-            }
+            nextButton.addEventListener('click', function () {
+                viewMonth += 1;
+                if (viewMonth > 11) {
+                    viewMonth = 0;
+                    viewYear += 1;
+                }
+                renderCalendar();
+            });
 
-            for (var d = 1; d <= totalDays; d++) {
-                var cell = document.createElement('div');
-                cell.className = 'calendar-day';
-                if (d === now.getDate()) {
-                    cell.className += ' calendar-day--today';
-                }
-                var dateKey = new Date(year, month, d).toISOString().slice(0, 10);
-                if (meetingMap[dateKey]) {
-                    cell.className += ' calendar-day--event';
-                    cell.title = meetingMap[dateKey].join(', ');
-                }
-                cell.textContent = d;
-                calendarGrid.appendChild(cell);
-            }
+            renderCalendar();
         })();
     </script>
     <script>

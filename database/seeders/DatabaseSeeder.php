@@ -47,14 +47,13 @@ class DatabaseSeeder extends Seeder
             'landing/assets/img/team/dev3-fun2.jpg',
         ], 'seed/avatars', 'avatar');
 
-        $courseImagePaths = $this->seedImages([
+        $courseImagePaths = array_values($this->seedImages([
             'seed/course-examples/web-development.jpg',
             'seed/course-examples/digital-marketing.jpg',
             'seed/course-examples/databases.jpg',
-        ], 'seed/courses', 'course');
+        ], 'seed/courses', 'church-course'));
 
         $nextAvatar = $this->cyclePicker($avatarPaths);
-        $nextCourseImage = $this->cyclePicker($courseImagePaths);
 
         User::factory()->create([
             'name' => 'Admin Demo',
@@ -66,19 +65,19 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $teacher = User::factory()->create([
-            'name' => 'Profesor Demo',
-            'email' => 'profesor@example.com',
+            'name' => 'Lider Demo',
+            'email' => 'lider@example.com',
             'role' => 'teacher',
-            'password' => Hash::make('profesor1234'),
+            'password' => Hash::make('lider1234'),
             'status' => 'activo',
             'avatar_path' => $nextAvatar(),
         ]);
 
         $demoStudent = User::factory()->create([
-            'name' => 'Alumno Demo',
-            'email' => 'alumno@example.com',
+            'name' => 'Usuario Demo',
+            'email' => 'usuario@example.com',
             'role' => 'student',
-            'password' => Hash::make('alumno1234'),
+            'password' => Hash::make('usuario1234'),
             'status' => 'activo',
             'avatar_path' => $nextAvatar(),
         ]);
@@ -108,19 +107,19 @@ class DatabaseSeeder extends Seeder
         }
 
         $courseNames = [
-            'Introduccion al desarrollo web',
-            'Marketing digital para principiantes',
-            'Bases de datos desde cero',
+            'Fortaleciendo la fe en tiempos dificiles',
+            'Sanidad interior y acompanamiento espiritual',
+            'Vida familiar con proposito cristiano',
         ];
         $courseDurations = [
-            '8 semanas',
+            '5 semanas',
             '6 semanas',
-            '10 semanas',
+            '4 semanas',
         ];
         $courseLevels = [
-            'principiante',
+            'inicial',
             'intermedio',
-            'avanzado',
+            'inicial',
         ];
 
         $createdCourses = collect();
@@ -129,12 +128,12 @@ class DatabaseSeeder extends Seeder
             $course = Course::create([
                 'user_id' => $teacher->id,
                 'name' => $name,
-                'subtitle' => 'Curso base de ejemplo',
-                'description' => 'Contenido inicial para pruebas.',
-                'price_ars' => 12000,
-                'price_usd' => 39,
+                'subtitle' => 'Contenido de ayuda para crecimiento espiritual',
+                'description' => 'Material de apoyo para acompanar a usuarios en su camino de fe.',
+                'price_ars' => 0,
+                'price_usd' => 0,
                 'start_date' => now()->addDays(rand(7, 30)),
-                'image_path' => $nextCourseImage(),
+                'image_path' => $courseImagePaths[$index] ?? null,
                 'duration' => $courseDurations[$index] ?? null,
                 'level' => $courseLevels[$index] ?? null,
             ]);
@@ -143,13 +142,13 @@ class DatabaseSeeder extends Seeder
             $modules = [
                 [
                     'title' => 'Modulo 1',
-                    'subtitle' => 'Introduccion',
-                    'description' => 'Conceptos base del curso.',
+                    'subtitle' => 'Escucha y contencion',
+                    'description' => 'Principios para escuchar con empatia y acompanar con amor.',
                 ],
                 [
                     'title' => 'Modulo 2',
-                    'subtitle' => 'Practica',
-                    'description' => 'Ejercicios y casos reales.',
+                    'subtitle' => 'Accion y seguimiento',
+                    'description' => 'Pasos practicos para sostener procesos de ayuda en la iglesia.',
                 ],
             ];
 
@@ -164,13 +163,13 @@ class DatabaseSeeder extends Seeder
                 $lessonOne = Lesson::create([
                     'module_id' => $module->id,
                     'title' => 'Leccion 1',
-                    'description' => 'Contenido inicial de la leccion.',
+                    'description' => 'Fundamentos biblicos para el acompanamiento.',
                 ]);
 
                 $lessonTwo = Lesson::create([
                     'module_id' => $module->id,
                     'title' => 'Leccion 2',
-                    'description' => 'Contenido complementario.',
+                    'description' => 'Herramientas practicas para reuniones de ayuda.',
                 ]);
 
                 $this->seedLessonContent($lessonOne, $lessonAssets);
@@ -239,11 +238,11 @@ class DatabaseSeeder extends Seeder
     private function seedLessonContent(Lesson $lesson, array $lessonAssets): void
     {
         $contentBlocks = [
-            'Objetivos de la leccion: entender los conceptos clave y aplicarlos con un caso simple.',
-            'Resumen practico con ejemplos reales y una mini actividad para resolver en 10 minutos.',
-            'Puntos clave: definiciones basicas, errores frecuentes y recomendaciones del profesor.',
-            'Actividad guiada: crea tu primer entregable y revisa una lista de verificacion.',
-            'Material extra: enlaces sugeridos y preguntas para debatir en clase.',
+            'Objetivo de la leccion: aprender a acompanar a la persona con escucha activa, oracion y seguimiento responsable.',
+            'Guia practica: identificar necesidades espirituales, familiares y emocionales sin emitir juicios.',
+            'Puntos clave: respeto por la confidencialidad, trato amoroso y derivacion cuando sea necesario.',
+            'Actividad sugerida: planificar una reunion corta de acompanamiento y registrar acuerdos claros.',
+            'Reflexion final: elegir un salmo de apoyo y compartir una palabra de esperanza para la semana.',
         ];
 
         $selected = collect($contentBlocks)->shuffle()->take(2);
@@ -292,36 +291,36 @@ class DatabaseSeeder extends Seeder
     {
         $quiz = LessonQuiz::create([
             'lesson_id' => $lesson->id,
-            'title' => 'Chequeo rapido',
-            'description' => 'Responde estas preguntas para reforzar lo visto.',
+            'title' => 'Chequeo de acompanamiento',
+            'description' => 'Responde estas preguntas para reforzar la ayuda espiritual.',
         ]);
 
         $questionSets = [
             [
-                'prompt' => 'Cual es el objetivo principal de esta leccion?',
+                'prompt' => 'Cual es el objetivo principal del acompanamiento en la iglesia?',
                 'options' => [
-                    ['text' => 'Comprender los conceptos clave', 'is_correct' => true],
-                    ['text' => 'Memorizar definiciones sin aplicarlas', 'is_correct' => false],
-                    ['text' => 'Completar el curso en una clase', 'is_correct' => false],
-                    ['text' => 'Ignorar los ejercicios practicos', 'is_correct' => false],
+                    ['text' => 'Acompanar con amor, escucha y orientacion biblica', 'is_correct' => true],
+                    ['text' => 'Apurar procesos sin conocer a la persona', 'is_correct' => false],
+                    ['text' => 'Resolver todo en una sola reunion', 'is_correct' => false],
+                    ['text' => 'Evitar el seguimiento semanal', 'is_correct' => false],
                 ],
             ],
             [
-                'prompt' => 'Que accion es recomendable al finalizar la practica?',
+                'prompt' => 'Que accion es recomendable luego de una reunion de ayuda?',
                 'options' => [
-                    ['text' => 'Revisar la lista de verificacion', 'is_correct' => true],
-                    ['text' => 'Guardar todo sin revisar', 'is_correct' => false],
-                    ['text' => 'Omitir el material extra', 'is_correct' => false],
-                    ['text' => 'Dejar el ejercicio a la mitad', 'is_correct' => false],
+                    ['text' => 'Registrar acuerdos y definir proximo contacto', 'is_correct' => true],
+                    ['text' => 'No tomar nota de la situacion', 'is_correct' => false],
+                    ['text' => 'Cortar el vinculo sin seguimiento', 'is_correct' => false],
+                    ['text' => 'Delegar sin explicar el contexto', 'is_correct' => false],
                 ],
             ],
             [
-                'prompt' => 'Que ayuda mas para entender el contenido?',
+                'prompt' => 'Que fortalece mejor el proceso de ayuda espiritual?',
                 'options' => [
-                    ['text' => 'Aplicar un ejemplo real', 'is_correct' => true],
-                    ['text' => 'Evitar practicar', 'is_correct' => false],
-                    ['text' => 'No hacer preguntas', 'is_correct' => false],
-                    ['text' => 'Leer sin anotar', 'is_correct' => false],
+                    ['text' => 'Orar, escuchar y aplicar la Palabra en casos reales', 'is_correct' => true],
+                    ['text' => 'Dar consejos generales sin conocer la situacion', 'is_correct' => false],
+                    ['text' => 'Ignorar el contexto familiar', 'is_correct' => false],
+                    ['text' => 'Esperar cambios sin acompanar', 'is_correct' => false],
                 ],
             ],
         ];
@@ -405,7 +404,7 @@ class DatabaseSeeder extends Seeder
             }
 
             $extension = pathinfo($source, PATHINFO_EXTENSION);
-            $filename = $type.'-seed-'.($index + 1).'.'.$extension;
+            $filename = $type.'-church-seed-'.($index + 1).'.'.$extension;
             $destination = $destinationDirectory.'/'.$filename;
             Storage::disk('public')->put($destination, File::get($sourcePath));
 
@@ -425,11 +424,11 @@ class DatabaseSeeder extends Seeder
     private function seedLessonComments(User $teacher, Collection $students): void
     {
         $commentBodies = [
-            'Me quedo mas claro con este ejemplo, gracias.',
-            'Podrias ampliar la parte del ejercicio 2? Me costo un poco.',
-            'Buenisimo, ya lo aplique en mi proyecto.',
-            'Tengo una duda sobre el paso 3, lo revisamos en clase?',
-            'Excelente resumen, me ayudo a repasar.',
+            'Este contenido me ayudo a entender como pedir ayuda con confianza.',
+            'Podemos profundizar como acompanar a una familia en crisis?',
+            'Gracias por la guia, me dio paz para seguir adelante.',
+            'Tengo dudas sobre como sostener la rutina de oracion diaria.',
+            'Muy claro el enfoque de escucha y contencion.',
         ];
 
         Lesson::query()->each(function (Lesson $lesson) use ($teacher, $students, $commentBodies) {
@@ -444,7 +443,7 @@ class DatabaseSeeder extends Seeder
                 'lesson_id' => $lesson->id,
                 'user_id' => $teacher->id,
                 'parent_id' => $comment->id,
-                'body' => 'Gracias por el aporte! En la proxima clase lo revisamos con mas detalle.',
+                'body' => 'Gracias por compartirlo. En el proximo encuentro lo trabajamos juntos.',
             ]);
 
             $anotherStudent = $students->random();
@@ -471,10 +470,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $directMessages = [
-            [$teacher, 'Hola! Bienvenido al curso. Cualquier duda avisame.'],
-            [$demoStudent, 'Gracias profe! Estoy empezando con la leccion 1.'],
-            [$teacher, 'Perfecto. Fijate los objetivos y despues hacemos el ejercicio.'],
-            [$demoStudent, 'Dale, te aviso si me trabo con algo.'],
+            [$teacher, 'Hola! Bienvenido. Estoy para acompanarte en este proceso.'],
+            [$demoStudent, 'Gracias lider! Quiero comenzar con el primer contenido.'],
+            [$teacher, 'Excelente. Empeza por la leccion 1 y luego coordinamos una reunion.'],
+            [$demoStudent, 'Perfecto, hoy mismo la leo y te escribo.'],
         ];
 
         $this->createMessages($directConversation, $directMessages);
@@ -492,9 +491,9 @@ class DatabaseSeeder extends Seeder
             ]);
 
             $studentMessages = [
-                [$extraStudent, 'Hola profe, ya vi la clase y me encanto.'],
-                [$teacher, 'Genial! Practica con el desafio y me contas.'],
-                [$extraStudent, 'Si, lo hago hoy a la tarde.'],
+                [$extraStudent, 'Hola lider, termine el modulo y me hizo bien.'],
+                [$teacher, 'Que bueno! Anota tus dudas y las vemos en la reunion.'],
+                [$extraStudent, 'Dale, gracias por el acompanamiento.'],
             ];
 
             $this->createMessages($studentConversation, $studentMessages);
@@ -504,7 +503,7 @@ class DatabaseSeeder extends Seeder
         if ($groupStudents->count() >= 2) {
             $groupConversation = Conversation::create([
                 'type' => Conversation::TYPE_GROUP,
-                'title' => 'Grupo de estudio demo',
+                'title' => 'Comision de ayuda demo',
                 'created_by' => $teacher->id,
             ]);
             $participantIds = $groupStudents->pluck('id')->push($teacher->id)->unique();
@@ -513,10 +512,10 @@ class DatabaseSeeder extends Seeder
             ]);
 
             $groupMessages = [
-                [$teacher, 'Bienvenidos! Compartan dudas y avances por aca.'],
-                [$groupStudents->get(0), 'Gracias! Estoy con el modulo 1.'],
-                [$groupStudents->get(1), 'Yo hice la actividad, despues paso mi solucion.'],
-                [$teacher, 'Excelente, asi aprendemos en conjunto.'],
+                [$teacher, 'Bienvenidos! Este espacio es para orar y compartir avances de acompanamiento.'],
+                [$groupStudents->get(0), 'Gracias! Estoy trabajando la guia de escucha activa.'],
+                [$groupStudents->get(1), 'Yo empece el seguimiento de una familia esta semana.'],
+                [$teacher, 'Excelente, sigamos en unidad y con respeto por cada caso.'],
             ];
 
             $this->createMessages($groupConversation, $groupMessages);
@@ -530,7 +529,7 @@ class DatabaseSeeder extends Seeder
 
         $teacherSlug = Str::slug(trim($teacher->name.' '.$teacher->last_name));
         if ($teacherSlug === '') {
-            $teacherSlug = 'profesor-'.$teacher->id;
+            $teacherSlug = 'lider-'.$teacher->id;
         }
 
         foreach ($students as $student) {
@@ -540,8 +539,8 @@ class DatabaseSeeder extends Seeder
 
             $meeting = Meeting::create([
                 'teacher_id' => $teacher->id,
-                'title' => 'Clase individual de seguimiento',
-                'description' => 'Sesion demo para resolver dudas y avanzar.',
+                'title' => 'Reunion de acompanamiento espiritual',
+                'description' => 'Encuentro de ayuda para orar, escuchar y definir pasos de seguimiento.',
                 'meeting_type' => Meeting::TYPE_INDIVIDUAL,
                 'scheduled_for' => $scheduledFor,
                 'duration_minutes' => 45,

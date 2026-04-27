@@ -317,8 +317,14 @@
                                     </span>
                                 </summary>
                                 <div class="menu-submenu">
-                                    <a class="menu-submenu__link {{ request()->routeIs('student.tasks.pending') ? 'is-active' : '' }}" href="{{ route('student.tasks.pending') }}">Tareas pendientes</a>
-                                    <a class="menu-submenu__link {{ request()->routeIs('student.tasks.index') ? 'is-active' : '' }}" href="{{ route('student.tasks.index') }}">Listado de tareas</a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('student.tasks.pending') ? 'is-active' : '' }}" href="{{ route('student.tasks.pending') }}">
+                                        <img class="menu-submenu__icon" src="{{ asset('icons/menu/clock-hour-4.svg') }}" alt="">
+                                        <span>Tareas pendientes</span>
+                                    </a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('student.tasks.index') ? 'is-active' : '' }}" href="{{ route('student.tasks.index') }}">
+                                        <img class="menu-submenu__icon" src="{{ asset('icons/menu/list-check.svg') }}" alt="">
+                                        <span>Listado de tareas</span>
+                                    </a>
                                 </div>
                             </details>
                             <a class="{{ request()->routeIs('student.notifications.*') ? 'is-active' : '' }}" href="{{ route('student.notifications.index') }}">
