@@ -134,4 +134,50 @@ class StudentController extends Controller
         return redirect()->route('teacher.students.index');
     }
 
+    public function updatePastoralProfile(Request $request, StudentProfile $studentProfile): RedirectResponse
+    {
+        if ($studentProfile->teacher_id !== $request->user()->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'pastoral_profile_id' => ['required', 'integer'],
+            'has_children' => ['required', 'boolean'],
+            'children_count' => ['nullable', 'integer', 'min:0', 'max:20'],
+            'sentimental_status' => ['nullable', 'string', 'max:120'],
+            'family_situation' => ['nullable', 'string', 'max:2000'],
+            'current_challenges' => ['nullable', 'string', 'max:2000'],
+            'leader_notes' => ['nullable', 'string', 'max:4000'],
+        ]);
+
+        if ((int) $data['pastoral_profile_id'] !== (int) $studentProfile->id) {
+            return redirect()
+                ->route('teacher.students.index')
+                ->with('error', 'La ficha seleccionada no es valida.');
+        }
+
+        $hasChildren = (bool) $data['has_children'];
+        $childrenCount = $hasChildren ? (int) ($data['children_count'] ?? 0) : null;
+        if ($hasChildren && $childrenCount < 1) {
+            return redirect()
+                ->route('teacher.students.index')
+                ->withErrors(['children_count' => 'Si tiene hijos, indica una cantidad mayor a 0.'])
+                ->withInput();
+        }
+
+        $studentProfile->update([
+            'has_children' => $hasChildren,
+            'children_count' => $childrenCount,
+            'sentimental_status' => $data['sentimental_status'] ?: null,
+            'family_situation' => $data['family_situation'] ?: null,
+            'current_challenges' => $data['current_challenges'] ?: null,
+            'leader_notes' => $data['leader_notes'] ?: null,
+            'pastoral_updated_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('teacher.students.index')
+            ->with('success', 'Ficha de acompanamiento guardada.');
+    }
+
 }

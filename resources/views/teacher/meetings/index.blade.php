@@ -46,14 +46,16 @@
                         <div>{{ $meeting->meeting_type === 'individual' ? 'Individual' : 'Grupal' }}</div>
                         <div class="meeting-grid-attendees">{{ $attendeeNames ?: 'Sin usuarios' }}</div>
                         <div class="meeting-grid-actions">
-                            <a class="btn btn-secondary" href="{{ $meeting->jitsi_room_url }}" target="_blank" rel="noopener">
+                            <a class="btn btn-secondary meeting-open-btn" href="{{ $meeting->jitsi_room_url }}" target="_blank" rel="noopener">
                                 Abrir reunion
                             </a>
                             <form method="POST" action="{{ route('teacher.meetings.destroy', $meeting) }}"
                                   data-confirm="Se eliminara la reunion y no podras recuperarla.">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-danger" type="submit">Eliminar</button>
+                                <button class="meeting-delete-btn" type="submit" aria-label="Eliminar reunion">
+                                    <img src="{{ asset('icons/trash-minimal.svg') }}" alt="Eliminar">
+                                </button>
                             </form>
                         </div>
                     </div>

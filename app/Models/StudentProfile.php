@@ -14,6 +14,18 @@ class StudentProfile extends Model
         'teacher_id',
         'student_id',
         'status',
+        'has_children',
+        'children_count',
+        'sentimental_status',
+        'family_situation',
+        'current_challenges',
+        'leader_notes',
+        'pastoral_updated_at',
+    ];
+
+    protected $casts = [
+        'has_children' => 'boolean',
+        'pastoral_updated_at' => 'datetime',
     ];
 
     public function teacher()

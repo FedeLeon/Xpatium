@@ -29,10 +29,8 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        $calendarStart = now()->startOfMonth();
-        $calendarEnd = now()->endOfMonth();
-        $calendarMeetings = Meeting::where('teacher_id', $user->id)
-            ->whereBetween('scheduled_for', [$calendarStart, $calendarEnd])
+        $calendarMeetings = Meeting::with('attendees:id,name,last_name')
+            ->where('teacher_id', $user->id)
             ->orderBy('scheduled_for')
             ->get();
 

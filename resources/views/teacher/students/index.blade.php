@@ -91,6 +91,12 @@
                                 </svg>
                                 Contenidos de ayuda
                             </button>
+                            <button class="btn btn-secondary btn-icon" type="button" onclick="document.getElementById('pastoralModal-{{ $record->id }}').showModal()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 21s-6-4.35-6-9a4 4 0 0 1 7-2.65A4 4 0 0 1 20 12c0 4.65-6 9-6 9z"></path>
+                                </svg>
+                                Ficha
+                            </button>
                             <form method="POST" action="{{ route('teacher.students.destroy', $record) }}" data-confirm="Se eliminara el usuario y su acceso.">
                                 @csrf
                                 @method('DELETE')
@@ -157,6 +163,75 @@
                     @endforelse
                 </div>
             </div>
+        </dialog>
+
+        <dialog id="pastoralModal-{{ $record->id }}">
+            <div class="modal-header">
+                <strong>Ficha de acompanamiento</strong>
+                <button class="btn btn-secondary" type="button" onclick="document.getElementById('pastoralModal-{{ $record->id }}').close()">Cerrar</button>
+            </div>
+            <form method="POST" action="{{ route('teacher.students.pastoral.update', $record) }}">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="pastoral_profile_id" value="{{ $record->id }}">
+                <div class="modal-body form-grid">
+                    <div>
+                        <label for="sentimental-status-{{ $record->id }}">Situacion sentimental</label>
+                        <select id="sentimental-status-{{ $record->id }}" name="sentimental_status">
+                            <option value="" {{ old('pastoral_profile_id') == $record->id && old('sentimental_status', $record->sentimental_status) === '' ? 'selected' : '' }}>Sin definir</option>
+                            @foreach (['soltero/a', 'en pareja', 'casado/a', 'separado/a', 'divorciado/a', 'viudo/a'] as $status)
+                                <option value="{{ $status }}" {{ old('pastoral_profile_id') == $record->id ? (old('sentimental_status') === $status ? 'selected' : '') : ($record->sentimental_status === $status ? 'selected' : '') }}>
+                                    {{ ucfirst($status) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="has-children-{{ $record->id }}">Tiene hijos</label>
+                        @php
+                            $hasChildrenValue = old('pastoral_profile_id') == $record->id
+                                ? old('has_children', $record->has_children ? '1' : '0')
+                                : ($record->has_children ? '1' : '0');
+                        @endphp
+                        <select id="has-children-{{ $record->id }}" name="has_children">
+                            <option value="0" {{ (string) $hasChildrenValue === '0' ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ (string) $hasChildrenValue === '1' ? 'selected' : '' }}>Si</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="children-count-{{ $record->id }}">Cantidad de hijos</label>
+                        <input
+                            id="children-count-{{ $record->id }}"
+                            name="children_count"
+                            type="number"
+                            min="0"
+                            max="20"
+                            value="{{ old('pastoral_profile_id') == $record->id ? old('children_count', $record->children_count) : $record->children_count }}"
+                        >
+                    </div>
+                    <div class="form-grid__full">
+                        <label for="family-situation-{{ $record->id }}">Situacion familiar</label>
+                        <textarea id="family-situation-{{ $record->id }}" name="family_situation" rows="3">{{ old('pastoral_profile_id') == $record->id ? old('family_situation', $record->family_situation) : $record->family_situation }}</textarea>
+                    </div>
+                    <div class="form-grid__full">
+                        <label for="current-challenges-{{ $record->id }}">Problemas o desafios actuales</label>
+                        <textarea id="current-challenges-{{ $record->id }}" name="current_challenges" rows="3">{{ old('pastoral_profile_id') == $record->id ? old('current_challenges', $record->current_challenges) : $record->current_challenges }}</textarea>
+                    </div>
+                    <div class="form-grid__full">
+                        <label for="leader-notes-{{ $record->id }}">Anotaciones del lider</label>
+                        <textarea id="leader-notes-{{ $record->id }}" name="leader_notes" rows="4">{{ old('pastoral_profile_id') == $record->id ? old('leader_notes', $record->leader_notes) : $record->leader_notes }}</textarea>
+                    </div>
+                    @if ($record->pastoral_updated_at)
+                        <div class="form-grid__full">
+                            <p class="subtle">Ultima actualizacion: {{ $record->pastoral_updated_at->format('d/m/Y H:i') }}</p>
+                        </div>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" onclick="document.getElementById('pastoralModal-{{ $record->id }}').close()">Cancelar</button>
+                    <button class="btn" type="submit">Guardar ficha</button>
+                </div>
+            </form>
         </dialog>
     @endforeach
 
@@ -241,6 +316,17 @@
                 });
             });
         });
+
+        (function () {
+            var openProfileId = @json(old('pastoral_profile_id'));
+            if (!openProfileId) {
+                return;
+            }
+            var modal = document.getElementById('pastoralModal-' + openProfileId);
+            if (modal && typeof modal.showModal === 'function') {
+                modal.showModal();
+            }
+        })();
 
         function showToast(options) {
             var toast = document.createElement('div');

@@ -404,12 +404,21 @@ html[data-theme="dark"] .menu-group[open] .menu-chevron {
     color: #9ca3af;
 }
 .menu-submenu__link {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 6px 10px;
     border-radius: 6px;
     color: #4b5563;
     text-decoration: none;
     font-size: 13px;
+}
+
+.menu-submenu__icon {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    opacity: 0.9;
 }
 
 .menu-submenu__link:hover {
@@ -424,6 +433,11 @@ html[data-theme="dark"] .menu-group[open] .menu-chevron {
 
 html[data-theme="dark"] .menu-submenu__link {
     color: #9ca3af;
+}
+
+html[data-theme="dark"] .menu-submenu__icon {
+    filter: invert(1) brightness(1.35);
+    opacity: 0.9;
 }
 
 html[data-theme="dark"] .menu-submenu__link:hover {
@@ -1438,9 +1452,43 @@ html[data-theme="dark"] .clock-icon {
     gap: 10px;
 }
 
+.calendar-controls {
+    display: grid;
+    grid-template-columns: 32px 1fr 32px;
+    align-items: center;
+    gap: 8px;
+}
+
 .calendar-header {
     font-weight: 600;
     text-transform: capitalize;
+    text-align: center;
+}
+
+.calendar-nav-btn {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #1f2937;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 18px;
+}
+
+.calendar-nav-btn:hover {
+    background: #f3f4f6;
+}
+
+html[data-theme="dark"] .calendar-nav-btn {
+    border-color: #374151;
+    background: #111827;
+    color: #e5e7eb;
+}
+
+html[data-theme="dark"] .calendar-nav-btn:hover {
+    background: #1f2937;
 }
 
 .calendar-grid {
@@ -1450,11 +1498,18 @@ html[data-theme="dark"] .clock-icon {
 }
 
 .calendar-day {
+    appearance: none;
     background: #f9fafb;
     border-radius: 8px;
+    border: 1px solid transparent;
+    width: 100%;
     padding: 8px 0;
     text-align: center;
     font-size: 12px;
+    font: inherit;
+    color: inherit;
+    min-height: 34px;
+    line-height: 1.2;
 }
 
 html[data-theme="dark"] .calendar-day {
@@ -1474,6 +1529,19 @@ html[data-theme="dark"] .calendar-day {
     background: #2563eb;
     color: #ffffff;
     font-weight: 600;
+}
+
+html[data-theme="dark"] .calendar-day--today {
+    background: #0ea5e9;
+    color: #082f49;
+}
+
+.calendar-day--clickable {
+    cursor: pointer;
+}
+
+.calendar-day--plain {
+    cursor: default;
 }
 
 .btn {
@@ -1506,6 +1574,30 @@ html[data-theme="dark"] .calendar-day {
     border-color: #dc2626;
     background: #dc2626;
     color: #ffffff;
+}
+
+.btn.btn-secondary.meeting-open-btn {
+    border-color: #a7f3d0;
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.btn.btn-secondary.meeting-open-btn:hover {
+    border-color: #86efac;
+    background: #bbf7d0;
+    color: #064e3b;
+}
+
+html[data-theme="dark"] .btn.btn-secondary.meeting-open-btn {
+    border-color: #86efac;
+    background: #d1fae5;
+    color: #065f46;
+}
+
+html[data-theme="dark"] .btn.btn-secondary.meeting-open-btn:hover {
+    border-color: #6ee7b7;
+    background: #bbf7d0;
+    color: #064e3b;
 }
 
 .btn-primary {
@@ -2304,6 +2396,10 @@ html[data-theme="dark"] .image-preview__img {
     max-width: 100%;
 }
 
+.form-grid .form-grid__full {
+    grid-column: 1 / -1;
+}
+
 .form-grid label {
     display: block;
     margin-bottom: 6px;
@@ -2764,6 +2860,23 @@ html[data-theme="dark"] .calendar-day--event {
     border-color: #1e3a8a;
 }
 
+.teacher-calendar .calendar-day--event {
+    border-color: #86efac;
+}
+
+.teacher-calendar .calendar-day--event::after {
+    background: #16a34a;
+}
+
+html[data-theme="dark"] .teacher-calendar .calendar-day--event {
+    border-color: #14532d;
+}
+
+html[data-theme="dark"] .teacher-calendar .calendar-day--today {
+    background: #38bdf8;
+    color: #082f49;
+}
+
 .btn.is-disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -2833,6 +2946,36 @@ html[data-theme="dark"] .calendar-day--event {
     justify-content: flex-start;
 }
 
+.meeting-delete-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #fca5a5;
+    border-radius: 12px;
+    background: #fee2e2;
+    color: #b91c1c;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+
+.meeting-delete-btn img {
+    width: 26px;
+    height: 26px;
+    display: block;
+}
+
+.meeting-delete-btn:hover {
+    transform: translateY(-1px);
+    border-color: #f87171;
+    background: #fecaca;
+}
+
+.meeting-delete-btn:active {
+    transform: translateY(0);
+}
+
 @media (max-width: 1024px) {
     .meeting-grid-row {
         grid-template-columns: 1fr;
@@ -2859,6 +3002,18 @@ html[data-theme="dark"] .meeting-grid-head {
 
 html[data-theme="dark"] .meeting-grid-title {
     color: #f9fafb;
+}
+
+html[data-theme="dark"] .meeting-delete-btn {
+    border-color: #fca5a5;
+    background: #fee2e2;
+    color: #7f1d1d;
+}
+
+html[data-theme="dark"] .meeting-delete-btn:hover {
+    border-color: #f87171;
+    background: #fecaca;
+    color: #7f1d1d;
 }
 
 .meeting-student-actions {

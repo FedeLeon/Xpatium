@@ -44,7 +44,7 @@
                                 Disponible desde {{ $joinAt->format('d/m/Y H:i') }}
                             </div>
                         </div>
-                        <a class="btn btn-secondary meeting-join {{ $meeting->join_available ? '' : 'is-disabled' }}"
+                        <a class="btn btn-secondary meeting-open-btn meeting-join {{ $meeting->join_available ? '' : 'is-disabled' }}"
                            href="{{ $meeting->jitsi_room_url }}"
                            target="_blank"
                            rel="noopener"

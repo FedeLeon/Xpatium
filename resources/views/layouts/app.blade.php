@@ -207,8 +207,14 @@
                                     </span>
                                 </summary>
                                 <div class="menu-submenu">
-                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.tasks.create') ? 'is-active' : '' }}" href="{{ route('teacher.tasks.create') }}">Crear tarea</a>
-                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.tasks.index') ? 'is-active' : '' }}" href="{{ route('teacher.tasks.index') }}">Ver tareas</a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.tasks.create') ? 'is-active' : '' }}" href="{{ route('teacher.tasks.create') }}">
+                                        <img class="menu-submenu__icon" src="{{ asset('icons/menu/plus.svg') }}" alt="">
+                                        <span>Crear tarea</span>
+                                    </a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.tasks.index') ? 'is-active' : '' }}" href="{{ route('teacher.tasks.index') }}">
+                                        <img class="menu-submenu__icon" src="{{ asset('icons/menu/eye.svg') }}" alt="">
+                                        <span>Ver tareas</span>
+                                    </a>
                                 </div>
                             </details>
                             <details class="menu-group" {{ request()->routeIs('teacher.students.*') ? 'open' : '' }}>
@@ -229,8 +235,14 @@
                                     </span>
                                 </summary>
                                 <div class="menu-submenu">
-                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.students.index') ? 'is-active' : '' }}" href="{{ route('teacher.students.index') }}">Listado de usuarios</a>
-                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.students.commission') ? 'is-active' : '' }}" href="{{ route('teacher.students.commission') }}">Comision</a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.students.index') ? 'is-active' : '' }}" href="{{ route('teacher.students.index') }}">
+                                        <img class="menu-submenu__icon" src="{{ asset('icons/menu/menu-2.svg') }}" alt="">
+                                        <span>Listado de usuarios</span>
+                                    </a>
+                                    <a class="menu-submenu__link {{ request()->routeIs('teacher.students.commission') ? 'is-active' : '' }}" href="{{ route('teacher.students.commission') }}">
+                                        <img class="menu-submenu__icon" src="{{ asset('icons/menu/users-group.svg') }}" alt="">
+                                        <span>Comision</span>
+                                    </a>
                                 </div>
                             </details>
                             <a class="{{ request()->routeIs('teacher.notifications.*') ? 'is-active' : '' }}" href="{{ route('teacher.notifications.index') }}">
